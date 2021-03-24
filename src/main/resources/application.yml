@@ -1,0 +1,23 @@
+server:
+  port: 5000 # ElasticBeanstalk expects for Java apps to be deployed on port 5000
+
+spring:
+  application:
+    name: ASAP-API
+  datasource:
+    platform: postgres
+    url: ${db_url}
+    username: ${db_username}
+    password: ${db_password}
+    driverClassName: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL82Dialect
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
