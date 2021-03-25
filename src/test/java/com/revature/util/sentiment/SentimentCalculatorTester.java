@@ -1,5 +1,7 @@
 package com.revature.util.sentiment;
 
+import com.revature.entities.SentimentCarrier;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -8,14 +10,15 @@ import java.util.ArrayList;
 public class SentimentCalculatorTester {
 
     private ArrayList<String> textList;
+    private ArrayList<String> biggerTextList;
     private SentimentCalculator sentimentCalculator;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         textList = new ArrayList<String>();
         textList.add("I hate Apple stock");
 
-        ArrayList<String> biggerTextList = new ArrayList<String>();
+        biggerTextList = new ArrayList<>();
         for (int i = 0; i < 26; i++) {
             biggerTextList.add("I really fucking love apple");
         }
@@ -23,7 +26,27 @@ public class SentimentCalculatorTester {
     }
 
     @Test
-    public void basicSentimentCheck(){
-        sentimentCalculator.sentimentAnalyzer(textList);
+    public void basicSentimentCheck() {
+        //Arrange
+        textList.add("Like, I really hate Apple stock");
+        SentimentCarrier sentimentCarrier;
+
+        //Act
+        sentimentCarrier = sentimentCalculator.apiArrayProcessor(textList);
+
+        //Assert
+        Assert.assertEquals(2, sentimentCarrier.getSentimentTotals().get("NEGATIVE").intValue());
+    }
+
+    @Test
+    public void biggerSentimentCheck() {
+        //Arrange
+        SentimentCarrier sentimentCarrier;
+
+        //Act
+        sentimentCarrier = sentimentCalculator.apiArrayProcessor(biggerTextList);
+
+        //Assert
+        Assert.assertEquals(26, sentimentCarrier.getSentimentTotals().get("POSITIVE").intValue());
     }
 }

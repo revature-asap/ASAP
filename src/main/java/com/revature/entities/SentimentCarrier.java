@@ -13,6 +13,14 @@ public class SentimentCarrier {
         super();
         sentimentAverage = new HashMap<>();
         sentimentTotals = new HashMap<>();
+        sentimentAverage.put("POSITIVE", 0.0);
+        sentimentAverage.put("NEGATIVE", 0.0);
+        sentimentAverage.put("MIXED", 0.0);
+        sentimentAverage.put("NEUTRAL", 0.0);
+        sentimentTotals.put("POSITIVE", 0);
+        sentimentTotals.put("NEGATIVE", 0);
+        sentimentTotals.put("MIXED", 0);
+        sentimentTotals.put("NEUTRAL", 0);
     }
 
     public SentimentCarrier(Map<String, Double> sentimentAverage, Map<String, Integer> sentimentTotals) {
@@ -37,8 +45,14 @@ public class SentimentCarrier {
     }
 
     public void clear(){
-        sentimentTotals.clear();
-        sentimentAverage.clear();
+        sentimentAverage.put("POSITIVE", 0.0);
+        sentimentAverage.put("NEGATIVE", 0.0);
+        sentimentAverage.put("MIXED", 0.0);
+        sentimentAverage.put("NEUTRAL", 0.0);
+        sentimentTotals.put("POSITIVE", 0);
+        sentimentTotals.put("NEGATIVE", 0);
+        sentimentTotals.put("MIXED", 0);
+        sentimentTotals.put("NEUTRAL", 0);
     }
 
     @Override
