@@ -81,6 +81,13 @@
             </exclusions>
         </dependency>
 
+        <!--Necessary dependency for Comprehend/Sentiment Analysis-->
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk</artifactId>
+            <version>1.11.327</version>
+        </dependency>
+
     </dependencies>
 
     <build>
