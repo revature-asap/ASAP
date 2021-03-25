@@ -57,7 +57,7 @@ public class UserService {
      * @param user user
      * @return returns true if the user is valid else false
      */
-    public Boolean isUserValid(User user){
+    private Boolean isUserValid(User user){
         if (user == null) return false;
         if (user.getFirstName() == null || user.getFirstName().trim().equals("")) return false;
         if (user.getLastName() == null || user.getLastName().trim().equals("")) return false;

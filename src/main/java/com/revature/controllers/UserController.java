@@ -42,6 +42,7 @@ public class UserController {
     }
 
     @GetMapping(path = "/confirmation/{username}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void confirmUserAccount(@PathVariable String username) {
         User user = userService.getUserByUsername(username);
         userService.confirmAccount(user.getUserId());
