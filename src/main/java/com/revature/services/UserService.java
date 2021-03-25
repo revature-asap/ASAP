@@ -31,6 +31,19 @@ public class UserService {
         userRepository.save(newUser);
     }
 
+    public void confirmedAccount(int userId){
+        if(userId<= 0){
+            throw new InvalidRequestException();
+        }
+
+        if(!userRepository.findById(userId).isPresent()){
+            throw new ResourceNotFoundException();
+        }
+
+        userRepository.confirmedAccount(userId);
+
+    }
+
     /**
      * helper function to check if the user is a valid user
      * @param user user
