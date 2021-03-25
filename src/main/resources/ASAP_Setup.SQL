@@ -36,6 +36,16 @@ create table assets(
 	
 );
 
+create table user_assets(
+	asset_id int,
+	user_id int,
+	
+	constraint user_assets_pk primary key(asset_id, user_id),
+	constraint asset_id_fk foreign key(asset_id) references assets,
+	constraint user_id_fk foreign key (user_id) references users
+);
+
+
 create table posts(
 
 	post_id serial,
@@ -93,5 +103,3 @@ values
 
 insert into post_tags 
 values (1, 1);
-
-
