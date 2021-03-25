@@ -7,6 +7,7 @@ import com.amazonaws.services.comprehend.AmazonComprehend;
 import com.amazonaws.services.comprehend.AmazonComprehendClientBuilder;
 import com.amazonaws.services.comprehend.model.*;
 import com.revature.entities.SentimentCarrier;
+import com.revature.exceptions.SentimentAnalysisException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +35,13 @@ public class SentimentCalculator {
      */
     //Batch call 25 at a time, sends to Organizer.
     public SentimentCarrier apiArrayProcessor(ArrayList<String> target) {
+        if(target.isEmpty()){
+            throw new SentimentAnalysisException("Analysis was called without any targets");
+
+        } else if(target.contains("")|| target.contains(null)){
+            throw new SentimentAnalysisException("Analysis was attempted on an empty string value");
+        }
+
         sentimentCarrier.clear();
 
         ArrayList<String> temp = new ArrayList<>();

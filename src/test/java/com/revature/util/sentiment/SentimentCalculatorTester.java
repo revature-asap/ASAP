@@ -1,11 +1,13 @@
 package com.revature.util.sentiment;
 
 import com.revature.entities.SentimentCarrier;
+import com.revature.exceptions.SentimentAnalysisException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SentimentCalculatorTester {
 
@@ -49,4 +51,42 @@ public class SentimentCalculatorTester {
         //Assert
         Assert.assertEquals(26, sentimentCarrier.getSentimentTotals().get("POSITIVE").intValue());
     }
+
+    @Test(expected = SentimentAnalysisException.class)
+    public void emptySentimentList(){
+
+        //Arrange
+        ArrayList<String> emptyList = new ArrayList<>();
+
+        //Act
+        sentimentCalculator.apiArrayProcessor(emptyList);
+
+    }
+
+    @Test(expected = SentimentAnalysisException.class)
+    public void emptyStringInSentimentList(){
+
+        //Arrange
+        ArrayList<String> badList = new ArrayList<>();
+        badList.add("Apple made me so rich");
+        badList.add("");
+
+        //Act
+        sentimentCalculator.apiArrayProcessor(badList);
+
+    }
+
+    @Test(expected = SentimentAnalysisException.class)
+    public void nullStringInSentimentList(){
+
+        //Arrange
+        ArrayList<String> badList = new ArrayList<>();
+        badList.add("Apple made me so rich");
+        badList.add(null);
+
+        //Act
+        sentimentCalculator.apiArrayProcessor(badList);
+
+    }
+
 }
