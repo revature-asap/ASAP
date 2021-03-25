@@ -16,7 +16,10 @@
 
     <properties>
         <java.version>8</java.version>
+        <log4jdbc.log4j2.version>1.16</log4jdbc.log4j2.version>
+        <start-class>com.revature.App</start-class>
     </properties>
+
 
     <dependencies>
 
@@ -67,6 +70,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.bgee.log4jdbc-log4j2</groupId>
+            <artifactId>log4jdbc-log4j2-jdbc4.1</artifactId>
+            <version>${log4jdbc.log4j2.version}</version>
         </dependency>
 
         <dependency>
