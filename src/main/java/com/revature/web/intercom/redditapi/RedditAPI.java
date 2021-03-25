@@ -29,7 +29,7 @@ public class RedditAPI {
     private String auth_token;
 
     public RedditAPI() {
-        this.client = WebClient.create();
+        this.client = WebClient.create(base_url);
     }
 
 
@@ -63,12 +63,18 @@ public class RedditAPI {
         auth_token = results.getAccess_token();
     }
 
-
+    /**
+     * MEthod to search a subreddit for a particular asset.
+     * @param subreddit the subreddit to search.
+     * @param asset the asset to search for.
+     * @param sort how to sort results. options are: relevance, hot, top, new, comments.
+     * @return RedditPostDTO which holds the entire result of the search. it's best to then parse this in a dedicate method to get the values you want.
+     */
     public RedditPostDTO searchAssetOnSubbreddit(final String subreddit, final String asset,final String sort) {
-        final int limit = 5;
-        final WebClient webClient = WebClient.create(base_url + "/r/" + subreddit + "/search");
-        final RedditPostDTO results = webClient.get()
+        final int limit = 5; //the number of results to limit to. we can hard code in a value or add it as a method parameter.
+        return client.get()
                 .uri(uriBuilder -> uriBuilder
+                        .path("/r/" + subreddit + "/search") //take the base url and add this stuff to the end of it.
                         .queryParam("q",asset)
                         .queryParam("sort",sort)
                         .queryParam("limit",limit)
@@ -77,9 +83,10 @@ public class RedditAPI {
                 .header("User-agent", user_agent)
                 .header("Authorization", "bearer " + auth_token)
                 .retrieve()
-                .bodyToMono(RedditPostDTO.class)//map results to a RedditAuthTOkenDTO
-                .blockOptional().orElseThrow(RuntimeException::new); //block until the results come back from the API.
-        return results;
+                .bodyToMono(RedditPostDTO.class)//map results to a RedditPostDTO
+                .blockOptional().orElseThrow(RuntimeException::new);
+                    //the exception thrown should be changed by production to be a more relevant exception.
+                    //possible change it to not thrown an exception here.
     }
 
 }

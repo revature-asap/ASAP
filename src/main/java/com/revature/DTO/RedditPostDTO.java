@@ -45,7 +45,7 @@ public class RedditPostDTO {
         this.data = data;
     }
 
-    t @Override
+    @Override
     public String toString() {
         return "RedditPostDTO{" +
                 "kind='" + kind + '\'' +
