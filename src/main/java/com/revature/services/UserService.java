@@ -31,7 +31,7 @@ public class UserService {
         userRepository.save(newUser);
     }
 
-    public void confirmedAccount(int userId){
+    public void confirmAccount(int userId){
         if(userId<= 0){
             throw new InvalidRequestException();
         }
@@ -42,6 +42,14 @@ public class UserService {
 
         userRepository.confirmedAccount(userId);
 
+    }
+
+    public User getUserByUsername(String username) {
+        if (username == null || username.trim().equals("")) {
+            throw new InvalidRequestException();
+        }
+
+        return userRepository.findUserByUsername(username).orElseThrow(ResourceNotFoundException::new);
     }
 
     /**

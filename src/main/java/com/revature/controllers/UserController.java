@@ -26,16 +26,25 @@ public class UserController {
     //Post
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    void registerUser(@RequestBody User newUser){
+    public void registerUser(@RequestBody User newUser){
         userService.registerUser(newUser);
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(newUser.getEmail());
         mailMessage.setSubject("Complete Registration For ASAP");
         mailMessage.setFrom("asap.revature@yahoo.com");
-        mailMessage.setText("To confirm your account, please click here: "
-        + "http://localhost:5000/");
 
+        // Need to change link when the API is hosted. . .
+        mailMessage.setText("To confirm your account, please click here: "
+        + "http://localhost:5000/users/confirmation/" + newUser.getUsername());
+
+        emailService.sendEmail(mailMessage);
+    }
+
+    @GetMapping(path = "/confirmation/{username}")
+    public void confirmUserAccount(@PathVariable String username) {
+        User user = userService.getUserByUsername(username);
+        userService.confirmAccount(user.getUserId());
     }
 
 
