@@ -14,6 +14,7 @@ CREATE TABLE users(
 	first_name varchar(25) not null,
 	last_name varchar(25) not null,
 	user_role varchar(10) not null default 'Basic',
+	account_confirmed bool not null default false,
 	
 	constraint users_pk primary key(user_id)
 );
