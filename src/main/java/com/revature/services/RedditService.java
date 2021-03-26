@@ -76,7 +76,7 @@ public class RedditService {
      * @return RedditPostDTO which holds the entire result of the search. it's best to then parse this in a dedicate method to get the values you want.
      */
     public RedditPostDTO searchAssetOnSubbreddit(final String subreddit, final String asset,final String sort) {
-        final int limit = 5; //the number of results to limit to. we can hard code in a value or add it as a method parameter.
+        final int limit = 4; //the number of results to limit to. we can hard code in a value or add it as a method parameter.
         return client.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/r/" + subreddit + "/search") //take the base url and add this stuff to the end of it.
@@ -111,7 +111,8 @@ public class RedditService {
     }
 
 
-    //Method currently not working. mapping the json objects form api calls into java is not working correctly.
+    //TODO fix this stuff
+    //Method currently not working. mapping the json objects from api calls into java is not working correctly.
     public RedditThreadDTO getCommentsOfThread(final String subreddit,final String thread) {
         final int limit = 5; //the number of results to limit to. we can hard code in a value or add it as a method parameter.
         return client.get()
