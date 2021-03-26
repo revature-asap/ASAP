@@ -18,16 +18,20 @@ public class RedditPost {
     @JsonProperty("score")
     private int score;   //net score of ups and downs.
 
+    @JsonProperty("created_utc")
+    private long created_utc;
+
 
     public RedditPost() {
         super();
     }
 
-    public RedditPost(final String selftext, final int ups, final int downs, final int score) {
+    public RedditPost(final String selftext, final int ups, final int downs, final int score, final long created_utc) {
         this.selftext = selftext;
         this.ups = ups;
         this.downs = downs;
         this.score = score;
+        this.created_utc = created_utc;
     }
 
     public String getSelftext() {
@@ -62,13 +66,22 @@ public class RedditPost {
         this.score = score;
     }
 
+    public long getCreated_utc() {
+        return created_utc;
+    }
+
+    public void setCreated_utc(long created_utc) {
+        this.created_utc = created_utc;
+    }
+
     @Override
     public String toString() {
-        return "RedditData{" +
+        return "RedditPost{" +
                 "selftext='" + selftext + '\'' +
                 ", ups=" + ups +
                 ", downs=" + downs +
                 ", score=" + score +
+                ", created_utc=" + created_utc +
                 '}';
     }
 }

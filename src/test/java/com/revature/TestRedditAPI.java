@@ -1,10 +1,11 @@
 package com.revature;
 
+import com.revature.entities.RedditAPI.RedditChildren;
+import com.revature.entities.RedditAPI.RedditPost;
 import com.revature.web.intercom.redditapi.RedditAPI;
 import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 public class TestRedditAPI {
@@ -23,8 +24,15 @@ public class TestRedditAPI {
 
     @Test
     public void testSearch() {
-        System.out.println("the search results are: ");
-        System.out.println(redditappi.searchAssetOnSubbreddit("stocks","apple","hot").toString());
+        for(RedditChildren post: redditappi.searchAssetOnSubbreddit("stocks","apple","hot").getData().getChildren()) {
+            System.out.println("\n\n\n <---------------------- the post is: ------------------------------->");
+            System.out.println(post);
+        }
     }
+
+//    @Test
+//    public void testComments() {
+//        System.out.println(redditappi.getCommentsOfThread("stocks","md10km").toString());
+//    }
 
 }

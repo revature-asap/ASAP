@@ -2,11 +2,6 @@ package com.revature.DTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.revature.entities.RedditAPI.RedditData;
-import com.revature.entities.RedditAPI.RedditParent;
-import com.revature.entities.RedditAPI.RedditPost;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * DTO for transfering of posts from the Reddit API

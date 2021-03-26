@@ -2,6 +2,10 @@ package com.revature.web.intercom.redditapi;
 
 import com.revature.DTO.RedditAuthTokenDTO;
 import com.revature.DTO.RedditPostDTO;
+import com.revature.DTO.RedditThreadDTO;
+import com.revature.entities.RedditAPI.RedditChildren;
+import com.revature.entities.RedditAPI.RedditPost;
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -9,6 +13,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.util.MultiValueMap;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 
 /**
@@ -18,9 +25,6 @@ import org.springframework.util.MultiValueMap;
 @Component
 public class RedditAPI {
 
-    //base url for making calls to the api.
-    private final String base_url = "https://oauth.reddit.com";
-
     //used in headers when calling the api.
     private final String user_agent = "mytestofapi by testingapiforrevatur";
 
@@ -29,6 +33,8 @@ public class RedditAPI {
     private String auth_token;
 
     public RedditAPI() {
+        //base url for making calls to the api.
+        final String base_url = "https://oauth.reddit.com";
         this.client = WebClient.create(base_url);
     }
 
@@ -47,7 +53,7 @@ public class RedditAPI {
         //use this to set values in the form-encodedurl
         final MultiValueMap<String, String> encoded_form = new LinkedMultiValueMap<>();
         encoded_form.add("grant_type","password");
-        encoded_form.add("username","testingapiforrevatur"); //username and password here need to be enviromental vars for production code
+        encoded_form.add("username","testingapiforrevatur"); //username and password here need to be environmental vars for production code
         encoded_form.add("password","Password!2");
 
         final WebClient webClient1 = WebClient.create(auth_url);
@@ -79,6 +85,7 @@ public class RedditAPI {
                         .queryParam("sort",sort)
                         .queryParam("limit",limit)
                         .queryParam("restrict_sr",1)
+                        .queryParam("raw_json","1")  //tell reddit not convert characters '<','>',and'&'
                         .build())
                 .header("User-agent", user_agent)
                 .header("Authorization", "bearer " + auth_token)
@@ -88,5 +95,36 @@ public class RedditAPI {
                     //the exception thrown should be changed by production to be a more relevant exception.
                     //possible change it to not thrown an exception here.
     }
+
+    /**
+     * Method which takes in a RedditPostDTO and returns an array list containing strings of the individual posts from reddit.
+     * @param dto DTO which contains the object returned from a call to the Reddit API
+     * @return ArrayList of strings. each string is the body of a post on Reddit.
+     */
+    public ArrayList<String> getArrayFromDTO(final RedditPostDTO dto) {
+        //arraylist to hold the body of every reddit post inside the dto.
+        final ArrayList<String> body_array = new ArrayList<>();
+        Arrays.stream(dto.getData().getChildren().toArray(new RedditChildren[0]))
+                .map(RedditChildren::getData)
+                .map(RedditPost::getSelftext)
+                .forEach(body_array::add);
+        return body_array;
+    }
+
+
+    //Method currently not working. mapping the json objects form api calls into java is not working correctly.
+    public RedditThreadDTO getCommentsOfThread(final String subreddit,final String thread) {
+        final int limit = 5; //the number of results to limit to. we can hard code in a value or add it as a method parameter.
+        return client.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/r/" + subreddit + "/comments/" + thread) //take the base url and add this stuff to the end of it.
+                        .build())
+                .header("User-agent", user_agent)
+                .header("Authorization", "bearer " + auth_token)
+                .retrieve()
+                .bodyToMono(RedditThreadDTO.class)//map results to a RedditPostDTO
+                .blockOptional().orElseThrow(RuntimeException::new);
+    }
+
 
 }
