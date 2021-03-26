@@ -1,14 +1,13 @@
-package com.revature.web.intercom.redditapi;
+package com.revature.services;
 
 import com.revature.DTO.RedditAuthTokenDTO;
 import com.revature.DTO.RedditPostDTO;
 import com.revature.DTO.RedditThreadDTO;
 import com.revature.entities.RedditAPI.RedditChildren;
 import com.revature.entities.RedditAPI.RedditPost;
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -22,8 +21,8 @@ import java.util.Arrays;
  * This class handles sending and receiving data from the reddit API.
  */
 
-@Component
-public class RedditAPI {
+@Service
+public class RedditService {
 
     //used in headers when calling the api.
     private final String user_agent = "mytestofapi by testingapiforrevatur";
@@ -32,7 +31,7 @@ public class RedditAPI {
 
     private String auth_token;
 
-    public RedditAPI() {
+    public RedditService() {
         //base url for making calls to the api.
         final String base_url = "https://oauth.reddit.com";
         this.client = WebClient.create(base_url);
