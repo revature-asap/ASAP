@@ -112,11 +112,12 @@ public class UserControllerIntegrationTest {
     @Test
     public void confirmUserAccountWithInvalidData() throws Exception {
 
-        when(userRepository.findById(theUser.getUserId())).thenReturn(Optional.of(theUser));
-        when(userService.getUserByUsername(theUser.getUsername())).thenReturn(theUser);
-        doNothing().when(userRepository).confirmedAccount(theUser.getUserId());
+        User fakeuser = new User();
+        fakeuser.setUsername(" ");
+        fakeuser.setUserId(10);
+        fakeuser.setRole(UserRole.BASIC);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/users/confirmation/{username}",theUser.getUsername()))
+        mockMvc.perform(MockMvcRequestBuilders.get("/users/confirmation/{username}",fakeuser.getUsername()))
                 .andExpect(status().isBadRequest());
 
     }

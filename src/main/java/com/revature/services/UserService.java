@@ -10,15 +10,29 @@ import com.revature.util.PasswordEncryption;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * User service class that has methods for calling the user repo and checking the validation of the data
+ */
 @Service
 public class UserService {
+
     private UserRepository userRepository;
 
+    /**
+     * User service constructor that sets the user repository
+     * @param userRepository user repository
+     */
     @Autowired
     public UserService(UserRepository userRepository){
         this.userRepository = userRepository;
     }
 
+    /**
+     * Gets a user from the user controller. Checks to see if the user is valid.
+     * Checks to see if the user is within the database. Then set the user's role to basic, encrypts the password,
+     * set the account confirmed to false, and saves the user
+     * @param newUser
+     */
     public void registerUser(User newUser){
         if(!isUserValid(newUser)) throw new InvalidRequestException();
 
@@ -31,6 +45,11 @@ public class UserService {
         userRepository.save(newUser);
     }
 
+    /**
+     * Gets the user id from the user controller. Checks to see if the integer value is less than and equals to zero.
+     * Checks to see if the user exist. Then calls the confirmed account method from the repository
+     * @param userId user's id
+     */
     public void confirmAccount(int userId){
         if(userId<= 0){
             throw new InvalidRequestException();
@@ -44,6 +63,12 @@ public class UserService {
 
     }
 
+    /**
+     * Gets the username from the user controller. Checks to see if the username is null or empty.
+     * Then return the username by using the find user by username method from Repository
+     * @param username
+     * @return
+     */
     public User getUserByUsername(String username) {
         if (username == null || username.trim().equals("")) {
             throw new InvalidRequestException();

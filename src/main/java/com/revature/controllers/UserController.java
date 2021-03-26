@@ -5,11 +5,17 @@ import com.revature.entities.User;
 import com.revature.services.EmailService;
 import com.revature.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * This class is used to access user methods by hitting the end points
+ */
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -17,6 +23,11 @@ public class UserController {
     private final UserService userService;
     private EmailService emailService;
 
+    /**
+     * Constructor for auto wiring User Service and Email Service
+     * @param userService service class for the users
+     * @param emailService service class for email
+     */
     @Autowired
     public UserController(UserService userService,EmailService emailService){
         this.userService = userService;
@@ -24,6 +35,12 @@ public class UserController {
     }
 
     //Post
+
+    /**
+     * Post method that will create a row in the database and also send an email
+     * to the user's private email
+     * @param newUser the json object of user data
+     */
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public void registerUser(@RequestBody User newUser){
@@ -41,11 +58,21 @@ public class UserController {
         emailService.sendEmail(mailMessage);
     }
 
+    /**
+     * Get method that will update the confirmed account column
+     * @param username the username of the user
+     */
     @GetMapping(path = "/confirmation/{username}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void confirmUserAccount(@PathVariable String username) {
+    public void confirmUserAccount(@PathVariable String username, HttpServletResponse response) {
         User user = userService.getUserByUsername(username);
-        userService.confirmAccount(user.getUserId());
+        if(user != null){
+            userService.confirmAccount(user.getUserId());
+            response.setStatus(204);
+        }
+        else{
+            response.setStatus(400);
+        }
+
     }
 
 

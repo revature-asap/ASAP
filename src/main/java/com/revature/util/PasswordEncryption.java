@@ -19,7 +19,7 @@ public class PasswordEncryption {
 
     /**
      * verifies the password
-     * @param pw regulat password
+     * @param pw regular password
      * @param encryptedPassword encrypted password
      * @return returns a boolean if the password matches
      */
