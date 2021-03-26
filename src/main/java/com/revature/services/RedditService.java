@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.util.MultiValueMap;
 
@@ -34,7 +35,11 @@ public class RedditService {
     public RedditService() {
         //base url for making calls to the api.
         final String base_url = "https://oauth.reddit.com";
-        this.client = WebClient.create(base_url);
+        this.client = WebClient.builder()
+                        .baseUrl(base_url)
+                        //change the default buffer size.
+                        .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(2 * 1024 * 1024))
+                        .build();
     }
 
 
@@ -114,7 +119,7 @@ public class RedditService {
      * @return RedditPostDTO which holds the entire result of the search. it's best to then parse this in a dedicate method to get the values you want.
      */
     public RedditPostDTO searchAssetOnSubbreddit(final String subreddit, final String asset,final String sort) {
-        final int limit = 10; //the number of results to limit to. we can hard code in a value or add it as a method parameter.
+        final int limit = 25; //the number of results to limit to. we can hard code in a value or add it as a method parameter.
         return client.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/r/" + subreddit + "/search") //take the base url and add this stuff to the end of it.
