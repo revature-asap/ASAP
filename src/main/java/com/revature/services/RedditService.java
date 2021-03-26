@@ -16,6 +16,7 @@ import org.springframework.util.MultiValueMap;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 
 
 /**
@@ -24,6 +25,8 @@ import java.util.Arrays;
 
 @Service
 public class RedditService {
+
+    private final String[] subreddits = {"/r/stocks","/r/wallstreetbets","/r/investing"};
 
     //used in headers when calling the api.
     private final String user_agent = "mytestofapi by testingapiforrevatur";
@@ -79,9 +82,12 @@ public class RedditService {
      * @param asset
      * @return
      */
-    public ArrayList<String> getAssetPosts(final String asset) {
-        final RedditPostDTO dto = searchAssetOnSubbreddit("stocks","asset","new");
-        return getArrayFromDTO(dto);
+    public Collection<String> getAssetPosts(final String asset) {
+        final ArrayList<String> assets_list = new ArrayList<>();
+        Arrays.stream(subreddits)
+                .map(subreddit -> getArrayFromDTO(searchAssetOnSubbreddit(subreddit,asset,"top")))
+                .forEach(assets_list::addAll);
+        return assets_list;
     }
 
     /**
@@ -122,7 +128,7 @@ public class RedditService {
         final int limit = 25; //the number of results to limit to. we can hard code in a value or add it as a method parameter.
         return client.get()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/r/" + subreddit + "/search") //take the base url and add this stuff to the end of it.
+                        .path(subreddit + "/search") //take the base url and add this stuff to the end of it.
                         .queryParam("q",asset)
                         .queryParam("sort",sort)
                         .queryParam("limit",limit)
@@ -146,7 +152,7 @@ public class RedditService {
     public ArrayList<String> getArrayFromDTO(final RedditPostDTO dto) {
         //arraylist to hold the body of every reddit post inside the dto.
         final ArrayList<String> body_array = new ArrayList<>();
-        Arrays.stream(dto.getData().getChildren().toArray(new RedditChildren[0]))
+        dto.getData().getChildren().stream()
                 .map(RedditChildren::getData)
                 .map(RedditPost::getSelftext)
                 .filter(str -> str != null && !"".equals(str.trim()))

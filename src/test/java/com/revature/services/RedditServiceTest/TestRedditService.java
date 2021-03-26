@@ -1,4 +1,4 @@
-package com.revature;
+package com.revature.services.RedditServiceTest;
 
 import com.revature.entities.SentimentCarrier;
 import com.revature.util.sentiment.SentimentCalculator;
@@ -6,19 +6,19 @@ import com.revature.services.RedditService;
 import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.Map;
 
 public class TestRedditService {
 
-    private final RedditService redditappi = new RedditService();
+    //@Mock
+    RedditService redditappi = new RedditService();
     private SentimentCalculator sentimentCalculator;
 
     @Before
     public void initMocks() {
-        MockitoAnnotations.initMocks(this);
+        //MockitoAnnotations.initMocks(this);
     }
 
     @BeforeEach
@@ -51,7 +51,7 @@ public class TestRedditService {
 
     @Test
     public void testSentiment() {
-        final ArrayList<String> body_array = redditappi.getAssetPosts("apple");
+        final ArrayList<String> body_array = (ArrayList<String>)redditappi.getAssetPosts("apple");
         final SentimentCarrier sentiment = sentimentCalculator.apiArrayProcessor(body_array);
         for(Map.Entry<String,Integer> entry: sentiment.getSentimentTotals().entrySet()) {
             System.out.println("key is: " + entry.getKey());
