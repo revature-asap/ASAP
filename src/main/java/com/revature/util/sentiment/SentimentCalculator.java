@@ -76,7 +76,7 @@ public class SentimentCalculator {
      * @param target batch of >= 25 Strings to be analyzed.
      */
     //Take in Target, validate credentials, etc. Sends to apiArrayProcessor to split into batches
-    public void sentimentAnalyzer(ArrayList<String> target) {
+    private void sentimentAnalyzer(ArrayList<String> target) {
         SentimentCarrier sentimentCarrier = new SentimentCarrier();
         // Create credentials using a provider chain. For more information, see
         AWSCredentialsProvider awsCreds = DefaultAWSCredentialsProviderChain.getInstance();
@@ -126,7 +126,7 @@ public class SentimentCalculator {
      * @param batchDetectSentimentResult Results of Comprehend's analytics.
      */
     //Totals for batch of 25
-    public void sentimentTotals(BatchDetectSentimentResult batchDetectSentimentResult) {
+    private void sentimentTotals(BatchDetectSentimentResult batchDetectSentimentResult) {
         String domSentiment = "";
         for (BatchDetectSentimentItemResult item : batchDetectSentimentResult.getResultList()) {
             switch (item.getSentiment()) {
@@ -156,7 +156,7 @@ public class SentimentCalculator {
      * @param batchDetectSentimentResult Results of Comprehend's analytics.
      */
     //Total averages for batch of 25
-    public void sentimentAverage(BatchDetectSentimentResult batchDetectSentimentResult) {
+    private void sentimentAverage(BatchDetectSentimentResult batchDetectSentimentResult) {
         for (BatchDetectSentimentItemResult item : batchDetectSentimentResult.getResultList()) {
             sentimentCarrier.getSentimentAverage().put("NEGATIVE",
                     sentimentCarrier.getSentimentAverage().get("NEGATIVE") + item.getSentimentScore().getNegative());
