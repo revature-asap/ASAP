@@ -52,9 +52,24 @@ public class UserController {
         mailMessage.setFrom("asap.revature@yahoo.com");
 
         // Need to change link when the API is hosted. . .
-        mailMessage.setText("To confirm your account, please click here: "
-        + "http://localhost:5000/users/confirmation/" + newUser.getUsername());
+//        mailMessage.setText("To confirm your account, please click here: "
+//        + "http://localhost:5000/users/confirmation/" + newUser.getUsername());
 
+        String confirmationlink = "http://localhost:5000/users/confirmation/" + newUser.getUsername();
+        StringBuilder htmlBuilder = new StringBuilder();
+        htmlBuilder.append("<html>");
+        htmlBuilder.append("<head><title>To confirm your account, please click below</title></head>");
+        htmlBuilder.append("<body>");
+//        htmlBuilder.append("<button onclick=\"window.location.href='https://w3docs.com';\">");
+        htmlBuilder.append("<button onclick=\"window.location.href=\' ");
+        htmlBuilder.append(confirmationlink);
+        htmlBuilder.append("';\">");
+
+        htmlBuilder.append("Activate Account");
+        htmlBuilder.append("</button>");
+        htmlBuilder.append("<body>");
+        htmlBuilder.append("</html>");
+        mailMessage.setText(htmlBuilder.toString());
         emailService.sendEmail(mailMessage);
     }
 
