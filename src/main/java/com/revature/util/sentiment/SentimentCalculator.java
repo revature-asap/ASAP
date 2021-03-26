@@ -77,7 +77,6 @@ public class SentimentCalculator {
      */
     //Take in Target, validate credentials, etc. Sends to apiArrayProcessor to split into batches
     private void sentimentAnalyzer(ArrayList<String> target) {
-        SentimentCarrier sentimentCarrier = new SentimentCarrier();
         // Create credentials using a provider chain. For more information, see
         AWSCredentialsProvider awsCreds = DefaultAWSCredentialsProviderChain.getInstance();
         AmazonComprehend comprehendClient =
