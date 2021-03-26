@@ -23,7 +23,7 @@ public class CorsFilter extends OncePerRequestFilter {
             header for JWT:
                 - ASAP-token
         */
-        httpServletResponse.setHeader("Access-Control-Allow-Origin","http://localhost, https://p3-210119-java-enterprise.s3.amazonaws.com");
+        httpServletResponse.setHeader("Access-Control-Allow-Origin","http://localhost:4200, https://p3-210119-java-enterprise.s3.amazonaws.com");
         httpServletResponse.setHeader("Access-Control-Allow-Credentials","true");
         httpServletResponse.setHeader("Access-Control-Allow-Headers","Content-Type, ASAP-token");
         httpServletResponse.setHeader("Access-Control-Expose-Headers","ASAP-token");
