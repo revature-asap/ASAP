@@ -72,35 +72,35 @@ public class UserServiceTest {
         verify(userRepository, times(0)).save(user1);
     }
 
-    // @Test
-    // public void confirmAccountTest(){
+    @Test
+    public void confirmAccountTest(){
 
-    //     when(userRepository.findById(user1.getUserId())).thenReturn(Optional.of(user1));
+        when(userRepository.findById(user1.getUserId())).thenReturn(Optional.of(user1));
 
-    //     doNothing().when(userRepository).confirmedAccount(user1.getUserId());
+        doNothing().when(userRepository).confirmedAccount(user1.getUserId());
 
-    //     userService.confirmAccount(user1.getUserId());
+        userService.confirmAccount(user1.getUserId());
 
-    //     verify(userRepository, times(1)).confirmedAccount(user1.getUserId());
-    // }
+        verify(userRepository, times(1)).confirmedAccount(user1.getUserId());
+    }
 
-    // @Test(expected = InvalidRequestException.class)
-    // public void confirmAccountIfUserIdIsZEROTest(){
+    @Test(expected = InvalidRequestException.class)
+    public void confirmAccountIfUserIdIsZEROTest(){
 
-    //     user1.setUserId(0);
+        user1.setUserId(0);
 
-    //     userService.confirmAccount(user1.getUserId());
+        userService.confirmAccount(user1.getUserId());
 
-    //     verify(userRepository, times(0)).confirmedAccount(user1.getUserId());
-    // }
+        verify(userRepository, times(0)).confirmedAccount(user1.getUserId());
+    }
 
-    // @Test(expected = ResourceNotFoundException.class)
-    // public void confirmAccountIfUserNotExistTest(){
+    @Test(expected = ResourceNotFoundException.class)
+    public void confirmAccountIfUserNotExistTest(){
 
-    //     userService.confirmAccount(user1.getUserId());
+        userService.confirmAccount(user1.getUserId());
 
-    //     verify(userRepository, times(1)).confirmedAccount(user1.getUserId());
-    // }
+        verify(userRepository, times(1)).confirmedAccount(user1.getUserId());
+    }
 
     @Test
     public void getUserByUsername(){
