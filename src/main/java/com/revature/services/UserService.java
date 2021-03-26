@@ -77,6 +77,25 @@ public class UserService {
         return userRepository.findUserByUsername(username).orElseThrow(ResourceNotFoundException::new);
     }
 
+    public User authenticate(String username, String password) {
+        if (username == null || username.trim().equals("") || password == null || password.trim().equals("")) {
+            throw new InvalidRequestException();
+        }
+
+        User user = userRepository.findUserByUsername(username).orElseThrow(ResourceNotFoundException::new);
+
+        if (!PasswordEncryption.verifyPassword(password, user.getPassword())) {
+            throw new InvalidRequestException();
+        }
+
+        // If the User has not clicked the link in their email. . .
+        if (!user.isAccountConfirmed()) {
+            throw new InvalidRequestException("Account not validated");
+        }
+
+        return user;
+    }
+
     /**
      * helper function to check if the user is a valid user
      * @param user user

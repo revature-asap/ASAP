@@ -4,6 +4,9 @@ package com.revature.controllers;
 import com.revature.entities.User;
 import com.revature.services.EmailService;
 import com.revature.services.UserService;
+import com.revature.util.JwtGenerator;
+import dtos.Credentials;
+import dtos.Principal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
@@ -12,6 +15,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 /**
  * This class is used to access user methods by hitting the end points
@@ -22,6 +26,7 @@ public class UserController {
 
     private final UserService userService;
     private EmailService emailService;
+    private final JwtGenerator jwtGenerator;
 
     /**
      * Constructor for auto wiring User Service and Email Service
@@ -29,9 +34,10 @@ public class UserController {
      * @param emailService service class for email
      */
     @Autowired
-    public UserController(UserService userService,EmailService emailService){
+    public UserController(UserService userService,EmailService emailService, JwtGenerator jwtGenerator){
         this.userService = userService;
         this.emailService = emailService;
+        this.jwtGenerator = jwtGenerator;
     }
 
     //Post
@@ -73,6 +79,18 @@ public class UserController {
             response.setStatus(400);
         }
 
+    }
+
+    @PostMapping(path = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Principal loginUser(@RequestBody @Valid Credentials credentials, HttpServletResponse response) {
+        Principal principal = new Principal(userService.authenticate(credentials.getUsername(), credentials.getPassword()));
+
+        String token = jwtGenerator.generateJwt(principal);
+        principal.setToken(token);
+
+        response.addHeader("asap-token", principal.getToken());
+
+        return principal;
     }
 
 
