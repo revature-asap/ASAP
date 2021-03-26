@@ -5,6 +5,9 @@ import com.revature.util.UserRoleConverter;
 import javax.persistence.*;
 import java.util.Objects;
 
+/**
+ * This the model class for the user with annotations that maps to the database
+ */
 @Entity
 @Table(name = "users")
 public class User {

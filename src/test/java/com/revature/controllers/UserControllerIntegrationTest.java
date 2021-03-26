@@ -3,6 +3,7 @@ package com.revature.controllers;
 import com.revature.entities.User;
 import com.revature.entities.UserRole;
 import com.revature.repositories.UserRepository;
+import com.revature.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterAll;
@@ -17,7 +18,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.mockito.Mockito.when;
+import java.util.Optional;
+
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -26,9 +29,14 @@ public class UserControllerIntegrationTest {
 
     private MockMvc mockMvc;
     private WebApplicationContext webApplicationContext;
+    private User theUser;
 
     @MockBean
     private UserRepository userRepository;
+
+    @MockBean
+    private UserService userService;
+
 
 
     @Autowired
@@ -39,7 +47,9 @@ public class UserControllerIntegrationTest {
     @BeforeEach
     public void setup(){
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-
+        theUser = new User("nana","password","nana123@yahoo.com","first","last");
+        theUser.setRole(UserRole.BASIC);
+        theUser.setUserId(1);
 
     }
 
@@ -83,6 +93,31 @@ public class UserControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/users")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(Json))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    public void confirmUserAccountWithValidData() throws Exception {
+
+        when(userRepository.findById(theUser.getUserId())).thenReturn(Optional.of(theUser));
+        when(userService.getUserByUsername(theUser.getUsername())).thenReturn(theUser);
+        doNothing().when(userRepository).confirmedAccount(theUser.getUserId());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/users/confirmation/{username}",theUser.getUsername()))
+                .andExpect(status().is(204));
+
+    }
+
+    @Test
+    public void confirmUserAccountWithInvalidData() throws Exception {
+
+        User fakeuser = new User();
+        fakeuser.setUsername(" ");
+        fakeuser.setUserId(10);
+        fakeuser.setRole(UserRole.BASIC);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/users/confirmation/{username}",fakeuser.getUsername()))
                 .andExpect(status().isBadRequest());
 
     }

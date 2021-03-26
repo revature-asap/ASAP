@@ -4,7 +4,16 @@ import com.revature.entities.UserRole;
 
 import javax.persistence.AttributeConverter;
 
+/**
+ * Converter class for the user role
+ */
 public class UserRoleConverter implements AttributeConverter<UserRole, String> {
+
+    /**
+     * converts the user role into a string with an uppercase
+     * @param userRole user role
+     * @return returns a user role in the form of a string with the first letter capitalize
+     */
     @Override
     public String convertToDatabaseColumn(UserRole userRole) {
         if(userRole == null){
@@ -23,6 +32,11 @@ public class UserRoleConverter implements AttributeConverter<UserRole, String> {
         }
     }
 
+    /**
+     * Converting the string of user role back into an ENUM that is the user role
+     * @param s string of user role
+     * @return returns the user role ENUM
+     */
     @Override
     public UserRole convertToEntityAttribute(String s) {
         if (s.isEmpty()) {
