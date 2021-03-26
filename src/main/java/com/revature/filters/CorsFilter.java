@@ -16,6 +16,13 @@ public class CorsFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
+        /*
+            urls available:
+                - localhost (for local testing)
+                - p3-210119-java-enterprise.s3.amazonaws.com (I expect this to be the url for our front end)
+            header for JWT:
+                - ASAP-token
+        */
         httpServletResponse.setHeader("Access-Control-Allow-Origin","http://localhost");
         httpServletResponse.setHeader("Access-Control-Allow-Origin","https://p3-210119-java-enterprise.s3.amazonaws.com");
         httpServletResponse.setHeader("Access-Control-Allow-Credentials","true");
