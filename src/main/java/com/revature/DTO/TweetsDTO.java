@@ -8,15 +8,15 @@ import java.util.List;
 /**
  * For holding the returned object from call to Twitter API
  */
-public class TweetDTO {
+public class TweetsDTO {
 
     @JsonProperty("data")
     private List<Tweet> tweets;
 
-    public TweetDTO() {
+    public TweetsDTO() {
     }
 
-    public TweetDTO(List<Tweet> tweets) {
+    public TweetsDTO(List<Tweet> tweets) {
         this.tweets = tweets;
     }
 
