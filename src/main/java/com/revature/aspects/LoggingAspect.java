@@ -14,7 +14,7 @@ import java.util.Arrays;
 @Component
 public class LoggingAspect {
 
-    private final Logger logger =LogManager.getLogger(LoggingAspect.class);
+    private final Logger logger = LogManager.getLogger(LoggingAspect.class);
 
 
     @Pointcut("within(com.revature..*) && !within(com.revature.filters..*)")
@@ -27,7 +27,7 @@ public class LoggingAspect {
     public void logMethodStart(JoinPoint jp) {
         String methodSig = extractMethodSignature(jp);
         String argStr = Arrays.toString(jp.getArgs());
-        logger.info("1<(^.^)> {} invoked at {}; input arguments: {}", methodSig, LocalDateTime.now(), argStr);
+        logger.info("<(^.^)> {} invoked at {}; input arguments: {}", methodSig, LocalDateTime.now(), argStr);
     }
 
     private String extractMethodSignature(JoinPoint jp){
@@ -37,13 +37,13 @@ public class LoggingAspect {
     @AfterReturning(pointcut = "logAllPointcut()", returning = "returned")
     public void logMethodReturned(JoinPoint jp, Object returned) {
         String methodSig = extractMethodSignature(jp);
-        logger.info("2<(^.^)> {} was successfully returned at {} with a value of {}", methodSig, LocalDateTime.now(), returned);
+        logger.info("<(^.^)> {} was successfully returned at {} with a value of {}", methodSig, LocalDateTime.now(), returned);
     }
 
     @AfterThrowing(pointcut = "logAllPointcut()", throwing = "e")
     public void logErrorOccurrence(JoinPoint jp, Exception e) {
         String methodSig = extractMethodSignature(jp);
-        logger.error("3<(^.^)> {} was thrown in method {} at {} with message: {}", e.getClass().getSimpleName(), methodSig, LocalDateTime.now(), e.getMessage());
+        logger.error("<(^.^)> {} was thrown in method {} at {} with message: {}", e.getClass().getSimpleName(), methodSig, LocalDateTime.now(), e.getMessage());
     }
 }
 
