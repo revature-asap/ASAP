@@ -5,12 +5,15 @@ import com.revature.entities.User;
 import com.revature.services.EmailService;
 import com.revature.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -43,7 +46,7 @@ public class UserController {
      */
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public void registerUser(@RequestBody User newUser){
+    public void registerUser(@RequestBody User newUser) throws MessagingException {
         userService.registerUser(newUser);
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
@@ -61,7 +64,7 @@ public class UserController {
         htmlBuilder.append("<head><title>To confirm your account, please click below</title></head>");
         htmlBuilder.append("<body>");
 //        htmlBuilder.append("<button onclick=\"window.location.href='https://w3docs.com';\">");
-        htmlBuilder.append("<button onclick=\"window.location.href=\' ");
+        htmlBuilder.append("<button onclick=\"window.location.href=\'");
         htmlBuilder.append(confirmationlink);
         htmlBuilder.append("';\">");
 
@@ -69,8 +72,13 @@ public class UserController {
         htmlBuilder.append("</button>");
         htmlBuilder.append("<body>");
         htmlBuilder.append("</html>");
-        mailMessage.setText(htmlBuilder.toString());
-        emailService.sendEmail(mailMessage);
+
+        MimeMessage mimeMessage = emailService.getJavaMailSender().createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
+        helper.setFrom("asap.revature@yahoo.com");
+        helper.setSubject("Complete Registration For ASAP");
+        helper.setText(htmlBuilder.toString());
+        emailService.sendEmail(mimeMessage);
     }
 
     /**
