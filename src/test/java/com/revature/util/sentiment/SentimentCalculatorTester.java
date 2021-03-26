@@ -41,6 +41,61 @@ public class SentimentCalculatorTester {
     }
 
     @Test
+    public void positiveSentimentCheck() {
+        //Arrange
+        textList.add("Like, I really hate Apple stock");
+        SentimentCarrier sentimentCarrier;
+
+        //Act
+        sentimentCarrier = sentimentCalculator.apiArrayProcessor(textList);
+
+        //Assert
+        Assert.assertEquals(0, sentimentCarrier.getSentimentTotals().get("POSITIVE").intValue());
+    }
+
+    @Test
+    public void neutralSentimentCheck() {
+        //Arrange
+        textList.add("Like, I really hate Apple stock");
+        SentimentCarrier sentimentCarrier;
+
+        //Act
+        sentimentCarrier = sentimentCalculator.apiArrayProcessor(textList);
+
+        //Assert
+        Assert.assertEquals(0, sentimentCarrier.getSentimentTotals().get("NEUTRAL").intValue());
+    }
+
+    @Test
+    public void mixedSentimentCheck() {
+        //Arrange
+        textList.add("Like, I really hate Apple stock");
+        SentimentCarrier sentimentCarrier;
+
+        //Act
+        sentimentCarrier = sentimentCalculator.apiArrayProcessor(textList);
+
+        //Assert
+        Assert.assertEquals(0, sentimentCarrier.getSentimentTotals().get("MIXED").intValue());
+    }
+
+    @Test
+    public void averageSentimentCheck() {
+        //Arrange
+        biggerTextList.add("Hate Apple");
+        biggerTextList.add("This company is terrible");
+        biggerTextList.add("Apple stock is overvalued");
+        biggerTextList.add("Apple stock is not for me");
+        SentimentCarrier sentimentCarrier;
+
+        //Act
+        sentimentCarrier = sentimentCalculator.apiArrayProcessor(biggerTextList);
+
+        //Assert
+        Assert.assertTrue(sentimentCarrier.getSentimentAverage().get("POSITIVE").doubleValue()>0.5);
+    }
+
+    @Test
     public void biggerSentimentCheck() {
         //Arrange
         SentimentCarrier sentimentCarrier;
