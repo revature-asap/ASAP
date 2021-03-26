@@ -1,8 +1,5 @@
 package com.revature;
 
-import com.revature.DTO.RedditPostDTO;
-import com.revature.entities.RedditAPI.RedditChildren;
-import com.revature.entities.RedditAPI.RedditPost;
 import com.revature.entities.SentimentCarrier;
 import com.revature.util.sentiment.SentimentCalculator;
 import com.revature.services.RedditService;
@@ -31,12 +28,21 @@ public class TestRedditService {
     }
 
 //    @Test
-//    public void testSearch() {
+//    public void testSubredditSearch() {
 //        for(RedditChildren post: redditappi.searchAssetOnSubbreddit("stocks","apple","hot").getData().getChildren()) {
 //            System.out.println("\n\n\n <---------------------- the post is: ------------------------------->");
 //            System.out.println(post);
 //        }
 //    }
+
+//    @Test
+//    public void testSearch() {
+//        System.out.println(redditappi.searchAssetOnReddit("apple","hot"));
+//        for(RedditChildren post: redditappi.searchAssetOnReddit("apple","hot").getData().getChildren()) {
+//            System.out.println("\n\n\n <---------------------- the post is: ------------------------------->");
+//            System.out.println(post);
+//        }
+    //}
 
 //    @Test
 //    public void testComments() {
@@ -45,9 +51,7 @@ public class TestRedditService {
 
     @Test
     public void testSentiment() {
-        final RedditPostDTO dto = redditappi.searchAssetOnSubbreddit("stocks","apple","hot");
-        final ArrayList<String> body_array = new ArrayList<String>();
-        dto.getData().getChildren().stream().map(RedditChildren::getData).map(RedditPost::getSelftext).forEach(body_array::add);
+        final ArrayList<String> body_array = redditappi.getAssetPosts("apple");
         final SentimentCarrier sentiment = sentimentCalculator.apiArrayProcessor(body_array);
         for(Map.Entry<String,Integer> entry: sentiment.getSentimentTotals().entrySet()) {
             System.out.println("key is: " + entry.getKey());

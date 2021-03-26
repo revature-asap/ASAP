@@ -68,6 +68,44 @@ public class RedditService {
         auth_token = results.getAccess_token();
     }
 
+
+    /**
+     * Method to return an ArrayList of threads from a reddit search for an asset.
+     * @param asset
+     * @return
+     */
+    public ArrayList<String> getAssetPosts(final String asset) {
+        final RedditPostDTO dto = searchAssetOnSubbreddit("stocks","asset","new");
+        return getArrayFromDTO(dto);
+    }
+
+    /**
+     * Method to search all of Reddit for a given asset.
+     * @param asset
+     * @param sort
+     * @return
+     */
+    public RedditPostDTO searchAssetOnReddit(final String asset, final String sort) {
+        final int limit = 25; //the number of results to limit to. we can hard code in a value or add it as a method parameter.
+        return client.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/search") //take the base url and add this stuff to the end of it.
+                        .queryParam("q",asset)
+                        .queryParam("sort",sort)
+                        .queryParam("limit",limit)
+                        .queryParam("restrict_sr",1)
+                        .queryParam("raw_json","1")  //tell reddit not convert characters '<','>',and'&'
+                        .build())
+                .header("User-agent", user_agent)
+                .header("Authorization", "bearer " + auth_token)
+                .retrieve()
+                .bodyToMono(RedditPostDTO.class)//map results to a RedditPostDTO
+                .blockOptional().orElseThrow(RuntimeException::new);
+        //the exception thrown should be changed by production to be a more relevant exception.
+        //possible change it to not thrown an exception here.
+
+    }
+
     /**
      * MEthod to search a subreddit for a particular asset.
      * @param subreddit the subreddit to search.
@@ -76,7 +114,7 @@ public class RedditService {
      * @return RedditPostDTO which holds the entire result of the search. it's best to then parse this in a dedicate method to get the values you want.
      */
     public RedditPostDTO searchAssetOnSubbreddit(final String subreddit, final String asset,final String sort) {
-        final int limit = 4; //the number of results to limit to. we can hard code in a value or add it as a method parameter.
+        final int limit = 10; //the number of results to limit to. we can hard code in a value or add it as a method parameter.
         return client.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/r/" + subreddit + "/search") //take the base url and add this stuff to the end of it.
@@ -106,6 +144,8 @@ public class RedditService {
         Arrays.stream(dto.getData().getChildren().toArray(new RedditChildren[0]))
                 .map(RedditChildren::getData)
                 .map(RedditPost::getSelftext)
+                .filter(str -> str != null && !"".equals(str.trim()))
+                .filter(str -> str.length() < 5000)
                 .forEach(body_array::add);
         return body_array;
     }
