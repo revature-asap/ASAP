@@ -1,26 +1,29 @@
-package com.revature.entities.RedditAPI;
+package com.revature.entities.redditAPI;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * Class to represent the objects contained inside the array when calling the Reddit API.
+ */
 public class RedditChildren{
 
     @JsonProperty("data")
-    private RedditPost data;
+    private RedditThreadPost data;
 
 
     public RedditChildren() {
         super();
     }
 
-    public RedditChildren(final RedditPost data) {
+    public RedditChildren(final RedditThreadPost data) {
         this.data = data;
     }
 
-    public RedditPost getData() {
+    public RedditThreadPost getData() {
         return data;
     }
 
-    public void setData(final RedditPost data) {
+    public void setData(final RedditThreadPost data) {
         this.data = data;
     }
 

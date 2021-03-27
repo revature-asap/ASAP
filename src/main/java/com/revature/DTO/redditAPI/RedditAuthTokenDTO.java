@@ -1,4 +1,4 @@
-package com.revature.DTO;
+package com.revature.DTO.redditAPI;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

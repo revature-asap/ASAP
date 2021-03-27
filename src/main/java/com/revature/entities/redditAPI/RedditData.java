@@ -1,9 +1,12 @@
-package com.revature.entities.RedditAPI;
+package com.revature.entities.redditAPI;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
+/**
+ * Class which represents the data object of a reddit post when received via the Reddit API.
+ */
 public class RedditData {
 
     @JsonProperty("children")

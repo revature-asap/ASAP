@@ -1,11 +1,11 @@
-package com.revature.entities.RedditAPI;
+package com.revature.entities.redditAPI;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Class which contains the data from a reddit post
+ * Class which contains the data from an individual reddit post
  */
-public class RedditPost {
+public abstract class RedditPost {
     @JsonProperty("selftext")
     private String selftext; //body of post
 
@@ -19,28 +19,24 @@ public class RedditPost {
     private int score;   //net score of ups and downs.
 
     @JsonProperty("created_utc")
-    private long created_utc;
+    private long created_utc; //utc epoch time when post was created
+
+    @JsonProperty("created")
+    private long created; //epoch time when post was created
 
 
     public RedditPost() {
         super();
     }
 
-    public RedditPost(final String selftext, final int ups, final int downs, final int score, final long created_utc) {
-        this.selftext = selftext;
+    public RedditPost( final int ups, final int downs, final int score, final long created_utc, final long created) {
         this.ups = ups;
         this.downs = downs;
         this.score = score;
         this.created_utc = created_utc;
+        this.created = created;
     }
 
-    public String getSelftext() {
-        return selftext;
-    }
-
-    public void setSelftext(final String selftext) {
-        this.selftext = selftext;
-    }
 
     public int getUps() {
         return ups;
@@ -74,14 +70,22 @@ public class RedditPost {
         this.created_utc = created_utc;
     }
 
+    public long getCreated() {
+        return created;
+    }
+
+    public void setCreated(final long created) {
+        this.created = created;
+    }
+
     @Override
     public String toString() {
         return "RedditPost{" +
-                "selftext='" + selftext + '\'' +
                 ", ups=" + ups +
                 ", downs=" + downs +
                 ", score=" + score +
                 ", created_utc=" + created_utc +
+                ", created=" + created +
                 '}';
     }
 }

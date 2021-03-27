@@ -1,23 +1,25 @@
-package com.revature.entities.RedditAPI;
+package com.revature.DTO.redditAPI;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.revature.entities.redditAPI.RedditData;
 
 /**
- * Parent JSON object received from the Reddit API.
+ * DTO for transfering of posts from the Reddit API
  */
-public class RedditParent {
-   @JsonProperty("kind")
+public class RedditCommentDTO {
+
+    @JsonProperty("kind")
     private String kind;
 
-   @JsonProperty("data")
+    @JsonProperty("data")
     private RedditData data;
 
 
-   public RedditParent() {
-       super();
-   }
+    public RedditCommentDTO() {
+        super();
+    }
 
-    public RedditParent(final String kind,final RedditData data) {
+    public RedditCommentDTO(final String kind, final RedditData data) {
         this.kind = kind;
         this.data = data;
     }
@@ -40,7 +42,7 @@ public class RedditParent {
 
     @Override
     public String toString() {
-        return "RedditParent{" +
+        return "RedditCommentDTO{" +
                 "kind='" + kind + '\'' +
                 ", data=" + data +
                 '}';

@@ -1,16 +1,15 @@
 package com.revature.services;
 
-import com.revature.DTO.RedditAuthTokenDTO;
-import com.revature.DTO.RedditPostDTO;
-import com.revature.DTO.RedditThreadDTO;
-import com.revature.entities.RedditAPI.RedditChildren;
-import com.revature.entities.RedditAPI.RedditPost;
+import com.revature.DTO.redditAPI.RedditAuthTokenDTO;
+import com.revature.DTO.redditAPI.RedditCommentDTO;
+import com.revature.DTO.redditAPI.RedditThreadDTO;
+import com.revature.entities.redditAPI.RedditChildren;
+import com.revature.entities.redditAPI.RedditThreadPost;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.util.MultiValueMap;
 
@@ -90,41 +89,15 @@ public class RedditService {
         return assets_list;
     }
 
-    /**
-     * Method to search all of Reddit for a given asset.
-     * @param asset
-     * @param sort
-     * @return
-     */
-    public RedditPostDTO searchAssetOnReddit(final String asset, final String sort) {
-        final int limit = 25; //the number of results to limit to. we can hard code in a value or add it as a method parameter.
-        return client.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/search") //take the base url and add this stuff to the end of it.
-                        .queryParam("q",asset)
-                        .queryParam("sort",sort)
-                        .queryParam("limit",limit)
-                        .queryParam("restrict_sr",1)
-                        .queryParam("raw_json","1")  //tell reddit not convert characters '<','>',and'&'
-                        .build())
-                .header("User-agent", user_agent)
-                .header("Authorization", "bearer " + auth_token)
-                .retrieve()
-                .bodyToMono(RedditPostDTO.class)//map results to a RedditPostDTO
-                .blockOptional().orElseThrow(RuntimeException::new);
-        //the exception thrown should be changed by production to be a more relevant exception.
-        //possible change it to not thrown an exception here.
-
-    }
 
     /**
      * MEthod to search a subreddit for a particular asset.
      * @param subreddit the subreddit to search.
      * @param asset the asset to search for.
      * @param sort how to sort results. options are: relevance, hot, top, new, comments.
-     * @return RedditPostDTO which holds the entire result of the search. it's best to then parse this in a dedicate method to get the values you want.
+     * @return RedditCommentDTO which holds the entire result of the search. it's best to then parse this in a dedicate method to get the values you want.
      */
-    public RedditPostDTO searchAssetOnSubbreddit(final String subreddit, final String asset,final String sort) {
+    public RedditCommentDTO searchAssetOnSubbreddit(final String subreddit, final String asset, final String sort) {
         final int limit = 25; //the number of results to limit to. we can hard code in a value or add it as a method parameter.
         return client.get()
                 .uri(uriBuilder -> uriBuilder
@@ -138,23 +111,23 @@ public class RedditService {
                 .header("User-agent", user_agent)
                 .header("Authorization", "bearer " + auth_token)
                 .retrieve()
-                .bodyToMono(RedditPostDTO.class)//map results to a RedditPostDTO
+                .bodyToMono(RedditCommentDTO.class)//map results to a RedditCommentDTO
                 .blockOptional().orElseThrow(RuntimeException::new);
                     //the exception thrown should be changed by production to be a more relevant exception.
                     //possible change it to not thrown an exception here.
     }
 
     /**
-     * Method which takes in a RedditPostDTO and returns an array list containing strings of the individual posts from reddit.
+     * Method which takes in a RedditCommentDTO and returns an array list containing strings of the individual posts from reddit.
      * @param dto DTO which contains the object returned from a call to the Reddit API
      * @return ArrayList of strings. each string is the body of a post on Reddit.
      */
-    public ArrayList<String> getArrayFromDTO(final RedditPostDTO dto) {
+    public ArrayList<String> getArrayFromDTO(final RedditCommentDTO dto) {
         //arraylist to hold the body of every reddit post inside the dto.
         final ArrayList<String> body_array = new ArrayList<>();
         dto.getData().getChildren().stream()
                 .map(RedditChildren::getData)
-                .map(RedditPost::getSelftext)
+                .map(RedditThreadPost::getSelftext)
                 .filter(str -> str != null && !"".equals(str.trim()))
                 .filter(str -> str.length() < 5000)
                 .forEach(body_array::add);
@@ -173,7 +146,7 @@ public class RedditService {
                 .header("User-agent", user_agent)
                 .header("Authorization", "bearer " + auth_token)
                 .retrieve()
-                .bodyToMono(RedditThreadDTO.class)//map results to a RedditPostDTO
+                .bodyToMono(RedditThreadDTO.class)//map results to a RedditCommentDTO
                 .blockOptional().orElseThrow(RuntimeException::new);
     }
 

@@ -1,8 +1,6 @@
-package com.revature.DTO;
+package com.revature.DTO.redditAPI;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.revature.entities.RedditAPI.RedditData;
-import com.revature.entities.RedditAPI.RedditParent;
+import com.revature.entities.redditAPI.RedditParent;
 
 import java.util.List;
 
