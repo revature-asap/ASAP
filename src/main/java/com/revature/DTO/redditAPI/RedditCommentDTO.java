@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.revature.entities.redditAPI.RedditData;
 
 /**
- * DTO for transfering of posts from the Reddit API
+ * DTO for transferring comments from the Reddit API
  */
 public class RedditCommentDTO {
 
