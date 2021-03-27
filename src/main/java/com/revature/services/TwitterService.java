@@ -14,12 +14,6 @@ public class TwitterService {
     Currently, retrieves the tweets from the past 7 days on the passed asset. Returns 10 tweets for now.
      */
     public TweetsDTO searchAssetOnTwitter(String asset) {
-
-<<<<<<< HEAD
-//    public Collection<String> getAssetPosts(String asset) {
-//
-//    }
-=======
         WebClient client;
         client = WebClient.create("https://api.twitter.com/2/tweets/search/recent?");
 
@@ -37,9 +31,6 @@ public class TwitterService {
 
 
     }
-
-
-
 
     /*
     Processes a TweetDTO and outputs a list of Strings
@@ -60,5 +51,4 @@ public class TwitterService {
         return tweetList;
 
     }
->>>>>>> sentiment
 }
