@@ -1,7 +1,7 @@
 package com.revature.services;
 
 import com.revature.DTO.redditAPI.RedditAuthTokenDTO;
-import com.revature.DTO.redditAPI.RedditCommentDTO;
+import com.revature.DTO.redditAPI.RedditResultsDTO;
 import com.revature.DTO.redditAPI.RedditThreadDTO;
 import com.revature.entities.redditAPI.RedditChildren;
 import com.revature.entities.redditAPI.RedditThreadPost;
@@ -25,6 +25,7 @@ import java.util.Collection;
 @Service
 public class RedditService {
 
+    //list of subreddit to search for an asset.
     private final String[] subreddits = {"/r/stocks","/r/wallstreetbets","/r/investing"};
 
     //used in headers when calling the api.
@@ -32,6 +33,7 @@ public class RedditService {
 
     private final WebClient client;
 
+    //authorization token needed in order to use the Reddit API.
     private String auth_token;
 
     public RedditService() {
@@ -48,19 +50,18 @@ public class RedditService {
     /**
      * Make a call to the reddit API to get an authorization token.
      */
-
     public void setAUthToken() {
         //public username for reddit app
-        final String username = "kpgtqXkTJsCWsQ";
+        final String username = System.getenv("reddit_public");        //"kpgtqXkTJsCWsQ";
         //private key for reddit app. this and username need to be environmental vars for production code.
-        final String pass = "2NOsdIoiOMykyMlAQnLm8nxIinRP4A";
+        final String pass = System.getenv("reddit_private");   //"2NOsdIoiOMykyMlAQnLm8nxIinRP4A";
         //url for getting the authorization token.
         final String auth_url = "https://www.reddit.com/api/v1/access_token";
         //use this to set values in the form-encodedurl
         final MultiValueMap<String, String> encoded_form = new LinkedMultiValueMap<>();
         encoded_form.add("grant_type","password");
-        encoded_form.add("username","testingapiforrevatur"); //username and password here need to be environmental vars for production code
-        encoded_form.add("password","Password!2");
+        encoded_form.add("username",System.getenv("reddit_username")); //"testingapiforrevatur"); //username and password here need to be environmental vars for production code
+        encoded_form.add("password",System.getenv("reddit_password")); //"Password!2");
 
         final WebClient webClient1 = WebClient.create(auth_url);
         final RedditAuthTokenDTO results = webClient1.post()
@@ -95,9 +96,10 @@ public class RedditService {
      * @param subreddit the subreddit to search.
      * @param asset the asset to search for.
      * @param sort how to sort results. options are: relevance, hot, top, new, comments.
-     * @return RedditCommentDTO which holds the entire result of the search. it's best to then parse this in a dedicate method to get the values you want.
+     * @return RedditResultsDTO which holds the entire result of the search. it's best to then parse this in a dedicate method to get the values you want.
      */
-    public RedditCommentDTO searchAssetOnSubbreddit(final String subreddit, final String asset, final String sort) {
+    public RedditResultsDTO searchAssetOnSubbreddit(final String subreddit, final String asset, final String sort) {
+        System.out.println("auth_token: " + auth_token);
         final int limit = 25; //the number of results to limit to. we can hard code in a value or add it as a method parameter.
         return client.get()
                 .uri(uriBuilder -> uriBuilder
@@ -108,21 +110,21 @@ public class RedditService {
                         .queryParam("restrict_sr",1)
                         .queryParam("raw_json","1")  //tell reddit not convert characters '<','>',and'&'
                         .build())
-                .header("User-agent", user_agent)
+                .header("User", user_agent)
                 .header("Authorization", "bearer " + auth_token)
                 .retrieve()
-                .bodyToMono(RedditCommentDTO.class)//map results to a RedditCommentDTO
+                .bodyToMono(RedditResultsDTO.class)//map results to a RedditResultsDTO
                 .blockOptional().orElseThrow(RuntimeException::new);
                     //the exception thrown should be changed by production to be a more relevant exception.
                     //possible change it to not thrown an exception here.
     }
 
     /**
-     * Method which takes in a RedditCommentDTO and returns an array list containing strings of the individual posts from reddit.
+     * Method which takes in a RedditResultsDTO and returns an array list containing strings of the individual posts from reddit.
      * @param dto DTO which contains the object returned from a call to the Reddit API
      * @return ArrayList of strings. each string is the body of a post on Reddit.
      */
-    public ArrayList<String> getArrayFromDTO(final RedditCommentDTO dto) {
+    public ArrayList<String> getArrayFromDTO(final RedditResultsDTO dto) {
         //arraylist to hold the body of every reddit post inside the dto.
         final ArrayList<String> body_array = new ArrayList<>();
         dto.getData().getChildren().stream()
@@ -146,7 +148,7 @@ public class RedditService {
                 .header("User-agent", user_agent)
                 .header("Authorization", "bearer " + auth_token)
                 .retrieve()
-                .bodyToMono(RedditThreadDTO.class)//map results to a RedditCommentDTO
+                .bodyToMono(RedditThreadDTO.class)//map results to a RedditResultsDTO
                 .blockOptional().orElseThrow(RuntimeException::new);
     }
 

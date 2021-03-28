@@ -1,6 +1,7 @@
 package com.revature.services.RedditServiceTest;
 
 import com.revature.entities.SentimentCarrier;
+import com.revature.entities.redditAPI.RedditChildren;
 import com.revature.util.sentiment.SentimentCalculator;
 import com.revature.services.RedditService;
 import org.junit.Before;
@@ -27,13 +28,13 @@ public class TestRedditService {
         sentimentCalculator = new SentimentCalculator();
     }
 
-//    @Test
-//    public void testSubredditSearch() {
-//        for(RedditChildren post: redditappi.searchAssetOnSubbreddit("stocks","apple","hot").getData().getChildren()) {
-//            System.out.println("\n\n\n <---------------------- the post is: ------------------------------->");
-//            System.out.println(post);
-//        }
-//    }
+    @Test
+    public void testSubredditSearch() {
+        for(RedditChildren post: redditappi.searchAssetOnSubbreddit("/r/stocks","apple","hot").getData().getChildren()) {
+            System.out.println("\n\n\n <---------------------- the post is: ------------------------------->");
+            System.out.println(post);
+        }
+    }
 
 //    @Test
 //    public void testSearch() {
@@ -42,12 +43,12 @@ public class TestRedditService {
 //            System.out.println("\n\n\n <---------------------- the post is: ------------------------------->");
 //            System.out.println(post);
 //        }
-    //}
+//    }
 
-    @Test
-    public void testComments() {
-        System.out.println(redditappi.getCommentsOfThread("stocks","md10km").toString());
-    }
+//    @Test
+//    public void testComments() {
+        //System.out.println(redditappi.getCommentsOfThread("stocks","md10km").toString());
+//    }
 
 //    @Test
 //    public void testSentiment() {

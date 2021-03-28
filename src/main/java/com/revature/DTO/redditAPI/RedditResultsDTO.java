@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.revature.entities.redditAPI.RedditData;
 
 /**
- * DTO for transferring comments from the Reddit API
+ * DTO for transferring threads from the Reddit API after a search for an asset.
  */
-public class RedditCommentDTO {
+public class RedditResultsDTO {
 
     @JsonProperty("kind")
     private String kind;
@@ -15,11 +15,11 @@ public class RedditCommentDTO {
     private RedditData data;
 
 
-    public RedditCommentDTO() {
+    public RedditResultsDTO() {
         super();
     }
 
-    public RedditCommentDTO(final String kind, final RedditData data) {
+    public RedditResultsDTO(final String kind, final RedditData data) {
         this.kind = kind;
         this.data = data;
     }
@@ -42,7 +42,7 @@ public class RedditCommentDTO {
 
     @Override
     public String toString() {
-        return "RedditCommentDTO{" +
+        return "RedditResultsDTO{" +
                 "kind='" + kind + '\'' +
                 ", data=" + data +
                 '}';
