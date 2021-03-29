@@ -18,7 +18,7 @@ public class SentimentCalculatorTester {
     @Before
     public void setUp() {
         textList = new ArrayList<String>();
-        textList.add("I hate Apple stock");
+        //textList.add("I'm Bullish on Apple");
 
         biggerTextList = new ArrayList<>();
         for (int i = 0; i < 26; i++) {
@@ -30,11 +30,12 @@ public class SentimentCalculatorTester {
     @Test
     public void basicSentimentCheck() {
         //Arrange
-        textList.add("Like, I really hate Apple stock");
+        textList.add("I don't understand why people are so good on Apple.");
         SentimentCarrier sentimentCarrier;
 
         //Act
         sentimentCarrier = sentimentCalculator.apiArrayProcessor(textList);
+        System.out.println(textList);
 
         //Assert
         Assert.assertEquals(2, sentimentCarrier.getSentimentTotals().get("NEGATIVE").intValue());

@@ -24,8 +24,8 @@ public class SentimentService {
     public SentimentCarrier updatedSentiment(String asset) {
         ArrayList<String> compiledPosts = new ArrayList<>();
 
-        compiledPosts.addAll(twitterService.getAssetPosts(asset));
-        //compiledPosts.addAll(RedditStuff)
+        compiledPosts.addAll(twitterService.getAssetPosts(asset + " stock"));
+        //compiledPosts.addAll(RedditStuff.getAssetPosts()
 
         return sentimentCalculator.apiArrayProcessor(compiledPosts);
     }

@@ -58,13 +58,13 @@ public class SentimentCalculator {
         }
 
         sentimentCarrier.getSentimentAverage().put("POSITIVE",
-                sentimentCarrier.getSentimentAverage().get("POSITIVE") / ((counter * 25) + target.size() % 25));
+                sentimentCarrier.getSentimentAverage().get("POSITIVE") / target.size());
         sentimentCarrier.getSentimentAverage().put("NEGATIVE",
-                sentimentCarrier.getSentimentAverage().get("NEGATIVE") / ((counter * 25) + target.size() % 25));
+                sentimentCarrier.getSentimentAverage().get("NEGATIVE") / target.size());
         sentimentCarrier.getSentimentAverage().put("MIXED",
-                sentimentCarrier.getSentimentAverage().get("MIXED") / ((counter * 25) + target.size() % 25));
+                sentimentCarrier.getSentimentAverage().get("MIXED") / target.size());
         sentimentCarrier.getSentimentAverage().put("NEUTRAL",
-                sentimentCarrier.getSentimentAverage().get("NEUTRAL") / ((counter * 25) + target.size() % 25));
+                sentimentCarrier.getSentimentAverage().get("NEUTRAL") / target.size());
 
         return sentimentCarrier;
     }
