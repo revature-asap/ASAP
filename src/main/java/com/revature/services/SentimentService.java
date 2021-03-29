@@ -1,5 +1,6 @@
 package com.revature.services;
 
+import com.revature.DTO.SentimentDTO;
 import com.revature.entities.SentimentCarrier;
 import com.revature.util.sentiment.SentimentCalculator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +23,13 @@ public class SentimentService {
         this.sentimentCalculator = sentimentCalculator;
     }
 
-    public SentimentCarrier updatedSentiment(String asset) {
-        ArrayList<String> compiledPosts = new ArrayList<>();
+    public SentimentDTO updatedSentiment(String asset) {
+        SentimentDTO sentimentDTO = new SentimentDTO();
+        sentimentDTO.setTwitterScores(sentimentCalculator.apiArrayProcessor
+                ((ArrayList<String>) twitterService.getAssetPosts(asset)));
+        sentimentDTO.setRedditScores(sentimentCalculator.apiArrayProcessor
+                ((ArrayList<String>) redditService.getAssetPosts(asset)));
 
-        compiledPosts.addAll(twitterService.getAssetPosts(asset));
-        compiledPosts.addAll(redditService.getAssetPosts(asset));
-
-        return sentimentCalculator.apiArrayProcessor(compiledPosts);
+        return sentimentDTO;
     }
 }
