@@ -16,9 +16,10 @@ public class SentimentService {
     private SentimentCalculator sentimentCalculator;
 
     @Autowired
-    public SentimentService(TwitterService twitterService, SentimentCalculator sentimentCalculator){
+    public SentimentService(TwitterService twitterService, SentimentCalculator sentimentCalculator,
+                            RedditService redditService){
         this.twitterService = twitterService;
-        //TODO: REDDIT SERVICE ALSO GOES HERE
+        this.redditService = redditService;
         this.sentimentCalculator = sentimentCalculator;
     }
 
