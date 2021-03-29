@@ -2,7 +2,6 @@ package com.revature.services;
 
 import com.revature.DTO.redditAPI.RedditAuthTokenDTO;
 import com.revature.DTO.redditAPI.RedditResultsDTO;
-import com.revature.DTO.redditAPI.RedditThreadDTO;
 import com.revature.entities.redditAPI.RedditChildren;
 import com.revature.entities.redditAPI.RedditThreadPost;
 import org.springframework.http.HttpHeaders;
@@ -136,21 +135,6 @@ public class RedditService {
         return body_array;
     }
 
-
-    //TODO fix this stuff
-    //Method currently not working. mapping the json objects from api calls into java is not working correctly.
-    public RedditThreadDTO getCommentsOfThread(final String subreddit,final String thread) {
-        final int limit = 5; //the number of results to limit to. we can hard code in a value or add it as a method parameter.
-        return client.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/r/" + subreddit + "/comments/" + thread) //take the base url and add this stuff to the end of it.
-                        .build())
-                .header("User-agent", user_agent)
-                .header("Authorization", "bearer " + auth_token)
-                .retrieve()
-                .bodyToMono(RedditThreadDTO.class)//map results to a RedditResultsDTO
-                .blockOptional().orElseThrow(RuntimeException::new);
-    }
 
 
 }

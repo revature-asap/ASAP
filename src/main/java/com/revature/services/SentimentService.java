@@ -13,6 +13,7 @@ public class SentimentService {
 
     private TwitterService twitterService;
     private RedditService redditService;
+    //TODO: REDDIT SERVICE GOES HERE;
     private SentimentCalculator sentimentCalculator;
 
     @Autowired
