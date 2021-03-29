@@ -12,7 +12,6 @@ ENV db_password=$DB_PASSWORD
 ENV AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
 ENV AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
 COPY ${JAR_FILE} app.jar
-CMD [ "echo url: $db_url username: $db_username password: $db_password access key: $AWS_ACCESS_KEY_ID secret key: $AWS_SECRET_ACCESS_KEY" ]
 ENTRYPOINT ["java","-jar","/app.jar"]
 
 EXPOSE 5000
