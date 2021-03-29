@@ -11,6 +11,7 @@ import java.util.ArrayList;
 public class SentimentService {
 
     private TwitterService twitterService;
+    private RedditService redditService;
     //TODO: REDDIT SERVICE GOES HERE;
     private SentimentCalculator sentimentCalculator;
 
@@ -23,9 +24,8 @@ public class SentimentService {
 
     public SentimentCarrier updatedSentiment(String asset) {
         ArrayList<String> compiledPosts = new ArrayList<>();
-
-       // compiledPosts.addAll(twitterService.getAssetPosts(asset));
-        //compiledPosts.addAll(RedditStuff)
+        compiledPosts.addAll(twitterService.getAssetPosts(asset + " stock"));
+        compiledPosts.addAll(redditService.getAssetPosts(asset));
 
         return sentimentCalculator.apiArrayProcessor(compiledPosts);
     }
