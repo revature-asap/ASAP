@@ -11,8 +11,10 @@ Link to front-end repository ASAP-UI: https://github.com/revature-asap/asap-ui
 Application Tier:
   - Language: Java version 8
   - Framework: Spring version 5
+  
 Persistence Tier:
   - Database Vendor: PostGreSQL 
+  
 DevOps Tools:
   - Pipeline: AWS CodePipeline
   - Build Server: AWS CodeBuild
