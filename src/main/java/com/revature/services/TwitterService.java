@@ -16,7 +16,6 @@ public class TwitterService {
     Currently, retrieves the tweets from the past 7 days on the passed asset. Returns 10 tweets for now.
      */
     public TweetsDTO searchAssetOnTwitter(String asset) {
-
         WebClient client;
         client = WebClient.create("https://api.twitter.com/2/tweets/search/recent?");
         String modifiedAsset = asset + " is:verified lang:en";
