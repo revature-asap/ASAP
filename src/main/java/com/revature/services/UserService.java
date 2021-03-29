@@ -42,7 +42,11 @@ public class UserService {
             throw new ResourcePersistenceException();
         }
         newUser.setRole(UserRole.BASIC);
+
+        // Uses BCrypt Password class to encrypt the password String before saving to the Database. . .
         newUser.setPassword(PasswordEncryption.encryptString(newUser.getPassword()));
+
+        // Set to false since we want Users to confirm their email before logging in. . .
         newUser.setAccountConfirmed(false);
         userRepository.save(newUser);
     }
@@ -79,8 +83,12 @@ public class UserService {
         return userRepository.findUserByUsername(username).orElseThrow(ResourceNotFoundException::new);
     }
 
-
-
+    /**
+     * Authenticates if a username and password corresponds to a User in the database
+     * @param username the username provided to check
+     * @param password the un-hashed password to check
+     * @return a User object if the username and password match, null if no match
+     */
     public User authenticate(String username, String password) {
         if (username == null || username.trim().equals("") || password == null || password.trim().equals("")) {
             throw new InvalidRequestException();
@@ -88,6 +96,7 @@ public class UserService {
 
         User user = userRepository.findUserByUsername(username).orElseThrow(ResourceNotFoundException::new);
 
+        // If the BCrypt hashed password does not match the password provided. . .
         if (!PasswordEncryption.verifyPassword(password, user.getPassword())) {
             throw new InvalidRequestException();
         }
@@ -100,6 +109,10 @@ public class UserService {
         return user;
     }
 
+    /**
+     * Gets all of the Users in the database
+     * @return a List of User objects
+     */
     public List<User> getallUsers(){
 
         List<User> users = userRepository.findAll();
