@@ -22,6 +22,7 @@ public interface UserRepository extends JpaRepository<User,Integer> {
      * @return an optional of the user
      */
     Optional<User> findUserByUsername(String username);
+    Optional<User> findUserByUsernameAndPassword(String username, String password);
 
     /**
      * Updates the confirmed account column to true where user id equals to the input id

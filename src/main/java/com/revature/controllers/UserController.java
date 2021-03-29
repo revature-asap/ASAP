@@ -2,16 +2,23 @@ package com.revature.controllers;
 
 
 import com.revature.entities.User;
+import com.revature.entities.UserRole;
 import com.revature.services.EmailService;
 import com.revature.services.UserService;
+import com.revature.util.JwtGenerator;
+import com.revature.dtos.Credentials;
+import com.revature.dtos.Principal;
+import com.revature.util.JwtParser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.util.List;
 
 /**
  * This class is used to access user methods by hitting the end points
@@ -22,16 +29,19 @@ public class UserController {
 
     private final UserService userService;
     private EmailService emailService;
-
+    private final JwtGenerator jwtGenerator;
+    private JwtParser jwtparser;
     /**
      * Constructor for auto wiring User Service and Email Service
      * @param userService service class for the users
      * @param emailService service class for email
      */
     @Autowired
-    public UserController(UserService userService,EmailService emailService){
+    public UserController(UserService userService, EmailService emailService, JwtGenerator jwtGenerator, JwtParser jwtparser){
         this.userService = userService;
         this.emailService = emailService;
+        this.jwtGenerator = jwtGenerator;
+        this.jwtparser = jwtparser;
     }
 
     //Post
@@ -73,6 +83,41 @@ public class UserController {
             response.setStatus(400);
         }
 
+    }
+
+    @PostMapping(path = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Principal loginUser(@RequestBody @Valid Credentials credentials, HttpServletResponse response) {
+
+        User user = userService.authenticate(credentials.getUsername(), credentials.getPassword());
+
+        if (user != null) {
+            Principal principal = new Principal(user);
+
+            String token = jwtGenerator.generateJwt(principal);
+            principal.setToken(token);
+
+            response.addHeader("ASAP-token", principal.getToken());
+            response.setStatus(201);
+
+            return principal;
+        }
+
+        response.setStatus(401);
+        return null;
+    }
+
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<User> getAllUsers(HttpServletRequest request,HttpServletResponse response){
+        String token = jwtparser.getTokenFromHeader(request);
+        Principal user = jwtparser.parseToken(token);
+
+        if(user.getRole() == UserRole.ADMIN){
+            response.setStatus(200);
+            return userService.getallUsers();
+
+        }
+            response.setStatus(403);
+            return null;
     }
 
 

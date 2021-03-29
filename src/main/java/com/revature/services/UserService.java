@@ -10,6 +10,8 @@ import com.revature.util.PasswordEncryption;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * User service class that has methods for calling the user repo and checking the validation of the data
  */
@@ -75,6 +77,37 @@ public class UserService {
         }
 
         return userRepository.findUserByUsername(username).orElseThrow(ResourceNotFoundException::new);
+    }
+
+
+
+    public User authenticate(String username, String password) {
+        if (username == null || username.trim().equals("") || password == null || password.trim().equals("")) {
+            throw new InvalidRequestException();
+        }
+
+        User user = userRepository.findUserByUsername(username).orElseThrow(ResourceNotFoundException::new);
+
+        if (!PasswordEncryption.verifyPassword(password, user.getPassword())) {
+            throw new InvalidRequestException();
+        }
+
+        // If the User has not clicked the link in their email. . .
+        if (!user.isAccountConfirmed()) {
+            throw new InvalidRequestException("Account not validated");
+        }
+
+        return user;
+    }
+
+    public List<User> getallUsers(){
+
+        List<User> users = userRepository.findAll();
+
+        if(users.isEmpty()){
+            throw new ResourceNotFoundException();
+        }
+        return users;
     }
 
     /**
