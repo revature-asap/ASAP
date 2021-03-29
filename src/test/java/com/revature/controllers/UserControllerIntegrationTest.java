@@ -1,5 +1,7 @@
 package com.revature.controllers;
 
+import com.revature.dtos.Credentials;
+import com.revature.dtos.Principal;
 import com.revature.entities.User;
 import com.revature.entities.UserRole;
 import com.revature.repositories.UserRepository;
@@ -121,4 +123,52 @@ public class UserControllerIntegrationTest {
                 .andExpect(status().isBadRequest());
 
     }
+
+    @Test
+    public void loginWithValidData() throws Exception {
+        Credentials credentials = new Credentials("calvin123","password");
+        User user = new User();
+        user.setUsername(credentials.getUsername());
+        user.setPassword(credentials.getPassword());
+        user.setEmail("calvin123@yahoo.com");
+        user.setFirstName("calvin");
+        user.setLastName("zheng");
+        when(userService.authenticate("calvin123","password")).thenReturn(user);
+        String Json = "{" +
+                "\"username\":\"" + "calvin123" + "\", " +
+                "\"password\":\"" + "password" + "\"" +
+                "}";
+        mockMvc.perform(MockMvcRequestBuilders.post("/users/login")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(Json)
+        ).andExpect(status().is2xxSuccessful());
+
+
+    }
+
+    @Test
+    public void loginWithInvalidData() throws Exception {
+        Credentials credentials = new Credentials("calvin123","password");
+        User user = new User();
+        user.setUserId(1);
+        user.setUsername("kfjddoincdoivmapdim");
+        user.setPassword(credentials.getPassword());
+        user.setEmail("calvin123@yahoo.com");
+        user.setFirstName("calvin");
+        user.setLastName("zheng");
+        when(userService.authenticate(user.getUsername(),"password")).thenReturn(user);
+        String Json = "{" +
+                "\"username\":\"" + user.getUsername() + "\", " +
+                "\"password\":\"" + "password1" + "\"" +
+                "}";
+        mockMvc.perform(MockMvcRequestBuilders.post("/users/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Json)
+        ).andExpect(status().is4xxClientError());
+
+
+    }
+
+
+
 }

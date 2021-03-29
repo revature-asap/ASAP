@@ -79,6 +79,8 @@ public class UserService {
         return userRepository.findUserByUsername(username).orElseThrow(ResourceNotFoundException::new);
     }
 
+
+
     public User authenticate(String username, String password) {
         if (username == null || username.trim().equals("") || password == null || password.trim().equals("")) {
             throw new InvalidRequestException();
@@ -100,7 +102,12 @@ public class UserService {
 
     public List<User> getallUsers(){
 
-        return userRepository.findAll();
+        List<User> users = userRepository.findAll();
+
+        if(users.isEmpty()){
+            throw new ResourceNotFoundException();
+        }
+        return users;
     }
 
     /**
