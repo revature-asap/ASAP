@@ -1,6 +1,7 @@
 package com.revature.controllers;
 
 
+import com.revature.annotations.Secured;
 import com.revature.entities.User;
 import com.revature.entities.UserRole;
 import com.revature.services.EmailService;
@@ -44,7 +45,7 @@ public class UserController {
         this.jwtparser = jwtparser;
     }
 
-    //Post
+    //Post4
 
     /**
      * Post method that will create a row in the database and also send an email
@@ -106,18 +107,19 @@ public class UserController {
         return null;
     }
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @Secured(allowedRoles = "BASIC")
+    @GetMapping(path ="/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<User> getAllUsers(HttpServletRequest request,HttpServletResponse response){
         String token = jwtparser.getTokenFromHeader(request);
         Principal user = jwtparser.parseToken(token);
 
-        if(user.getRole() == UserRole.ADMIN){
+//        if(user.getRole() == UserRole.ADMIN){
             response.setStatus(200);
             return userService.getallUsers();
-
-        }
-            response.setStatus(403);
-            return null;
+//
+//        }
+//            response.setStatus(403);
+//            return null;
     }
 
 

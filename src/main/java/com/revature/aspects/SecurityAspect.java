@@ -2,6 +2,9 @@ package com.revature.aspects;
 
 
 import com.revature.annotations.Secured;
+import com.revature.dtos.Principal;
+import com.revature.exceptions.AuthenticationException;
+import com.revature.util.JwtParser;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -29,7 +32,7 @@ public class SecurityAspect {
         this.request = request;
         this.jwtParser = jwtParser;
     }
-    
+
 
     @Around("@annotation(com.revature.annotations.Secured)")
     public Object secureEndpoint(ProceedingJoinPoint pjp) throws Throwable {
@@ -42,6 +45,7 @@ public class SecurityAspect {
 
         if (cookies == null ) {
             throw new AuthenticationException("An unauthenticated request was made to a protected endpoint!");
+
         }
 
         String token = Stream.of(cookies)
@@ -59,7 +63,7 @@ public class SecurityAspect {
         }
         if (!allowedRoles.contains(principal.getRole().toString())) {
             System.out.println(principal.getRole());
-            throw new AuthorizationException();
+            //throw new AuthorizationException();
         }
 
         return pjp.proceed();
