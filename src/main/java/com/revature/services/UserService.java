@@ -10,6 +10,8 @@ import com.revature.util.PasswordEncryption;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * User service class that has methods for calling the user repo and checking the validation of the data
  */
@@ -94,6 +96,11 @@ public class UserService {
         }
 
         return user;
+    }
+
+    public List<User> getallUsers(){
+
+        return userRepository.findAll();
     }
 
     /**

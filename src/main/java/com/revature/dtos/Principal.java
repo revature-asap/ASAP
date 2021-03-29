@@ -1,4 +1,4 @@
-package dtos;
+package com.revature.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.revature.entities.User;

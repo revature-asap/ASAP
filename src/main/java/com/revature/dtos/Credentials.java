@@ -1,4 +1,4 @@
-package dtos;
+package com.revature.dtos;
 
 public class Credentials {
 

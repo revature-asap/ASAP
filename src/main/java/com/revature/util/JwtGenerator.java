@@ -1,6 +1,6 @@
 package com.revature.util;
 
-import dtos.Principal;
+import com.revature.dtos.Principal;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
