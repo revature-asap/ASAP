@@ -8,7 +8,7 @@ import com.revature.services.UserService;
 import com.revature.util.JwtGenerator;
 import com.revature.dtos.Credentials;
 import com.revature.dtos.Principal;
-import com.revature.util.Jwtparser;
+import com.revature.util.JwtParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,14 +30,14 @@ public class UserController {
     private final UserService userService;
     private EmailService emailService;
     private final JwtGenerator jwtGenerator;
-    private Jwtparser jwtparser;
+    private JwtParser jwtparser;
     /**
      * Constructor for auto wiring User Service and Email Service
      * @param userService service class for the users
      * @param emailService service class for email
      */
     @Autowired
-    public UserController(UserService userService, EmailService emailService, JwtGenerator jwtGenerator, Jwtparser jwtparser){
+    public UserController(UserService userService, EmailService emailService, JwtGenerator jwtGenerator, JwtParser jwtparser){
         this.userService = userService;
         this.emailService = emailService;
         this.jwtGenerator = jwtGenerator;

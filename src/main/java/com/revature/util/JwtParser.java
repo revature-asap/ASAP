@@ -6,16 +6,17 @@ import com.revature.exceptions.InvalidRequestException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 
-
-public class Jwtparser {
+@Component
+public class JwtParser {
 
     private JwtConfig jwtConfig;
 
     @Autowired
-    public Jwtparser(JwtConfig jwtConfig){
+    public JwtParser(JwtConfig jwtConfig){
         this.jwtConfig = jwtConfig;
     }
 
