@@ -87,15 +87,23 @@ public class UserController {
 
     @PostMapping(path = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Principal loginUser(@RequestBody @Valid Credentials credentials, HttpServletResponse response) {
-        Principal principal = new Principal(userService.authenticate(credentials.getUsername(), credentials.getPassword()));
 
-        String token = jwtGenerator.generateJwt(principal);
-        principal.setToken(token);
+        User user = userService.authenticate(credentials.getUsername(), credentials.getPassword());
 
-        response.addHeader("ASAP-token", principal.getToken());
+        if (user != null) {
+            Principal principal = new Principal(user);
 
+            String token = jwtGenerator.generateJwt(principal);
+            principal.setToken(token);
 
-        return principal;
+            response.addHeader("ASAP-token", principal.getToken());
+            response.setStatus(201);
+
+            return principal;
+        }
+
+        response.setStatus(401);
+        return null;
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
