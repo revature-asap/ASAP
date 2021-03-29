@@ -28,13 +28,13 @@ public class TestRedditService {
         sentimentCalculator = new SentimentCalculator();
     }
 
-    @Test
-    public void testSubredditSearch() {
-        for(RedditChildren post: redditappi.searchAssetOnSubbreddit("/r/stocks","apple","hot").getData().getChildren()) {
-            System.out.println("\n\n\n <---------------------- the post is: ------------------------------->");
-            System.out.println(post);
-        }
-    }
+//    @Test
+//    public void testSubredditSearch() {
+//        for(RedditChildren post: redditappi.searchAssetOnSubbreddit("/r/stocks","apple","hot").getData().getChildren()) {
+//            System.out.println("\n\n\n <---------------------- the post is: ------------------------------->");
+//            System.out.println(post);
+//        }
+//    }
 
 //    @Test
 //    public void testSearch() {
@@ -50,15 +50,15 @@ public class TestRedditService {
         //System.out.println(redditappi.getCommentsOfThread("stocks","md10km").toString());
 //    }
 
-//    @Test
-//    public void testSentiment() {
-//        final ArrayList<String> body_array = (ArrayList<String>)redditappi.getAssetPosts("apple");
-//        final SentimentCarrier sentiment = sentimentCalculator.apiArrayProcessor(body_array);
-//        for(Map.Entry<String,Integer> entry: sentiment.getSentimentTotals().entrySet()) {
-//            System.out.println("key is: " + entry.getKey());
-//            System.out.println("value is: " + entry.getValue());
-//        }
-//
-//    }
+    @Test
+    public void testSentiment() {
+        final ArrayList<String> body_array = (ArrayList<String>)redditappi.getAssetPosts("apple");
+        final SentimentCarrier sentiment = sentimentCalculator.apiArrayProcessor(body_array);
+        for(Map.Entry<String,Integer> entry: sentiment.getSentimentTotals().entrySet()) {
+            System.out.println("key is: " + entry.getKey());
+            System.out.println("value is: " + entry.getValue());
+        }
+
+    }
 
 }
