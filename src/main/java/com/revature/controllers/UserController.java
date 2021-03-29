@@ -85,6 +85,14 @@ public class UserController {
 
     }
 
+    /**
+     * Post method that takes in the credentials from the user which contains username and password. User Service then authenticate
+     * the input username and password. If the user is not equal to null, we create a principal and generate a JWT token and set it to ASAP-token
+     * After set the response status to 201. If the user is equal to null, set response status to 401
+     * @param credentials contains username and password
+     * @param response is the Http Servlet Response
+     * @return The principal of the user which contains id , username , and role
+     */
     @PostMapping(path = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Principal loginUser(@RequestBody @Valid Credentials credentials, HttpServletResponse response) {
 
@@ -106,6 +114,13 @@ public class UserController {
         return null;
     }
 
+    /**
+     * Get method that will output the list of users. It will only return the list if the user is an Admin from the token.
+     * If the user isn't an Admin, it will set the response status to 403 and return null.
+     * @param request is the Http Servlet Request
+     * @param response is the Http Servlet response
+     * @return the list of users in the database
+     */
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<User> getAllUsers(HttpServletRequest request,HttpServletResponse response){
         String token = jwtparser.getTokenFromHeader(request);
