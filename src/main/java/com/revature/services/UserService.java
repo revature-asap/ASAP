@@ -33,7 +33,7 @@ public class UserService {
      * Gets a user from the user controller. Checks to see if the user is valid.
      * Checks to see if the user is within the database. Then set the user's role to basic, encrypts the password,
      * set the account confirmed to false, and saves the user
-     * @param newUser
+     * @param newUser is the data containing the new user
      */
     public void registerUser(User newUser){
         if(!isUserValid(newUser)) throw new InvalidRequestException();
@@ -72,8 +72,8 @@ public class UserService {
     /**
      * Gets the username from the user controller. Checks to see if the username is null or empty.
      * Then return the username by using the find user by username method from Repository
-     * @param username
-     * @return
+     * @param username is the username of the user
+     * @return the user object
      */
     public User getUserByUsername(String username) {
         if (username == null || username.trim().equals("")) {
