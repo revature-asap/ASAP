@@ -16,6 +16,9 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
@@ -53,7 +56,7 @@ public class UserController {
      */
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public void registerUser(@RequestBody User newUser){
+    public void registerUser(@RequestBody User newUser) throws MessagingException {
         userService.registerUser(newUser);
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
@@ -62,10 +65,30 @@ public class UserController {
         mailMessage.setFrom("asap.revature@yahoo.com");
 
         // Need to change link when the API is hosted. . .
-        mailMessage.setText("To confirm your account, please click here: "
-        + "http://localhost:5000/users/confirmation/" + newUser.getUsername());
+//        mailMessage.setText("To confirm your account, please click here: "
+//        + "http://localhost:5000/users/confirmation/" + newUser.getUsername());
 
-        emailService.sendEmail(mailMessage);
+        String confirmationlink = "http://localhost:5000/users/confirmation/" + newUser.getUsername();
+        StringBuilder htmlBuilder = new StringBuilder();
+        htmlBuilder.append("<html>");
+        htmlBuilder.append("<head><title>To confirm your account, please click below</title></head>");
+        htmlBuilder.append("<body>");
+//        htmlBuilder.append("<button onclick=\"window.location.href='https://w3docs.com';\">");
+        htmlBuilder.append("<button onclick=\"window.location.href=\'");
+        htmlBuilder.append(confirmationlink);
+        htmlBuilder.append("';\">");
+
+        htmlBuilder.append("Activate Account");
+        htmlBuilder.append("</button>");
+        htmlBuilder.append("<body>");
+        htmlBuilder.append("</html>");
+
+        MimeMessage mimeMessage = emailService.getJavaMailSender().createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
+        helper.setFrom("asap.revature@yahoo.com");
+        helper.setSubject("Complete Registration For ASAP");
+        helper.setText(htmlBuilder.toString());
+        emailService.sendEmail(mimeMessage);
     }
 
     /**
