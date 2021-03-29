@@ -107,19 +107,10 @@ public class UserController {
         return null;
     }
 
-    @Secured(allowedRoles = "BASIC")
+    @Secured(allowedRoles = "ADMIN")
     @GetMapping(path ="/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<User> getAllUsers(HttpServletRequest request,HttpServletResponse response){
-        String token = jwtparser.getTokenFromHeader(request);
-        Principal user = jwtparser.parseToken(token);
-
-//        if(user.getRole() == UserRole.ADMIN){
-            response.setStatus(200);
-            return userService.getallUsers();
-//
-//        }
-//            response.setStatus(403);
-//            return null;
+        return userService.getallUsers();
     }
 
 

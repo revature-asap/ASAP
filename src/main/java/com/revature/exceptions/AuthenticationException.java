@@ -6,7 +6,7 @@ package com.revature.exceptions;
 public class AuthenticationException extends RuntimeException {
 
     public AuthenticationException() {
-        super("Unathorized!");
+        super("Authentification Failed!");
     }
 
     public AuthenticationException(String message) {
