@@ -13,17 +13,9 @@ ENV AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
 ENV AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
 
 COPY ${JAR_FILE} app.jar
-
-USER root
-RUN useradd -m docker && \
-    cp /root/.bashrc /home/docker/ && \
-    mkdir /home/docker/data && \
-    chown -R --from=root docker /home/docker
-
 WORKDIR /home/docker/data
 
-
-USER docker
+USER root
 ENTRYPOINT ["sh", "-c", "java -jar /app.jar"]
 
 EXPOSE 5000
