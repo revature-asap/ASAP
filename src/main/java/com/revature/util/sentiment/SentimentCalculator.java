@@ -8,6 +8,7 @@ import com.amazonaws.services.comprehend.AmazonComprehendClientBuilder;
 import com.amazonaws.services.comprehend.model.*;
 import com.revature.entities.SentimentCarrier;
 import com.revature.exceptions.SentimentAnalysisException;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import java.util.Map;
  * AWS Comprehend analyzes the Strings to decide Sentiment based on 4 values:
  * Positive, Negative, Mixed, Neutral.
  */
+@Component
 public class SentimentCalculator {
 
     private SentimentCarrier sentimentCarrier;
