@@ -15,7 +15,7 @@ ENV AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
 COPY ${JAR_FILE} app.jar
 WORKDIR /home/docker/data
 
-USER root
+RUN chmod +x app.jar
 ENTRYPOINT ["sh", "-c", "java -jar /app.jar"]
 
 EXPOSE 5000
