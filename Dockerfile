@@ -1,4 +1,5 @@
 FROM openjdk:8-jdk-alpine
+
 ARG JAR_FILE=target/*.jar
 ARG DB_URL
 ARG DB_PASSWORD
@@ -11,7 +12,7 @@ ARG REDDIT_PUBLIC
 ARG REDDIT_PRIVATE
 ARG REDDIT_USERNAME
 ARG REDDIT_PASSWORD
-
+ARG TWITTER_BEARER_TOKEN
 
 ENV db_url=$DB_URL
 ENV db_username=$DB_USERNAME
@@ -24,6 +25,7 @@ ENV reddit_public=$REDDIT_PUBLIC
 ENV reddit_private=$REDDIT_PRIVATE
 ENV reddit_username=$REDDIT_USERNAME
 ENV reddit_password=$REDDIT_PASSWORD
+ENV twitter_bearer_token=$TWITTER_BEARER_TOKEN
 
 COPY ${JAR_FILE} app.jar
 WORKDIR /home/docker/data
