@@ -12,6 +12,7 @@ ENV db_password=$DB_PASSWORD
 ENV AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
 ENV AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
 COPY ${JAR_FILE} app.jar
+WORKDIR /opt/docker
 RUN ["chown", "-R", "daemon", "."]
 RUN ["chmod", "+x", "/app.jar"]
 USER ec2-user
