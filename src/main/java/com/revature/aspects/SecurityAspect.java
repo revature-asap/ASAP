@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.revature.annotations.Secured;
 import com.revature.dtos.Principal;
+import com.revature.exceptions.AuthenticationException;
 import com.revature.util.JwtParser;
 
 import org.aspectj.lang.ProceedingJoinPoint;
