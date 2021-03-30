@@ -82,6 +82,7 @@ public class RedditService {
      * @return
      */
     public Collection<String> getAssetPosts(final String asset) {
+        setAUthToken();
         final ArrayList<String> assets_list = new ArrayList<>();
         Arrays.stream(subreddits)
                 .map(subreddit -> getArrayFromDTO(searchAssetOnSubbreddit(subreddit,asset,"top")))
