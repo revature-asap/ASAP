@@ -16,6 +16,10 @@ ENV AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
 ENV email_username=$EMAIL_USERNAME
 ENV email_password=$EMAIL_PASSWORD
 COPY ${JAR_FILE} app.jar
+WORKDIR /opt/docker
+RUN ["chown", "-R", "daemon", "."]
+RUN ["chmod", "+x", "/app.jar"]
+USER daemon
 ENTRYPOINT ["java","-jar","/app.jar"]
 
 EXPOSE 5000
