@@ -99,7 +99,6 @@ public class RedditService {
      * @return RedditResultsDTO which holds the entire result of the search. it's best to then parse this in a dedicate method to get the values you want.
      */
     public RedditResultsDTO searchAssetOnSubbreddit(final String subreddit, final String asset, final String sort) {
-        System.out.println("auth_token: " + auth_token);
         final int limit = 25; //the number of results to limit to. we can hard code in a value or add it as a method parameter.
         return client.get()
                 .uri(uriBuilder -> uriBuilder
