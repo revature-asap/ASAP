@@ -6,11 +6,13 @@ import com.revature.entities.Tweet;
 import com.revature.util.sentiment.SentimentCalculator;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
+
+import static org.mockito.Mockito.when;
 
 public class TwitterServiceTester {
 
@@ -18,16 +20,56 @@ public class TwitterServiceTester {
     TwitterService twitterService;
 
     private SentimentCalculator sentimentCalculator;
+    private TweetsDTO tweetsDTO;
+
 
     @Before
     public void setup(){
         sentimentCalculator = new SentimentCalculator();
-        //MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.initMocks(this);
+        tweetsDTO = new TweetsDTO();
+
+
+
+
     }
 
     @Test
     public void testAPICall(){
 
+    }
+
+    @Test
+    public void testEmptyStringGetAssetsPost(){
+
+        //Arrange
+        tweetsDTO.setTweets(Arrays.asList(new Tweet(""), new Tweet("I am a tweet")));
+        when(twitterService.searchAssetOnTwitter("Apple")).thenReturn(tweetsDTO);
+
+        //Act
+        List<String> returnedTweets = (LinkedList<String>)twitterService.getAssetPosts("Apple");
+
+    // Assert
+        System.out.println(returnedTweets);
+        assert(returnedTweets.size()==1);
+        assert(!returnedTweets.get(0).equals(""));
+
+
+    }
+
+    @Test
+    public void testNullGetAssetsPost(){
+
+        //Arrange
+        tweetsDTO.setTweets(Arrays.asList(new Tweet(null), new Tweet("I am a tweet")));
+        when(twitterService.searchAssetOnTwitter("Apple")).thenReturn(tweetsDTO);
+
+        //Act
+        List<String> returnedTweets = (LinkedList<String>)twitterService.getAssetPosts("Apple");
+
+        //Assert
+        assert(returnedTweets.size()==1);
+        assert(returnedTweets.get(0)!=null);
     }
 
     @Test
