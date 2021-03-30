@@ -1,5 +1,6 @@
 package com.revature.controllers;
 
+import com.revature.DTO.SentimentDTO;
 import com.revature.entities.SentimentCarrier;
 import com.revature.services.SentimentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +19,10 @@ public class SentimentController {
         this.sentimentService = sentimentService;
     }
 
-    //Get (Updating an Asset existing (once every 24 hours)
+    //Get (Updating an Asset existing (once every 24 hours) Asset is asset name + ticker (APPLE, AAPL)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    SentimentCarrier freshSentiment(@RequestParam String asset){
+    SentimentDTO freshSentiment(@RequestParam String asset){
         return sentimentService.updatedSentiment(asset);
     }
 }

@@ -13,7 +13,7 @@ import java.util.*;
 public class TwitterService {
 
     /*
-    Currently, retrieves the tweets from the past 7 days on the passed asset. Returns 10 tweets for now.
+    Currently, retrieves the tweets from the past 5 days on the passed asset. Returns 10 tweets for now.
      */
     public TweetsDTO searchAssetOnTwitter(String asset) {
         WebClient client;

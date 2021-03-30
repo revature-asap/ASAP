@@ -8,7 +8,6 @@ public class SentimentCarrier {
 
     private Map<String, Double> sentimentAverage;
     private Map<String, Integer> sentimentTotals;
-    private int postsAnalyzed;
 
     public SentimentCarrier() {
         super();
@@ -43,14 +42,6 @@ public class SentimentCarrier {
 
     public void setSentimentTotals(Map<String, Integer> sentimentTotals) {
         this.sentimentTotals = sentimentTotals;
-    }
-
-    public int getPostsAnalyzed() {
-        return postsAnalyzed;
-    }
-
-    public void setPostsAnalyzed(int postsAnalyzed) {
-        this.postsAnalyzed = postsAnalyzed;
     }
 
     public void clear(){
