@@ -15,7 +15,7 @@ COPY ${JAR_FILE} app.jar
 WORKDIR /opt/docker
 RUN ["chown", "-R", "daemon", "."]
 RUN ["chmod", "+x", "/app.jar"]
-USER ec2-user
+USER daemon
 ENTRYPOINT ["java","-jar","/app.jar"]
 
 EXPOSE 5000
