@@ -2,8 +2,11 @@ package com.revature.services;
 
 import com.revature.DTO.redditAPI.RedditAuthTokenDTO;
 import com.revature.DTO.redditAPI.RedditResultsDTO;
+import com.revature.entities.SentimentCarrier;
 import com.revature.entities.redditAPI.RedditChildren;
 import com.revature.entities.redditAPI.RedditThreadPost;
+import com.revature.util.sentiment.SentimentCalculator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -32,10 +35,13 @@ public class RedditService {
 
     private final WebClient client;
 
+    private final SentimentCalculator sentimentCalculator;
+
     //authorization token needed in order to use the Reddit API.
     private String auth_token;
 
-    public RedditService() {
+    @Autowired
+    public RedditService(SentimentCalculator sentimentCalculator) {
         //base url for making calls to the api.
         final String base_url = "https://oauth.reddit.com";
         this.client = WebClient.builder()
@@ -43,6 +49,7 @@ public class RedditService {
                         //change the default buffer size.
                         .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(2 * 1024 * 1024))
                         .build();
+        this.sentimentCalculator = sentimentCalculator;
     }
 
 
@@ -136,5 +143,7 @@ public class RedditService {
     }
 
 
-
+    public SentimentCarrier updatedSentiment(String asset) {
+        return sentimentCalculator.apiArrayProcessor((ArrayList<String>) getAssetPosts(asset));
+    }
 }

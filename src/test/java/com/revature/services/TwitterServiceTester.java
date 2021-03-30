@@ -28,46 +28,40 @@ public class TwitterServiceTester {
     @Test
     public void testAPICall(){
 
-        twitterService = new TwitterService();
-        TweetsDTO tweetsDTO = twitterService.searchAssetOnTwitter("Apple stock investing");
-        System.out.println("\n------------------------------------------\n");
-        for (Tweet t: tweetsDTO.getTweets()) {
-            System.out.println("Tweet pulled: " + t.getTweet() + "\n------------------------------------------\n");
-        }
     }
 
     @Test
     public void testAssetCall(){
 
-        twitterService = new TwitterService();
-        ArrayList<String> stringList = (ArrayList<String>) twitterService.getAssetPosts("AAPL Apple");
-        System.out.println("\n------------------------------------------\n");
-        for (String s: stringList) {
-            System.out.println("Tweet pulled: " + s + "\n------------------------------------------\n");
-        }
-
-        SentimentCarrier sentimentCarrier = sentimentCalculator.apiArrayProcessor(stringList);
-        System.out.println(sentimentCarrier.getSentimentAverage());
-        System.out.println(sentimentCarrier.getSentimentTotals());
+//        twitterService = new TwitterService();
+//        ArrayList<String> stringList = (ArrayList<String>) twitterService.getAssetPosts("AAPL Apple");
+//        System.out.println("\n------------------------------------------\n");
+//        for (String s: stringList) {
+//            System.out.println("Tweet pulled: " + s + "\n------------------------------------------\n");
+//        }
+//
+//        SentimentCarrier sentimentCarrier = sentimentCalculator.apiArrayProcessor(stringList);
+//        System.out.println(sentimentCarrier.getSentimentAverage());
+//        System.out.println(sentimentCarrier.getSentimentTotals());
     }
 
     @Test
     public void integrateSentimentTweets(){
-        twitterService = new TwitterService();
-        TweetsDTO tweetsDTO = twitterService.searchAssetOnTwitter("AAPL Apple");
-        ArrayList<String> tweetList = new ArrayList<>();
-
-
-
-        System.out.println("\n------------------------------------------\n");
-        for (Tweet t: tweetsDTO.getTweets()) {
-            System.out.println("Tweet pulled: " + t.getTweet() + "\n------------------------------------------\n");
-            tweetList.add(t.getTweet());
-        }
-
-        SentimentCarrier sentimentCarrier = sentimentCalculator.apiArrayProcessor(tweetList);
-        System.out.println(sentimentCarrier.getSentimentAverage());
-        System.out.println(sentimentCarrier.getSentimentTotals());
+//        twitterService = new TwitterService();
+//        TweetsDTO tweetsDTO = twitterService.searchAssetOnTwitter("AAPL Apple");
+//        ArrayList<String> tweetList = new ArrayList<>();
+//
+//
+//
+//        System.out.println("\n------------------------------------------\n");
+//        for (Tweet t: tweetsDTO.getTweets()) {
+//            System.out.println("Tweet pulled: " + t.getTweet() + "\n------------------------------------------\n");
+//            tweetList.add(t.getTweet());
+//        }
+//
+//        SentimentCarrier sentimentCarrier = sentimentCalculator.apiArrayProcessor(tweetList);
+//        System.out.println(sentimentCarrier.getSentimentAverage());
+//        System.out.println(sentimentCarrier.getSentimentTotals());
     }
 
 

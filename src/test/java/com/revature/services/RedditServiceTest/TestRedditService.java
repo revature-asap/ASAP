@@ -7,19 +7,21 @@ import com.revature.services.RedditService;
 import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.Map;
 
 public class TestRedditService {
 
-    //@Mock
-    RedditService redditappi = new RedditService();
+    @Mock
+    RedditService redditappi;
     private SentimentCalculator sentimentCalculator;
 
     @Before
     public void initMocks() {
-        //MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.initMocks(this);
     }
 
     @BeforeEach

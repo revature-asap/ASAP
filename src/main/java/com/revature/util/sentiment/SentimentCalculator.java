@@ -47,7 +47,6 @@ public class SentimentCalculator {
         sentimentCarrier.clear();
 
         ArrayList<String> temp = new ArrayList<>();
-        int counter = -1;
 
         for (int i = 1; i < target.size() + 1; i++) {
             temp.add(target.get(i - 1));
@@ -55,7 +54,6 @@ public class SentimentCalculator {
             if (i % 25 == 0 || i == target.size()) {
                 sentimentAnalyzer(temp);
                 temp.clear();
-                counter++;
             }
         }
 
