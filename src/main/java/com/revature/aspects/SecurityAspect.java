@@ -4,10 +4,7 @@ package com.revature.aspects;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 
 import com.revature.annotations.Secured;
 import com.revature.dtos.Principal;
@@ -22,11 +19,8 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 
 
 @Component

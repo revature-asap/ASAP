@@ -11,8 +11,6 @@ import com.revature.exceptions.SentimentAnalysisException;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Collects Sentiment values from AWS Comprehend by passing Strings of text to analyze.
