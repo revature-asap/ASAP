@@ -8,6 +8,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class TwitterService {
@@ -15,10 +17,9 @@ public class TwitterService {
     /*
     Currently, retrieves the tweets from the past 5 days on the passed asset. Returns 10 tweets for now.
      */
-    public TweetsDTO searchAssetOnTwitter(String asset) {
-        WebClient client;
-        client = WebClient.create("https://api.twitter.com/2/tweets/search/recent?");
-        String modifiedAsset = asset + " is:verified lang:en";
+    public TweetsDTO searchAssetOnTwitter(final String asset) {
+        final WebClient client = WebClient.create("https://api.twitter.com/2/tweets/search/recent?");
+        final String modifiedAsset = asset + " is:verified lang:en";
 
         return client.get()
                 .uri(uriBuilder -> uriBuilder
@@ -29,9 +30,7 @@ public class TwitterService {
                         .queryParam("max_results",100)
                         .build())
                 .header("Authorization",
-                        "Bearer AAAAAAAAAAAAAAAAAAAAADGONw" +
-                                "EAAAAAr6f8hXiM9o5bmI7w%2BoKEUxY%2FCEI%3Dx9e5LgBNr22yfKKS4SkLEn" +
-                                "SAMCPfDEv4PFILkzsRsi0Zy2zElD"
+                        "Bearer AAAAAAAAAAAAAAAAAAAAADCONwEAAAAAjMQw2AMLamUZ7qIy69qy5MjLb%2Bk%3DRo0rn9HjFjU09g1Rrz4vqXEEj7PTLa0QkZYEWcJzz8GsbNfP4e"
                 )
                 .retrieve()
                 .bodyToMono(TweetsDTO.class)//map results to a RedditPostDTO
@@ -51,18 +50,16 @@ public class TwitterService {
                 .map(Tweet::getTweet)
                 .filter(str -> str != null && !"".equals(str.trim()))
                 .filter(str -> str.length() < 5000)
-                .map(str -> bullBearReplace(str))
+                .map(this::bullBearReplace)
                 .forEach(tweetList::add);
 
         return tweetList;
     }
 
     public String bullBearReplace(String tweet) {
-        if(tweet.toLowerCase().contains("bullish"))
-            tweet = tweet.replace("bullish", "positive");
-        if (tweet.toLowerCase().contains("bearish"))
-            tweet = tweet.replace("bearish", "negative");
-
+        //case insensitive searches for bullish and bearish
+            tweet = tweet.replaceAll("(?i)bullish","positive");
+            tweet = tweet.replaceAll("(?i)bearish", "negative");
         return tweet;
     }
 }
