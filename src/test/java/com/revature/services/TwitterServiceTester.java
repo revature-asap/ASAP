@@ -37,7 +37,6 @@ public class TwitterServiceTester {
         final String tweet = "I am Bearish on Apple.";
         final String result = twitterService.bullBearReplace(tweet);
         Assertions.assertNotNull(result);
-        Assertions.assertTrue(result.length() > 0);
         Assertions.assertEquals(result, "I am negative on Apple.");
     }
 

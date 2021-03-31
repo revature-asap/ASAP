@@ -42,7 +42,7 @@ public class TwitterService {
     /*
     Processes a TweetDTO and outputs a list of Strings
      */
-    public Collection<String> getAssetPosts(String asset) {
+    public Collection<String> getAssetPosts(final String asset) {
 
         TweetsDTO tweetsDTO = searchAssetOnTwitter(asset);
         ArrayList<String> tweetList = new ArrayList<>();
