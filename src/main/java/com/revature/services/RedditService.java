@@ -135,6 +135,4 @@ public class RedditService {
         return body_array;
     }
 
-
-
 }

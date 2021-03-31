@@ -44,8 +44,8 @@ public class TwitterService {
      */
     public Collection<String> getAssetPosts(final String asset) {
 
-        TweetsDTO tweetsDTO = searchAssetOnTwitter(asset);
-        ArrayList<String> tweetList = new ArrayList<>();
+        final TweetsDTO tweetsDTO = searchAssetOnTwitter(asset);
+        final ArrayList<String> tweetList = new ArrayList<>();
 
         //Iterate
         tweetsDTO.getTweets().stream()

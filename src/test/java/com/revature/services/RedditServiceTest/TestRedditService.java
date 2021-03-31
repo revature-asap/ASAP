@@ -6,6 +6,7 @@ import com.revature.entities.redditAPI.RedditData;
 import com.revature.entities.redditAPI.RedditThreadPost;
 import com.revature.util.sentiment.SentimentCalculator;
 import com.revature.services.RedditService;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -79,6 +80,15 @@ public class TestRedditService {
         Assertions.assertNotNull(result_dto.getData());
         Assertions.assertNotNull(result_dto.getData().getChildren());
         Assertions.assertNotEquals(0,result_dto.getData().getChildren().size());
+    }
+
+    @Test
+    public void testAssetPost() {
+        final ArrayList<String> result = (ArrayList<String>) redditappi.getAssetPosts("apple");
+        Assertions.assertNotNull(result);
+        Assertions.assertTrue(result.size() > 0);
+        Assertions.assertNotNull(result.get(0));
+        Assertions.assertTrue(result.get(0).length() > 0);
     }
 
 }

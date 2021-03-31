@@ -8,6 +8,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.ArrayList;
+
 
 public class TwitterServiceTester {
 
@@ -19,8 +21,6 @@ public class TwitterServiceTester {
 
     @Before
     public void setup(){
-        sentimentCalculator = new SentimentCalculator();
-        twitterService = new TwitterService();
         MockitoAnnotations.initMocks(this);
     }
 
@@ -38,6 +38,15 @@ public class TwitterServiceTester {
         final String result = twitterService.bullBearReplace(tweet);
         Assertions.assertNotNull(result);
         Assertions.assertEquals(result, "I am negative on Apple.");
+    }
+
+    @Test
+    public void testAssetPost() {
+        final ArrayList<String> result = (ArrayList<String>) twitterService.getAssetPosts("apple");
+        Assertions.assertNotNull(result);
+        Assertions.assertTrue(result.size() > 0);
+        Assertions.assertNotNull(result.get(0));
+        Assertions.assertTrue(result.get(0).length() > 0);
     }
 
 //    @Test
@@ -66,8 +75,8 @@ public class TwitterServiceTester {
 //
 //    @Test
 //    public void integrateSentimentTweets(){
-//        TweetsDTO tweetsDTO = twitterService.searchAssetOnTwitter("AAPL Apple");
-//        ArrayList<String> tweetList = new ArrayList<>();
+//        final TweetsDTO tweetsDTO = twitterService.searchAssetOnTwitter("AAPL Apple");
+//        final ArrayList<String> tweetList = new ArrayList<>();
 //
 //
 //
@@ -81,7 +90,5 @@ public class TwitterServiceTester {
 //        System.out.println(sentimentCarrier.getSentimentAverage());
 //        System.out.println(sentimentCarrier.getSentimentTotals());
 //    }
-
-
 
 }
