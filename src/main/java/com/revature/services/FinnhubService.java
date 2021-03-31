@@ -53,7 +53,14 @@ public class FinnhubService {
                     assetRepo.save(assetToCheck); //!
                     return assetToCheck;
                 } else {
-                    throw new ResourceNotFoundException();
+                    assetToCheck = searchLunarCrush(ticker);
+                    if (assetToCheck.getName() != null) {
+                        assetToCheck.setLastTouchedTimestamp(LocalDate.now());
+                        assetRepo.save(assetToCheck); //!
+                        return assetToCheck;
+                    } else {
+                        throw new ResourceNotFoundException();
+                    }
                 }
             }
         }
@@ -64,6 +71,17 @@ public class FinnhubService {
         public Asset searchFinnhub(String ticker) {
             WebClient client;
             client = WebClient.create("https://finnhub.io/api/v1/stock/profile2?symbol="+ ticker + "&token=c1ceppv48v6scqmqtk5g");
+            return client.get()
+                    .uri(uriBuilder -> uriBuilder.build())
+                    .retrieve()
+                    .bodyToMono(Asset.class)//map results to a Asset
+                    .blockOptional().orElseThrow(RuntimeException::new);
+        }
+
+        // Doesn't return an actual Asset right now, may need to parse the return from lunarcrush a bit
+        public Asset searchLunarCrush(String ticker) {
+            WebClient client;
+            client = WebClient.create("https://api.lunarcrush.com/v2?data=assets&key=x9aazwqfpgvfd08gtrd2&symbol="+ ticker);
             return client.get()
                     .uri(uriBuilder -> uriBuilder.build())
                     .retrieve()
