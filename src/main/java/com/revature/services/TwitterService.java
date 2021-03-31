@@ -30,7 +30,9 @@ public class TwitterService {
                         .queryParam("max_results",100)
                         .build())
                 .header("Authorization",
-                        "Bearer AAAAAAAAAAAAAAAAAAAAADCONwEAAAAAjMQw2AMLamUZ7qIy69qy5MjLb%2Bk%3DRo0rn9HjFjU09g1Rrz4vqXEEj7PTLa0QkZYEWcJzz8GsbNfP4e"
+                        "Bearer AAAAAAAAAAAAAAAAAAAAADCONw" +
+                                "EAAAAAjMQw2AMLamUZ7qIy69qy5MjLb%2Bk%3DRo0rn" +
+                                "9HjFjU09g1Rrz4vqXEEj7PTLa0QkZYEWcJzz8GsbNfP4e"
                 )
                 .retrieve()
                 .bodyToMono(TweetsDTO.class)//map results to a RedditPostDTO
@@ -56,10 +58,9 @@ public class TwitterService {
         return tweetList;
     }
 
-    public String bullBearReplace(String tweet) {
+    public String bullBearReplace(final String tweet) {
         //case insensitive searches for bullish and bearish
-            tweet = tweet.replaceAll("(?i)bullish","positive");
-            tweet = tweet.replaceAll("(?i)bearish", "negative");
-        return tweet;
+            return tweet.replaceAll("(?i)bullish","positive")
+                    .replaceAll("(?i)bearish", "negative");
     }
 }

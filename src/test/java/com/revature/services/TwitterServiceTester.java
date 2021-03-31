@@ -24,8 +24,6 @@ public class TwitterServiceTester {
         MockitoAnnotations.initMocks(this);
     }
 
-
-
     @Test
     public void testBullishReplace() {
         final String tweet = "I am Bullish on Apple.";
