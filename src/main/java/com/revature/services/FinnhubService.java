@@ -32,12 +32,13 @@ public class FinnhubService {
         public Asset getAsset(String ticker) {
             ticker = ticker.toUpperCase();
             System.out.println("RETURN FROM FINDBYTICKER ON REPO: " + assetRepo.findAssetByTicker(ticker));
+            // If ticker is in database
             if(assetRepo.findAssetByTicker(ticker).isPresent()){
                 Asset assetToCheck = assetRepo.findAssetByTicker(ticker).get();
-                //8640000 = a day in milliseconds
+                // If data is old and needs to be refreshed
                 if (assetToCheck.getLastTouchedTimestamp().isBefore(LocalDate.now().minusDays(1))) {
                     //OLD - get record from finnhub and update database entry
-                    assetToCheck = searchFinnhub(ticker);
+                    assetToCheck = retrieveAssetFromApi(ticker);
                     assetToCheck.setLastTouchedTimestamp(LocalDate.now());
                     assetRepo.save(assetToCheck);
                     return assetToCheck;
@@ -47,20 +48,27 @@ public class FinnhubService {
                     return assetToCheck;
                 }
             } else {
-                Asset assetToCheck = searchFinnhub(ticker);
+                // If ticker is not in database
+                return retrieveAssetFromApi(ticker);
+            }
+        }
+
+        public Asset retrieveAssetFromApi(String ticker) {
+            // Search finnhub first (for stock tickers)
+            Asset assetToCheck = searchFinnhub(ticker);
+            if (assetToCheck.getName() != null) {
+                assetToCheck.setLastTouchedTimestamp(LocalDate.now());
+                assetRepo.save(assetToCheck); //!
+                return assetToCheck;
+            } else {
+                // Search lunarcrush next (for crypto currencies)
+                assetToCheck = searchLunarCrush(ticker);
                 if (assetToCheck.getName() != null) {
                     assetToCheck.setLastTouchedTimestamp(LocalDate.now());
                     assetRepo.save(assetToCheck); //!
                     return assetToCheck;
                 } else {
-                    assetToCheck = searchLunarCrush(ticker);
-                    if (assetToCheck.getName() != null) {
-                        assetToCheck.setLastTouchedTimestamp(LocalDate.now());
-                        assetRepo.save(assetToCheck); //!
-                        return assetToCheck;
-                    } else {
-                        throw new ResourceNotFoundException();
-                    }
+                    throw new ResourceNotFoundException();
                 }
             }
         }
