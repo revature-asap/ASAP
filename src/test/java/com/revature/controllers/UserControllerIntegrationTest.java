@@ -1,9 +1,13 @@
 package com.revature.controllers;
 
+import com.revature.dtos.Credentials;
+import com.revature.dtos.Principal;
 import com.revature.entities.User;
 import com.revature.entities.UserRole;
 import com.revature.repositories.UserRepository;
 import com.revature.services.UserService;
+import com.revature.util.JwtConfig;
+import com.revature.util.JwtGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterAll;
@@ -121,4 +125,82 @@ public class UserControllerIntegrationTest {
                 .andExpect(status().isBadRequest());
 
     }
+
+    @Test
+    public void loginWithValidData() throws Exception {
+        Credentials credentials = new Credentials("calvin123","password");
+        User user = new User();
+        user.setUsername(credentials.getUsername());
+        user.setPassword(credentials.getPassword());
+        user.setEmail("calvin123@yahoo.com");
+        user.setFirstName("calvin");
+        user.setLastName("zheng");
+        when(userService.authenticate("calvin123","password")).thenReturn(user);
+        String Json = "{" +
+                "\"username\":\"" + "calvin123" + "\", " +
+                "\"password\":\"" + "password" + "\"" +
+                "}";
+        mockMvc.perform(MockMvcRequestBuilders.post("/users/login")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(Json)
+        ).andExpect(status().is2xxSuccessful());
+
+
+    }
+
+    @Test
+    public void loginWithInvalidData() throws Exception {
+        User user = new User();
+        user.setUserId(1);
+        user.setUsername("agooge");
+        user.setPassword("password123");
+        user.setEmail("alexcgooge1@gmail.com");
+        user.setFirstName("Alex");
+        user.setLastName("Googe");
+        when(userService.authenticate("agooge","password")).thenReturn(user);
+        String Json = "{" +
+                "\"username\":\"" + user.getUsername() + "\", " +
+                "\"password\":\"" + "password1" + "\"" +
+                "}";
+        mockMvc.perform(MockMvcRequestBuilders.post("/users/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(Json)
+        ).andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    public void getAllWithCorrectRole() throws Exception {
+
+        User adminUser = new User("agooge","password","alexcgooge1@gmail.com","Alex","Googe");
+        adminUser.setRole(UserRole.ADMIN);
+
+        Principal principal = new Principal(adminUser);
+
+        JwtGenerator generator = new JwtGenerator(new JwtConfig());
+
+        String token = generator.generateJwt(principal);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/users")
+                .header("ASAP-token", token))
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
+    public void getAllWithWrongRole() throws Exception {
+        User basicUser = new User("agooge","password","alexcgooge1@gmail.com","Alex","Googe");
+        basicUser.setRole(UserRole.BASIC);
+
+        Principal principal = new Principal(basicUser);
+
+        JwtGenerator generator = new JwtGenerator(new JwtConfig());
+
+        String token = generator.generateJwt(principal);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/users")
+                .header("ASAP-token", token))
+                .andExpect(status().is4xxClientError());
+    }
+
+
+
 }

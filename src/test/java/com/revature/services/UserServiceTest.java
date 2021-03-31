@@ -7,6 +7,8 @@ import com.revature.exceptions.InvalidRequestException;
 import com.revature.exceptions.ResourceNotFoundException;
 import com.revature.exceptions.ResourcePersistenceException;
 import com.revature.repositories.UserRepository;
+import com.revature.util.PasswordEncryption;
+import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -17,6 +19,8 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.swing.text.html.Option;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
@@ -25,7 +29,9 @@ import static org.mockito.Mockito.*;
 public class UserServiceTest {
 
     User user1;
+    User user2;
     User nullUser;
+    List<User> listUsers;
 
     @Mock
     UserRepository userRepository;
@@ -42,7 +48,12 @@ public class UserServiceTest {
         user1 = new User("nana","password","nana123@yahoo.com","first","last");
         user1.setUserId(1);
         user1.setRole(UserRole.BASIC);
-
+        user2 = new User("nana","password","nana123@yahoo.com","first","last");
+        user2.setUserId(2);
+        user2.setRole(UserRole.BASIC);
+        listUsers = new ArrayList<>();
+        listUsers.add(user1);
+        listUsers.add(user2);
     }
 
     @Test
@@ -139,4 +150,69 @@ public class UserServiceTest {
 
         assertEquals(user1.getUsername(),existUser.getUsername());
     }
+
+    @Test
+    public void authenticateIfValid(){
+        User hashUser = new User();
+        hashUser.setUsername(user1.getUsername());
+        hashUser.setPassword(PasswordEncryption.encryptString(user1.getPassword()));
+        hashUser.setAccountConfirmed(true);
+        when(userRepository.findUserByUsername(user1.getUsername())).thenReturn(Optional.of(hashUser));
+
+        User existUser = userService.authenticate(user1.getUsername(),user1.getPassword());
+        assertEquals(existUser.getUsername(),user1.getUsername());
+
+    }
+
+    @Test(expected = InvalidRequestException.class)
+    public void authenticateIfBadUsername(){
+        User hashUser = new User();
+        hashUser.setUsername(user1.getUsername());
+        hashUser.setPassword(PasswordEncryption.encryptString(user1.getPassword()));
+        hashUser.setAccountConfirmed(true);
+        user1.setUsername(" ");
+
+        User existUser = userService.authenticate(user1.getUsername(),user1.getPassword());
+
+    }
+
+    @Test(expected = InvalidRequestException.class)
+    public void authenticateIfBadPassword(){
+        User hashUser = new User();
+        hashUser.setUsername(user1.getUsername());
+        hashUser.setPassword(user1.getPassword());
+        hashUser.setAccountConfirmed(true);
+        when(userRepository.findUserByUsername(user1.getUsername())).thenReturn(Optional.of(hashUser));
+
+        User existUser = userService.authenticate(user1.getUsername(),user1.getPassword());
+
+    }
+
+    @Test(expected = InvalidRequestException.class)
+    public void authenticateIfAccountNotConfirmed(){
+        User hashUser = new User();
+        hashUser.setUsername(user1.getUsername());
+        hashUser.setPassword(PasswordEncryption.encryptString(user1.getPassword()));
+        when(userRepository.findUserByUsername(user1.getUsername())).thenReturn(Optional.of(hashUser));
+
+        User existUser = userService.authenticate(user1.getUsername(),user1.getPassword());
+
+    }
+
+    @Test
+    public void getAllUsers(){
+
+        when(userRepository.findAll()).thenReturn(listUsers);
+        List<User> users = userService.getallUsers();
+        assertEquals(users,listUsers);
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void getAllUsersIfEmpty(){
+
+        when(userRepository.findAll()).thenReturn(Lists.emptyList());
+        List<User> users = userService.getallUsers();
+
+    }
+
 }

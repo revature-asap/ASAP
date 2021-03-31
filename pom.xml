@@ -16,7 +16,10 @@
 
     <properties>
         <java.version>8</java.version>
+        <log4jdbc.log4j2.version>1.16</log4jdbc.log4j2.version>
+        <start-class>com.revature.App</start-class>
     </properties>
+
 
     <dependencies>
 
@@ -70,6 +73,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.bgee.log4jdbc-log4j2</groupId>
+            <artifactId>log4jdbc-log4j2-jdbc4.1</artifactId>
+            <version>${log4jdbc.log4j2.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.junit.vintage</groupId>
             <artifactId>junit-vintage-engine</artifactId>
             <scope>test</scope>
@@ -81,6 +90,20 @@
             </exclusions>
         </dependency>
 
+
+        <!-- needed for spring webclient -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
+
+
+        <!--Necessary dependency for Comprehend/Sentiment Analysis-->
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk</artifactId>
+            <version>1.11.327</version>
+        </dependency>
         <!-- Mockito -->
 
         <dependency>
@@ -107,6 +130,12 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>test</scope>
+          
+        <!--Necessary dependency for WebClient-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+          
         </dependency>
 
     </dependencies>
