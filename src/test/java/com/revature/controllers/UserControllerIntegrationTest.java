@@ -108,8 +108,9 @@ public class UserControllerIntegrationTest {
         when(userService.getUserByUsername(theUser.getUsername())).thenReturn(theUser);
         doNothing().when(userRepository).confirmedAccount(theUser.getUserId());
 
+        // redirect
         mockMvc.perform(MockMvcRequestBuilders.get("/users/confirmation/{username}",theUser.getUsername()))
-                .andExpect(status().is(204));
+                .andExpect(status().is(302));
 
     }
 
@@ -121,8 +122,9 @@ public class UserControllerIntegrationTest {
         fakeuser.setUserId(10);
         fakeuser.setRole(UserRole.BASIC);
 
+        // redirect
         mockMvc.perform(MockMvcRequestBuilders.get("/users/confirmation/{username}",fakeuser.getUsername()))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().is(302));
 
     }
 
