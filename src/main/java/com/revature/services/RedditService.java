@@ -59,16 +59,16 @@ public class RedditService {
      */
     public void setAUthToken() {
         //public key for reddit api
-        final String username = System.getenv("REDDIT_PUBLIC");
+        final String username = System.getenv("reddit_public");
         //private key for reddit api
-        final String pass = System.getenv("REDDIT_PRIVATE");
+        final String pass = System.getenv("reddit_private");
         //url for getting the authorization token.
         final String auth_url = "https://www.reddit.com/api/v1/access_token";
         //use this to set values in the form-encodedurl
         final MultiValueMap<String, String> encoded_form = new LinkedMultiValueMap<>();
         encoded_form.add("grant_type","password");
-        encoded_form.add("username",System.getenv("REDDIT_USERNAME"));
-        encoded_form.add("password",System.getenv("REDDIT_PASSWORD"));
+        encoded_form.add("username",System.getenv("reddit_username"));
+        encoded_form.add("password",System.getenv("reddit_password"));
 
         final WebClient webClient1 = WebClient.create(auth_url);
         final RedditAuthTokenDTO results = webClient1.post()
@@ -144,7 +144,7 @@ public class RedditService {
     }
 
     public SentimentCarrier updatedSentiment(final String asset) {
-        if(asset == null || asset.equals(asset.trim())) {
+        if(asset == null || asset.trim().equals("")) {
             throw new InvalidRequestException("asset cannot be null or empty.");
         }
         return sentimentCalculator.apiArrayProcessor((ArrayList<String>) getAssetPosts(asset));

@@ -36,7 +36,7 @@ public class TwitterService {
                                 LocalDateTime.now().minusDays(5).withNano(0) + "Z")
                         .queryParam("max_results",100)
                         .build())
-                        .header("Authorization",System.getenv("TWITTER_BEARER_TOKEN") )
+                        .header("Authorization","Bearer " + System.getenv("twitter_bearer_token") )
                 .retrieve()
                 .bodyToMono(TweetsDTO.class)//map results to a RedditPostDTO
                 .blockOptional().orElseThrow(RuntimeException::new);
@@ -68,7 +68,7 @@ public class TwitterService {
     }
 
     public SentimentCarrier updatedSentiment(String asset) {
-        if(asset == null || asset.equals(asset.trim())) {
+        if(asset == null || asset.trim().equals("")) {
             throw new InvalidRequestException("asset cannot be null or empty.");
         }
         return sentimentCalculator.apiArrayProcessor((ArrayList<String>) getAssetPosts(asset));
