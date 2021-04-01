@@ -11,9 +11,7 @@ import com.revature.util.JwtGenerator;
 import com.revature.util.JwtParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,6 +42,14 @@ public class PostController {
 
         response.setStatus(200);
         return postService.getAllPosts();
+
+    }
+
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void makePost(@RequestBody Post newPost, HttpServletRequest request, HttpServletResponse response){
+
+        response.setStatus(200);
+        postService.makePost(newPost);
 
     }
 

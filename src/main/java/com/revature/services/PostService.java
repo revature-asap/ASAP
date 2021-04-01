@@ -23,5 +23,9 @@ public class PostService {
         return posts;
     }
 
+    public void makePost(Post newPost){
+        postRepository.save(newPost);
+    }
+
 
 }

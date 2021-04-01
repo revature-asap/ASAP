@@ -1,5 +1,7 @@
 package com.revature.entities;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 
@@ -27,6 +29,7 @@ public class Post {
     @Column(name="image_content")
     private Byte[] imageContent;
 
+    @CreationTimestamp
     @Column(name="creation_timestamp", nullable = false)
     private Timestamp creationTimestamp;
 
