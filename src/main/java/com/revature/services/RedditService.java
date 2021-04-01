@@ -5,6 +5,7 @@ import com.revature.DTO.redditAPI.RedditResultsDTO;
 import com.revature.entities.SentimentCarrier;
 import com.revature.entities.redditAPI.RedditChildren;
 import com.revature.entities.redditAPI.RedditThreadPost;
+import com.revature.exceptions.InvalidRequestException;
 import com.revature.util.sentiment.SentimentCalculator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -142,7 +143,10 @@ public class RedditService {
         return body_array;
     }
 
-    public SentimentCarrier updatedSentiment(String asset) {
+    public SentimentCarrier updatedSentiment(final String asset) {
+        if(asset == null || asset.equals(asset.trim())) {
+            throw new InvalidRequestException("asset cannot be null or empty.");
+        }
         return sentimentCalculator.apiArrayProcessor((ArrayList<String>) getAssetPosts(asset));
     }
 }

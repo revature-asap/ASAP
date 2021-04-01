@@ -3,6 +3,7 @@ package com.revature.services;
 import com.revature.DTO.TweetsDTO;
 import com.revature.entities.SentimentCarrier;
 import com.revature.entities.Tweet;
+import com.revature.exceptions.InvalidRequestException;
 import com.revature.util.sentiment.SentimentCalculator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -67,6 +68,9 @@ public class TwitterService {
     }
 
     public SentimentCarrier updatedSentiment(String asset) {
+        if(asset == null || asset.equals(asset.trim())) {
+            throw new InvalidRequestException("asset cannot be null or empty.");
+        }
         return sentimentCalculator.apiArrayProcessor((ArrayList<String>) getAssetPosts(asset));
     }
 }
