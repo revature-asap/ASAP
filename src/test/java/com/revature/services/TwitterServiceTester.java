@@ -9,7 +9,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
-import static org.mockito.Mockito.when;
 
 public class TwitterServiceTester {
 
