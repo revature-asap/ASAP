@@ -8,31 +8,31 @@ import com.revature.util.sentiment.SentimentCalculator;
 import com.revature.services.RedditService;
 import org.junit.Before;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
 
+@RunWith(MockitoJUnitRunner.class)
 public class TestRedditService {
 
+    @Mock
+    SentimentCalculator sentimentCalculator;
+    @InjectMocks
     private RedditService redditappi;
-
+    
     private RedditResultsDTO test_dto;
 
     @Before
-    public void initMocks() {
-        MockitoAnnotations.initMocks(this);
-    }
-
-    @BeforeEach
     public void setAuthToken() {
-        redditappi = new RedditService(new SentimentCalculator());
+        MockitoAnnotations.initMocks(this);
         redditappi.setAUthToken();
         test_dto = new RedditResultsDTO();
         test_dto.setData(new RedditData());

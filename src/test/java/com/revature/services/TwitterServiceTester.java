@@ -4,24 +4,27 @@ import com.revature.util.sentiment.SentimentCalculator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 
+@RunWith(MockitoJUnitRunner.class)
 public class TwitterServiceTester {
 
+    @Mock
+    SentimentCalculator sentimentCalculator;
     @InjectMocks
     TwitterService twitterService;
-
-    @Mock
-    private SentimentCalculator sentimentCalculator;
 
 
     @Before
     public void setup(){
         MockitoAnnotations.initMocks(this);
+
     }
 
     @Test
@@ -43,6 +46,10 @@ public class TwitterServiceTester {
     @Test
     public void testAssetPost() {
         final ArrayList<String> result = (ArrayList<String>) twitterService.getAssetPosts("apple");
+        System.out.println("----------------------------");
+        System.out.println("Twitter");
+        System.out.println(result);
+        System.out.println("----------------------------");
         Assertions.assertNotNull(result);
         Assertions.assertTrue(result.size() > 0);
         Assertions.assertNotNull(result.get(0));

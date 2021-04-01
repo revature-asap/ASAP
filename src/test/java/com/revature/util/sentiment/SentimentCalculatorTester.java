@@ -37,7 +37,7 @@ public class SentimentCalculatorTester {
         System.out.println(textList);
 
         //Assert
-        Assert.assertEquals(2, sentimentCarrier.getSentimentTotals().get("NEGATIVE").intValue());
+        Assert.assertEquals(1, sentimentCarrier.getSentimentTotals().get("NEGATIVE").intValue());
     }
 
     @Test
