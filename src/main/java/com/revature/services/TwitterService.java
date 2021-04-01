@@ -39,11 +39,7 @@ public class TwitterService {
                                 LocalDateTime.now().minusDays(5).withNano(0) + "Z")
                         .queryParam("max_results",100)
                         .build())
-                .header("Authorization",
-                        "Bearer AAAAAAAAAAAAAAAAAAAAADCONw" +
-                                "EAAAAAjMQw2AMLamUZ7qIy69qy5MjLb%2Bk%3DRo0rn" +
-                                "9HjFjU09g1Rrz4vqXEEj7PTLa0QkZYEWcJzz8GsbNfP4e"
-                )
+                        .header("Authorization",System.getenv("TWITTER_BEARER_TOKEN") )
                 .retrieve()
                 .bodyToMono(TweetsDTO.class)//map results to a RedditPostDTO
                 .blockOptional().orElseThrow(RuntimeException::new);
