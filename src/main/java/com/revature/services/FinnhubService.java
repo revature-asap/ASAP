@@ -30,10 +30,7 @@ public class FinnhubService {
                 // If data is old and needs to be refreshed
                 if (assetToCheck.getLastTouchedTimestamp().isBefore(LocalDate.now().minusDays(1))) {
                     //OLD - get record from finnhub and update database entry
-                    assetToCheck = retrieveAssetFromApi(ticker);
-                    assetToCheck.setLastTouchedTimestamp(LocalDate.now());
-                    assetRepo.save(assetToCheck);
-                    return assetToCheck;
+                    return retrieveAssetFromApi(ticker);
                 } else {
                     //STILL VALID - return asset
                     System.out.println("SAVED CALL TO FINNHUB FOR ASSET: " + assetToCheck);
