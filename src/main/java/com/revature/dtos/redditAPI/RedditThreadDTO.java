@@ -1,4 +1,4 @@
-package com.revature.DTO.redditAPI;
+package com.revature.dtos.redditAPI;
 
 import com.revature.entities.redditAPI.RedditParent;
 

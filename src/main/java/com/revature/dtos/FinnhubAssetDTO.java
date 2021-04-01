@@ -1,22 +1,19 @@
-package com.revature.DTO;
+package com.revature.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.revature.entities.Tweet;
 
 import java.util.List;
 
-/**
- * For holding the returned object from call to Twitter API
- */
-public class TweetsDTO {
+public class FinnhubAssetDTO {
 
     @JsonProperty("data")
     private List<Tweet> tweets;
 
-    public TweetsDTO() {
+    public FinnhubAssetDTO() {
     }
 
-    public TweetsDTO(List<Tweet> tweets) {
+    public FinnhubAssetDTO(List<Tweet> tweets) {
         this.tweets = tweets;
     }
 
@@ -34,4 +31,5 @@ public class TweetsDTO {
                 "tweets=" + tweets +
                 '}';
     }
+
 }
