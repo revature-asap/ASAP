@@ -1,8 +1,10 @@
 package com.revature.controllers;
 
 
+import com.revature.entities.Asset;
 import com.revature.entities.User;
 import com.revature.entities.UserRole;
+import com.revature.services.AssetService;
 import com.revature.services.EmailService;
 import com.revature.services.UserService;
 import com.revature.util.JwtGenerator;
@@ -35,6 +37,7 @@ public class UserController {
     private final String WEB_URL = "http://p3-210119-java-enterprise.s3-website.us-east-2.amazonaws.com/";
     private final String APP_URL = "http://localhost:5000";
     private final UserService userService;
+    private final AssetService assetService;
     private EmailService emailService;
     private final JwtGenerator jwtGenerator;
     private JwtParser jwtparser;
@@ -44,8 +47,9 @@ public class UserController {
      * @param emailService service class for email
      */
     @Autowired
-    public UserController(UserService userService, EmailService emailService, JwtGenerator jwtGenerator, JwtParser jwtparser){
+    public UserController(UserService userService, AssetService assetService, EmailService emailService, JwtGenerator jwtGenerator, JwtParser jwtparser){
         this.userService = userService;
+        this.assetService = assetService;
         this.emailService = emailService;
         this.jwtGenerator = jwtGenerator;
         this.jwtparser = jwtparser;
@@ -139,7 +143,7 @@ public class UserController {
      * @return the list of users in the database
      */
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<User> getAllUsers(HttpServletRequest request,HttpServletResponse response){
+    public List<User> getAllUsers(HttpServletRequest request, HttpServletResponse response){
         String token = jwtparser.getTokenFromHeader(request);
         Principal user = jwtparser.parseToken(token);
 
@@ -150,6 +154,36 @@ public class UserController {
         }
             response.setStatus(403);
             return null;
+    }
+
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, path="/watchlist")
+    public List<Asset> getWatchlistForUser(HttpServletRequest request) {
+        String token = jwtparser.getTokenFromHeader(request);
+        Principal user = jwtparser.parseToken(token);
+
+        return userService.getWatchlistFromUser(user.getUsername());
+    }
+
+    @PostMapping(path="/watchlist/{ticker}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addAssetToWatchlist(@PathVariable String ticker, HttpServletRequest request) {
+        String token = jwtparser.getTokenFromHeader(request);
+        Principal user = jwtparser.parseToken(token);
+
+        Asset asset = assetService.getAssetByTicker(ticker);
+
+        userService.addToWatchlist(user.getUsername(), asset);
+    }
+
+    @DeleteMapping(path="/watchlist/{ticker}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removeAssetFromWatchlist(@PathVariable String ticker, HttpServletRequest request) {
+        String token = jwtparser.getTokenFromHeader(request);
+        Principal user = jwtparser.parseToken(token);
+
+        Asset asset = assetService.getAssetByTicker(ticker);
+
+        userService.removeFromWatchlist(user.getUsername(), asset);
     }
 
 
