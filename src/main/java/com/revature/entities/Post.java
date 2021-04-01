@@ -1,22 +1,22 @@
 package com.revature.entities;
 
 import javax.persistence.*;
-import java.sql.Blob;
-import java.sql.Date;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name="posts")
 public class Post {
 
-    @Id()
+    @Id
+    @Column(name="post_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(name="author_id")
-    private String authorId;
+    private int authorId;
 
     @Column(name="asset_id")
-    private String assetId;
+    private int assetId;
 
     @Column(name="title", nullable = false)
     private String title;
@@ -25,18 +25,20 @@ public class Post {
     private String textContent;
 
     @Column(name="image_content")
-    private Blob imageContent;
+    private Byte[] imageContent;
 
     @Column(name="creation_timestamp", nullable = false)
-    private Date creationTimestamp;
+    private Timestamp creationTimestamp;
 
-    @Column(name="parent_post_id", nullable = false)
-    private int parentPostId;
+    @Column(name="parent_post_id")
+    private Integer parentPostId;
 
+    public Post() {
+        super();
+        //this.parentPostId = 0;
+    }
 
-
-
-    public Post(int id, String authorId, String assetId, String title, String textContent, Blob imageContent, Date creationTimestamp, int parentPostId) {
+    public Post(int id, int authorId, int assetId, String title, String textContent, Byte[] imageContent, Timestamp creationTimestamp, int parentPostId) {
         this.id = id;
         this.authorId = authorId;
         this.assetId = assetId;
@@ -55,19 +57,19 @@ public class Post {
         this.id = id;
     }
 
-    public String getAuthorId() {
+    public int getAuthorId() {
         return authorId;
     }
 
-    public void setAuthorId(String authorId) {
+    public void setAuthorId(int authorId) {
         this.authorId = authorId;
     }
 
-    public String getAssetId() {
+    public int getAssetId() {
         return assetId;
     }
 
-    public void setAssetId(String assetId) {
+    public void setAssetId(int assetId) {
         this.assetId = assetId;
     }
 
@@ -87,27 +89,27 @@ public class Post {
         this.textContent = textContent;
     }
 
-    public Blob getImageContent() {
+    public Byte[] getImageContent() {
         return imageContent;
     }
 
-    public void setImageContent(Blob imageContent) {
+    public void setImageContent(Byte[] imageContent) {
         this.imageContent = imageContent;
     }
 
-    public Date getCreationTimestamp() {
+    public Timestamp getCreationTimestamp() {
         return creationTimestamp;
     }
 
-    public void setCreationTimestamp(Date creationTimestamp) {
+    public void setCreationTimestamp(Timestamp creationTimestamp) {
         this.creationTimestamp = creationTimestamp;
     }
 
-    public int getParentPostId() {
+    public Integer getParentPostId() {
         return parentPostId;
     }
 
-    public void setParentPostId(int parentPostId) {
+    public void setParentPostId(Integer parentPostId) {
         this.parentPostId = parentPostId;
     }
 }

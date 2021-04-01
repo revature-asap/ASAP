@@ -2,8 +2,10 @@ package com.revature.controllers;
 
 
 import com.revature.dtos.Principal;
+import com.revature.entities.Post;
 import com.revature.entities.User;
 import com.revature.entities.UserRole;
+import com.revature.services.PostService;
 import com.revature.services.UserService;
 import com.revature.util.JwtGenerator;
 import com.revature.util.JwtParser;
@@ -18,19 +20,19 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
-@RequestMapping("/post")
+@RequestMapping("/posts")
 public class PostController {
 
     private final String WEB_URL = "http://p3-210119-java-enterprise.s3-website.us-east-2.amazonaws.com/";
     private final String APP_URL = "http://localhost:5000";
-    private final UserService userService;
+    private final PostService postService;
     private final JwtGenerator jwtGenerator;
     private JwtParser jwtparser;
 
 
     @Autowired
-    public PostController(UserService userService, JwtGenerator jwtGenerator, JwtParser jwtparser){
-        this.userService = userService;
+    public PostController(PostService postService, JwtGenerator jwtGenerator, JwtParser jwtparser){
+        this.postService = postService;
         this.jwtGenerator = jwtGenerator;
         this.jwtparser = jwtparser;
     }
@@ -38,17 +40,11 @@ public class PostController {
 
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<User> getAllPosts(HttpServletRequest request, HttpServletResponse response){
-        String token = jwtparser.getTokenFromHeader(request);
-        Principal user = jwtparser.parseToken(token);
+    public List<Post> getAllPosts(HttpServletRequest request, HttpServletResponse response){
 
-        if(user.getRole() == UserRole.ADMIN){
-            response.setStatus(200);
-            return userService.getallUsers();
+        response.setStatus(200);
+        return postService.getallPosts();
 
-        }
-        response.setStatus(403);
-        return null;
     }
 
 
