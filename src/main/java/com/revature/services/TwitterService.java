@@ -1,7 +1,10 @@
 package com.revature.services;
 
 import com.revature.DTO.TweetsDTO;
+import com.revature.entities.SentimentCarrier;
 import com.revature.entities.Tweet;
+import com.revature.util.sentiment.SentimentCalculator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -13,6 +16,13 @@ import java.util.regex.Pattern;
 
 @Service
 public class TwitterService {
+
+    private final SentimentCalculator sentimentCalculator;
+
+    @Autowired
+    public TwitterService(SentimentCalculator sentimentCalculator) {
+        this.sentimentCalculator = sentimentCalculator;
+    }
 
     /*
     Currently, retrieves the tweets from the past 5 days on the passed asset. Returns 10 tweets for now.
@@ -62,5 +72,9 @@ public class TwitterService {
         //case insensitive searches for bullish and bearish
             return tweet.replaceAll("(?i)bullish","positive")
                     .replaceAll("(?i)bearish", "negative");
+    }
+
+    public SentimentCarrier updatedSentiment(String asset) {
+        return sentimentCalculator.apiArrayProcessor((ArrayList<String>) getAssetPosts(asset));
     }
 }

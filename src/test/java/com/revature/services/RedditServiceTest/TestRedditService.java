@@ -22,7 +22,7 @@ import java.util.Collections;
 public class TestRedditService {
 
     @InjectMocks
-    RedditService redditappi = new RedditService();
+    RedditService redditappi;
 
     @Mock
     private SentimentCalculator sentimentCalculator;

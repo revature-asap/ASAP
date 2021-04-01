@@ -9,7 +9,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
-
+import static org.mockito.Mockito.when;
 
 public class TwitterServiceTester {
 
@@ -18,6 +18,7 @@ public class TwitterServiceTester {
 
     @Mock
     private SentimentCalculator sentimentCalculator;
+
 
     @Before
     public void setup(){
@@ -49,46 +50,5 @@ public class TwitterServiceTester {
         Assertions.assertTrue(result.get(0).length() > 0);
     }
 
-//    @Test
-//    public void testAPICall(){
-//
-//        TweetsDTO tweetsDTO = twitterService.searchAssetOnTwitter("Apple stock investing");
-//        System.out.println("\n------------------------------------------\n");
-//        for (Tweet t: tweetsDTO.getTweets()) {
-//            System.out.println("Tweet pulled: " + t.getTweet() + "\n------------------------------------------\n");
-//        }
-//    }
-//
-//    @Test
-//    public void testAssetCall(){
-//
-//        ArrayList<String> stringList = (ArrayList<String>) twitterService.getAssetPosts("AAPL Apple");
-//        System.out.println("\n------------------------------------------\n");
-//        for (String s: stringList) {
-//            System.out.println("Tweet pulled: " + s + "\n------------------------------------------\n");
-//        }
-//
-//        SentimentCarrier sentimentCarrier = sentimentCalculator.apiArrayProcessor(stringList);
-//        System.out.println(sentimentCarrier.getSentimentAverage());
-//        System.out.println(sentimentCarrier.getSentimentTotals());
-//    }
-//
-//    @Test
-//    public void integrateSentimentTweets(){
-//        final TweetsDTO tweetsDTO = twitterService.searchAssetOnTwitter("AAPL Apple");
-//        final ArrayList<String> tweetList = new ArrayList<>();
-//
-//
-//
-//        System.out.println("\n------------------------------------------\n");
-//        for (Tweet t: tweetsDTO.getTweets()) {
-//            System.out.println("Tweet pulled: " + t.getTweet() + "\n------------------------------------------\n");
-//            tweetList.add(t.getTweet());
-//        }
-//
-//        SentimentCarrier sentimentCarrier = sentimentCalculator.apiArrayProcessor(tweetList);
-//        System.out.println(sentimentCarrier.getSentimentAverage());
-//        System.out.println(sentimentCarrier.getSentimentTotals());
-//    }
 
 }
