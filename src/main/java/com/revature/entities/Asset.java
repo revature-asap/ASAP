@@ -31,7 +31,7 @@ public class Asset {
     private String logo;
 
     @Column(name = "market_cap")
-    private BigDecimal marketCapitalization; //maybe not right data type?
+    private BigDecimal marketCapitalization;
 
     @Column(name = "share_outstanding")
     private BigDecimal shareOutstanding;
