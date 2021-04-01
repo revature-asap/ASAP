@@ -6,7 +6,6 @@ import com.revature.entities.redditAPI.RedditData;
 import com.revature.entities.redditAPI.RedditThreadPost;
 import com.revature.util.sentiment.SentimentCalculator;
 import com.revature.services.RedditService;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +35,7 @@ public class TestRedditService {
     }
 
     @BeforeEach
-    public void testAuthToken() {
+    public void setAuthToken() {
         redditappi.setAUthToken();
         sentimentCalculator = new SentimentCalculator();
         test_dto = new RedditResultsDTO();
@@ -51,7 +50,7 @@ public class TestRedditService {
     @Test
     public void testNullString() {
         test_dto.getData().getChildren().get(0).getData().setSelftext(null);
-        final ArrayList<String> results = (ArrayList<String>) redditappi.getArrayFromDTO(test_dto);
+        final ArrayList<String> results = redditappi.getArrayFromDTO(test_dto);
         Assertions.assertEquals(1,results.size());
         Assertions.assertEquals("I am a post on Reddit.",results.get(0));
     }
@@ -59,7 +58,7 @@ public class TestRedditService {
     @Test
     public void testEmptyString() {
         test_dto.getData().getChildren().get(0).getData().setSelftext("");
-        final ArrayList<String> results = (ArrayList<String>) redditappi.getArrayFromDTO(test_dto);
+        final ArrayList<String> results = redditappi.getArrayFromDTO(test_dto);
         Assertions.assertEquals(1,results.size());
         Assertions.assertEquals("I am a post on Reddit.",results.get(0));
     }
@@ -68,7 +67,7 @@ public class TestRedditService {
     public void testLongString() {
         //make a string of 5001 of the letter e.
         test_dto.getData().getChildren().get(0).getData().setSelftext(String.join("", Collections.nCopies(5001, "e")));;
-        final ArrayList<String> results = (ArrayList<String>) redditappi.getArrayFromDTO(test_dto);
+        final ArrayList<String> results = redditappi.getArrayFromDTO(test_dto);
         Assertions.assertEquals(1,results.size());
         Assertions.assertEquals("I am a post on Reddit.",results.get(0));
     }
