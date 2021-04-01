@@ -21,11 +21,7 @@ import java.util.Collections;
 
 public class TestRedditService {
 
-    @InjectMocks
-    RedditService redditappi;
-
-    @Mock
-    private SentimentCalculator sentimentCalculator;
+    private RedditService redditappi;
 
     private RedditResultsDTO test_dto;
 
@@ -36,8 +32,8 @@ public class TestRedditService {
 
     @BeforeEach
     public void setAuthToken() {
+        redditappi = new RedditService(new SentimentCalculator());
         redditappi.setAUthToken();
-        sentimentCalculator = new SentimentCalculator();
         test_dto = new RedditResultsDTO();
         test_dto.setData(new RedditData());
         test_dto.getData().setChildren(Arrays.asList(new RedditChildren(), new RedditChildren()));
