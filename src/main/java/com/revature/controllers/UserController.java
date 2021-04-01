@@ -12,9 +12,14 @@ import com.revature.util.JwtParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
+import javax.mail.Address;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -27,6 +32,8 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
 
+    private final String WEB_URL = "http://p3-210119-java-enterprise.s3-website.us-east-2.amazonaws.com/";
+    private final String APP_URL = "http://localhost:5000";
     private final UserService userService;
     private EmailService emailService;
     private final JwtGenerator jwtGenerator;
@@ -53,17 +60,24 @@ public class UserController {
      */
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public void registerUser(@RequestBody User newUser){
+    public void registerUser(@RequestBody User newUser) throws MessagingException {
         userService.registerUser(newUser);
 
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(newUser.getEmail());
+        MimeMessage mailMessage = emailService.getJavaMailSender().createMimeMessage();
+        mailMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(newUser.getEmail()));
         mailMessage.setSubject("Complete Registration For ASAP");
         mailMessage.setFrom("asap.revature@yahoo.com");
 
-        // Need to change link when the API is hosted. . .
-        mailMessage.setText("To confirm your account, please click here: "
-        + "http://localhost:5000/users/confirmation/" + newUser.getUsername());
+        String confirmationUrl = String.format("%s/users/confirmation/%s", APP_URL, newUser.getUsername());
+        String html = String.format(
+                "<div style=\"text-align:center;border:3px solid black;margin-left:25rem;margin-right:25rem;margin-top:25rem\">" +
+                "<h3>Thank you for signing up for ASAP, %s!</h3>" +
+                "<p>Click the following link to confirm your account: " +
+                    "<a href=\"%s\">Confirm Your Account</a>" +
+                    "</p" +
+                "</div>", newUser.getFirstName(), confirmationUrl);
+
+        mailMessage.setContent(html, "text/html; charset=utf-8");
 
         emailService.sendEmail(mailMessage);
     }
@@ -73,14 +87,17 @@ public class UserController {
      * @param username the username of the user
      */
     @GetMapping(path = "/confirmation/{username}")
-    public void confirmUserAccount(@PathVariable String username, HttpServletResponse response) {
+    public RedirectView confirmUserAccount(@PathVariable String username, HttpServletResponse response) {
         User user = userService.getUserByUsername(username);
         if(user != null){
             userService.confirmAccount(user.getUserId());
-            response.setStatus(204);
+            response.setStatus(204); // redirected
+            return new RedirectView(WEB_URL);
         }
         else{
+            // Create a different URL for failed confirmation?
             response.setStatus(400);
+            return new RedirectView(WEB_URL);
         }
 
     }

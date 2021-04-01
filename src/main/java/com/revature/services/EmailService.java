@@ -6,6 +6,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import javax.mail.internet.MimeMessage;
+
 /**
  * This service class is responsible for sending emails
  */
@@ -28,7 +30,11 @@ public class EmailService {
      * @param email the email that send to the user
      */
     @Async
-    public void sendEmail(SimpleMailMessage email){
+    public void sendEmail(MimeMessage email){
         javaMailSender.send(email);
+    }
+
+    public JavaMailSender getJavaMailSender() {
+        return javaMailSender;
     }
 }
