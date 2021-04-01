@@ -2,7 +2,6 @@ package com.revature.controllers;
 
 import com.revature.entities.SentimentCarrier;
 import com.revature.services.RedditService;
-import com.revature.services.TwitterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

@@ -16,7 +16,9 @@
 
     <properties>
         <java.version>8</java.version>
+        <log4jdbc.log4j2.version>1.16</log4jdbc.log4j2.version>
     </properties>
+
 
     <dependencies>
 
@@ -70,6 +72,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.bgee.log4jdbc-log4j2</groupId>
+            <artifactId>log4jdbc-log4j2-jdbc4.1</artifactId>
+            <version>${log4jdbc.log4j2.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.junit.vintage</groupId>
             <artifactId>junit-vintage-engine</artifactId>
             <scope>test</scope>
@@ -117,6 +125,12 @@
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+          
         <!--Necessary dependency for WebClient-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

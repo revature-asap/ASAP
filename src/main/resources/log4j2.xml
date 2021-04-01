@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="info" strict="true" name="app-logger"
-               packages="com.revature">
+<Configuration status="info" strict="true" name="app-logger" packages="com.revature">
     <Properties>
         <Property name="filename">logs/app.log</Property>
     </Properties>
     <Filter type="ThresholdFilter" level="trace"/>
+
+
 
     <Appenders>
         <Appender type="Console" name="STDOUT">
@@ -26,6 +27,7 @@
                 <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
             </Layout>
         </Appender>
+
     </Appenders>
 
     <Loggers>
@@ -46,3 +48,49 @@
     </Loggers>
 
 </Configuration>
+
+
+
+<!--<?xml version="1.0" encoding="UTF-8" ?>-->
+<!--<Configuration status="WARN">-->
+<!--    <Appenders>-->
+
+<!--        Console Appender-->
+<!--        <Console name="stdout" target="SYSTEM_OUT">-->
+<!--        &lt;!&ndash; Pattern of log messages for the console appender &ndash;&gt;-->
+<!--            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>-->
+<!--            <PatternLayout pattern=""/>-->
+<!--        </Console>-->
+
+<!--        &lt;!&ndash; File Appender &ndash;&gt;-->
+<!--        <File name="info_fileout" fileName="src/main/resources/info_log.txt" append="true">-->
+<!--            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>-->
+<!--        </File>-->
+
+<!--        <File name="trace_fileout" fileName="src/main/resources/trace_log.txt" append="true">-->
+<!--            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>-->
+<!--        </File>-->
+
+<!--        <File name="error_fileout" fileName="src/main/resources/error_log.txt" append="true">-->
+<!--            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>-->
+<!--        </File>-->
+
+<!--    </Appenders>-->
+
+<!--    <Loggers>-->
+
+<!--        <Root level="ALL">-->
+<!--            <AppenderRef ref="stdout"/>-->
+<!--        </Root>-->
+
+<!--        <Logger name="com.revature" level="ALL">-->
+<!--            <AppenderRef ref="error_fileout" level="ERROR"/>-->
+<!--            <AppenderRef ref="info_fileout" level="INFO"/>-->
+<!--            <AppenderRef ref="trace_fileout" level="TRACE"/>-->
+<!--        </Logger>-->
+
+<!--    </Loggers>-->
+
+<!--</Configuration>-->
+
+
