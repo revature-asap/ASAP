@@ -1,22 +1,14 @@
 package com.revature.services;
 
-import com.revature.DTO.FinnhubAssetDTO;
-import com.revature.DTO.TweetsDTO;
+import com.revature.dtos.LunarCrushDTO;
 import com.revature.entities.Asset;
 import com.revature.exceptions.ResourceNotFoundException;
-import com.revature.exceptions.ResourcePersistenceException;
 import com.revature.repositories.AssetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.sql.Date;
-import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Locale;
-import java.util.Optional;
 
 @Service
 public class FinnhubService {
@@ -68,17 +60,14 @@ public class FinnhubService {
                     assetRepo.save(assetToCheck); //!
                     return assetToCheck;
                 } else {
-                    throw new ResourceNotFoundException();
+                    throw new ResourceNotFoundException("The provided ticker does not correspond to any known stock or crypto currency.");
                 }
             }
         }
-
-        /*
-        Currently, retrieves the tweets from the past 7 days on the passed asset. Returns 10 tweets for now.
-         */
+        
         public Asset searchFinnhub(String ticker) {
             WebClient client;
-            client = WebClient.create("https://finnhub.io/api/v1/stock/profile2?symbol="+ ticker + "&token=c1ceppv48v6scqmqtk5g");
+            client = WebClient.create("https://finnhub.io/api/v1/stock/profile2?token=c1ceppv48v6scqmqtk5g&symbol="+ ticker);
             return client.get()
                     .uri(uriBuilder -> uriBuilder.build())
                     .retrieve()
@@ -90,11 +79,12 @@ public class FinnhubService {
         public Asset searchLunarCrush(String ticker) {
             WebClient client;
             client = WebClient.create("https://api.lunarcrush.com/v2?data=assets&key=x9aazwqfpgvfd08gtrd2&symbol="+ ticker);
-            return client.get()
+            LunarCrushDTO cryptoAsset = client.get()
                     .uri(uriBuilder -> uriBuilder.build())
                     .retrieve()
-                    .bodyToMono(Asset.class)//map results to a Asset
+                    .bodyToMono(LunarCrushDTO.class) //map results to a LunarCrushDTO
                     .blockOptional().orElseThrow(RuntimeException::new);
+            return cryptoAsset.convertToAsset(); // convert the LunarCrush object to an Asset
         }
 
 
