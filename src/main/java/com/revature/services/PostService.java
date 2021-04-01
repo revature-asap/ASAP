@@ -17,7 +17,7 @@ public class PostService {
 
 
 
-    public List<Post> getallPosts(){
+    public List<Post> getAllPosts(){
         List<Post> posts = postRepository.findAll();
         if(posts.isEmpty()){throw new ResourceNotFoundException();}
         return posts;

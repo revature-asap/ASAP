@@ -43,7 +43,7 @@ public class PostController {
     public List<Post> getAllPosts(HttpServletRequest request, HttpServletResponse response){
 
         response.setStatus(200);
-        return postService.getallPosts();
+        return postService.getAllPosts();
 
     }
 
