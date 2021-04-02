@@ -7,6 +7,7 @@ import com.revature.entities.redditAPI.RedditThreadPost;
 import com.revature.util.sentiment.SentimentCalculator;
 import com.revature.services.RedditService;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;

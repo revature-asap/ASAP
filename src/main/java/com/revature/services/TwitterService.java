@@ -25,6 +25,8 @@ public class TwitterService {
     Currently, retrieves the tweets from the past 5 days on the passed asset. Returns 10 tweets for now.
      */
     public TweetsDTO searchAssetOnTwitter(final String asset) {
+        if (System.getProperty("twitter_bearer_token") == null)
+            System.setProperty("twitter_bearer_token", System.getenv("twitter_bearer_token"));
         final WebClient client = WebClient.create("https://api.twitter.com/2/tweets/search/recent?");
         final String modifiedAsset = asset + " is:verified lang:en";
 
@@ -36,7 +38,7 @@ public class TwitterService {
                                 LocalDateTime.now().minusDays(5).withNano(0) + "Z")
                         .queryParam("max_results",100)
                         .build())
-                        .header("Authorization","Bearer " + System.getenv("twitter_bearer_token") )
+                        .header("Authorization","Bearer " + System.getProperty("twitter_bearer_token") )
                 .retrieve()
                 .bodyToMono(TweetsDTO.class)//map results to a RedditPostDTO
                 .blockOptional().orElseThrow(RuntimeException::new);
