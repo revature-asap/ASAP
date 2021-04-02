@@ -137,6 +137,7 @@ public class UserController {
      * @param response is the Http Servlet response
      * @return the list of users in the database
      */
+//    @Secured(allowedRoles = "ADMIN")
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<User> getAllUsers(HttpServletRequest request,HttpServletResponse response) {
         //String token = jwtparser.getTokenFromHeader(request);
