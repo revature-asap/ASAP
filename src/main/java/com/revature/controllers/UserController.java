@@ -33,7 +33,7 @@ import java.util.List;
 public class UserController {
 
     private final String WEB_URL = "http://p3-210119-java-enterprise.s3-website.us-east-2.amazonaws.com/";
-    private final String APP_URL = "http://localhost:5000";
+    private final String APP_URL = "http://ec2co-ecsel-1g0q6xc63i5af-1652680293.us-east-2.elb.amazonaws.com:5000/";
     private final UserService userService;
     private EmailService emailService;
     private final JwtGenerator jwtGenerator;
