@@ -8,7 +8,6 @@ import java.util.Map;
 
 public class LunarCrushDTO {
 
-
     private String name;
 
     private String cryptoTicker;
@@ -21,9 +20,9 @@ public class LunarCrushDTO {
     @JsonProperty("data")
     private void unpackData(Object[] realDataArray) {
         Map<String,Object> coinDataMap = (Map<String, Object>) realDataArray[0];
-        this.marketCap = (BigDecimal) coinDataMap.get("market_cap");
+        this.marketCap = new BigDecimal(coinDataMap.get("market_cap").toString());
         this.name = (String) coinDataMap.get("name");
-        this.maxSupply = (BigDecimal) coinDataMap.get("max_supply");
+        this.maxSupply = new BigDecimal(coinDataMap.get("max_supply").toString());
         this.cryptoTicker = (String) coinDataMap.get("symbol");
     }
 
@@ -39,7 +38,6 @@ public class LunarCrushDTO {
 
     public Asset getAsset() {
         Asset returnAsset = new Asset();
-
         returnAsset.setFinnhubIndustry(industry);
         returnAsset.setLogo(logo);
         returnAsset.setName(name);
@@ -47,7 +45,6 @@ public class LunarCrushDTO {
         returnAsset.setMarketCapitalization(marketCap);
         returnAsset.setShareOutstanding(maxSupply);
         returnAsset.setWeburl(webUrl);
-
         return returnAsset;
     }
 }
