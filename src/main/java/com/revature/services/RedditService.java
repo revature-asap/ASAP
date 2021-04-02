@@ -19,6 +19,7 @@ import org.springframework.util.MultiValueMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Properties;
 
 
 /**
@@ -53,32 +54,22 @@ public class RedditService {
         this.sentimentCalculator = sentimentCalculator;
     }
 
-
     /**
      * Make a call to the reddit API to get an authorization token.
      */
     public void setAUthToken() {
-        if (System.getProperty("reddit_public") == null)
-            System.setProperty("reddit_public", System.getenv("reddit_public"));
-        if (System.getProperty("reddit_private") == null)
-            System.setProperty("reddit_private", System.getenv("reddit_private"));
-        if (System.getProperty("reddit_username") == null)
-            System.setProperty("reddit_username", System.getenv("reddit_username"));
-        if (System.getProperty("reddit_password") == null)
-            System.setProperty("reddit_password", System.getenv("reddit_password"));
-
-
+        
         //public key for reddit api
-        final String username = System.getProperty("reddit_public");
+        final String username = System.getProperty("reddit_public") != null ? System.getProperty("reddit_public"): System.getenv("reddit_public");
         //private key for reddit api
-        final String pass = System.getProperty("reddit_private");
+        final String pass = System.getProperty("reddit_private") != null ? System.getProperty("reddit_private"): System.getenv("reddit_private");
         //url for getting the authorization token.
         final String auth_url = "https://www.reddit.com/api/v1/access_token";
         //use this to set values in the form-encodedurl
         final MultiValueMap<String, String> encoded_form = new LinkedMultiValueMap<>();
         encoded_form.add("grant_type","password");
-        encoded_form.add("username",System.getProperty("reddit_username"));
-        encoded_form.add("password",System.getProperty("reddit_password"));
+        encoded_form.add("username", System.getProperty("reddit_username") != null ? System.getProperty("reddit_username") : System.getenv("reddit_username"));
+        encoded_form.add("password", System.getProperty("reddit_password") != null ? System.getProperty("reddit_password") : System.getenv("reddit_password"));
 
         final WebClient webClient1 = WebClient.create(auth_url);
         final RedditAuthTokenDTO results = webClient1.post()

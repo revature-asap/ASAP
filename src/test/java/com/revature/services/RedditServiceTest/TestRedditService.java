@@ -69,7 +69,7 @@ public class TestRedditService {
         Assertions.assertEquals("I am a post on Reddit.",results.get(0));
     }
 
-    @Test
+    @Test @Ignore
     public void testSearchSubreddit() {
         final RedditResultsDTO result_dto = redditappi.searchAssetOnSubbreddit("/r/stocks","apple","hot");
         Assertions.assertNotNull(result_dto);
@@ -78,7 +78,7 @@ public class TestRedditService {
         Assertions.assertNotEquals(0,result_dto.getData().getChildren().size());
     }
 
-    @Test
+    @Test @Ignore
     public void testAssetPost() {
         final ArrayList<String> result = (ArrayList<String>) redditappi.getAssetPosts("apple");
         Assertions.assertNotNull(result);
