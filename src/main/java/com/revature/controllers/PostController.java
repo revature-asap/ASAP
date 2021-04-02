@@ -1,6 +1,7 @@
 package com.revature.controllers;
 
 
+import com.revature.annotations.Secured;
 import com.revature.dtos.Principal;
 import com.revature.entities.Post;
 import com.revature.entities.User;
@@ -36,7 +37,7 @@ public class PostController {
     }
 
 
-
+//    @Secured(allowedRoles = "ADMIN")
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Post> getAllPosts(HttpServletRequest request, HttpServletResponse response){
 
@@ -44,7 +45,7 @@ public class PostController {
         return postService.getAllPosts();
 
     }
-
+//    @Secured(allowedRoles = {"ADMIN","BASIC"})
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public void makePost(@RequestBody Post newPost, HttpServletRequest request, HttpServletResponse response){
 
@@ -52,8 +53,22 @@ public class PostController {
         postService.makePost(newPost);
 
     }
+//    @Secured(allowedRoles = {"ADMIN","BASIC"})
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void editPost(@RequestBody Post newPost, HttpServletRequest request, HttpServletResponse response){
 
+        response.setStatus(200);
+        postService.editPost(newPost);
 
+    }
 
+//    @Secured(allowedRoles = "ADMIN")
+    @DeleteMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void deletePost(@RequestBody Post post, HttpServletRequest request, HttpServletResponse response){
+
+        response.setStatus(200);
+        postService.deletePost(post);
+
+    }
 
 }

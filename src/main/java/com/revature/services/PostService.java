@@ -7,6 +7,7 @@ import com.revature.repositories.PostRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PostService {
@@ -25,6 +26,21 @@ public class PostService {
 
     public void makePost(Post newPost){
         postRepository.save(newPost);
+    }
+
+    public void editPost(Post updatedPost){
+        Post postToEdit= postRepository.findPostById(updatedPost.getId());
+        if(postToEdit==null){
+            //TODO ERROR
+        }
+        assert postToEdit != null;
+        postToEdit.setTitle(updatedPost.getTitle());
+        postToEdit.setTextContent(updatedPost.getTextContent());
+        postRepository.save(postToEdit);
+    }
+
+    public void deletePost(Post newPost){
+        postRepository.delete(newPost);
     }
 
 

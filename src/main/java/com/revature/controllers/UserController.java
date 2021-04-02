@@ -139,19 +139,11 @@ public class UserController {
      * @return the list of users in the database
      */
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<User> getAllUsers(HttpServletRequest request,HttpServletResponse response){
-        String token = jwtparser.getTokenFromHeader(request);
-        Principal user = jwtparser.parseToken(token);
+    public List<User> getAllUsers(HttpServletRequest request,HttpServletResponse response) {
+        //String token = jwtparser.getTokenFromHeader(request);
+        //Principal user = jwtparser.parseToken(token);
+        response.setStatus(200);
+        return userService.getallUsers();
 
-        if(user.getRole() == UserRole.ADMIN){
-            response.setStatus(200);
-            return userService.getallUsers();
-
-        }
-            response.setStatus(403);
-            return null;
     }
-
-
-
 }
