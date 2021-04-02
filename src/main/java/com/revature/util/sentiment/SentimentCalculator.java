@@ -11,8 +11,6 @@ import com.revature.exceptions.SentimentAnalysisException;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Collects Sentiment values from AWS Comprehend by passing Strings of text to analyze.
@@ -47,7 +45,6 @@ public class SentimentCalculator {
         sentimentCarrier.clear();
 
         ArrayList<String> temp = new ArrayList<>();
-        int counter = -1;
 
         for (int i = 1; i < target.size() + 1; i++) {
             temp.add(target.get(i - 1));
@@ -55,18 +52,17 @@ public class SentimentCalculator {
             if (i % 25 == 0 || i == target.size()) {
                 sentimentAnalyzer(temp);
                 temp.clear();
-                counter++;
             }
         }
 
         sentimentCarrier.getSentimentAverage().put("POSITIVE",
-                sentimentCarrier.getSentimentAverage().get("POSITIVE") / ((counter * 25) + target.size() % 25));
+                sentimentCarrier.getSentimentAverage().get("POSITIVE") / target.size());
         sentimentCarrier.getSentimentAverage().put("NEGATIVE",
-                sentimentCarrier.getSentimentAverage().get("NEGATIVE") / ((counter * 25) + target.size() % 25));
+                sentimentCarrier.getSentimentAverage().get("NEGATIVE") / target.size());
         sentimentCarrier.getSentimentAverage().put("MIXED",
-                sentimentCarrier.getSentimentAverage().get("MIXED") / ((counter * 25) + target.size() % 25));
+                sentimentCarrier.getSentimentAverage().get("MIXED") / target.size());
         sentimentCarrier.getSentimentAverage().put("NEUTRAL",
-                sentimentCarrier.getSentimentAverage().get("NEUTRAL") / ((counter * 25) + target.size() % 25));
+                sentimentCarrier.getSentimentAverage().get("NEUTRAL") / target.size());
 
         return sentimentCarrier;
     }
@@ -79,7 +75,6 @@ public class SentimentCalculator {
      */
     //Take in Target, validate credentials, etc. Sends to apiArrayProcessor to split into batches
     private void sentimentAnalyzer(ArrayList<String> target) {
-        SentimentCarrier sentimentCarrier = new SentimentCarrier();
         // Create credentials using a provider chain. For more information, see
         AWSCredentialsProvider awsCreds = DefaultAWSCredentialsProviderChain.getInstance();
         AmazonComprehend comprehendClient =
@@ -89,7 +84,6 @@ public class SentimentCalculator {
                         .build();
 
         // Call detectEntities API
-        System.out.println("Calling BatchDetectEntities");
         BatchDetectSentimentRequest batchDetectSentimentRequest = new BatchDetectSentimentRequest().withTextList(target)
                 .withLanguageCode("en");
         BatchDetectSentimentResult batchDetectSentimentResult = comprehendClient.batchDetectSentiment(batchDetectSentimentRequest);
@@ -99,7 +93,6 @@ public class SentimentCalculator {
 
         // check if we need to retry failed requests
         if (batchDetectSentimentResult.getErrorList().size() != 0) {
-            System.out.println("Retrying Failed Requests");
             ArrayList<String> textToRetry = new ArrayList<String>();
             for (BatchItemError errorItem : batchDetectSentimentResult.getErrorList()) {
                 textToRetry.add(target.get(errorItem.getIndex()));
@@ -114,11 +107,8 @@ public class SentimentCalculator {
         }
 
         // Call to our hashmap of sentiment totals
-        System.out.println("Map of all sentiments and dominant occurrences in the batch");
         sentimentTotals(batchDetectSentimentResult);
-        System.out.println("Map of all sentiments and their batch averages");
         sentimentAverage(batchDetectSentimentResult);
-        System.out.println("End of DetectEntities");
     }
 
     /**
@@ -129,7 +119,6 @@ public class SentimentCalculator {
      */
     //Totals for batch of 25
     private void sentimentTotals(BatchDetectSentimentResult batchDetectSentimentResult) {
-        String domSentiment = "";
         for (BatchDetectSentimentItemResult item : batchDetectSentimentResult.getResultList()) {
             switch (item.getSentiment()) {
                 case "NEGATIVE":

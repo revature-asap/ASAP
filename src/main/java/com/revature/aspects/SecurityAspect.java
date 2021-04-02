@@ -1,11 +1,17 @@
 package com.revature.aspects;
 
 
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
+
+
 import com.revature.annotations.Secured;
 import com.revature.dtos.Principal;
 import com.revature.exceptions.AuthenticationException;
 import com.revature.exceptions.AuthorizationException;
 import com.revature.util.JwtParser;
+
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -17,7 +23,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
-
 
 
 @Component

@@ -1,6 +1,5 @@
 package com.revature;
 
-import com.revature.entities.Asset;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -27,7 +26,7 @@ public class ASAPDriver {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.revature.web.controllers"))
+                .apis(RequestHandlerSelectors.basePackage("com.revature.controllers"))
                 .paths(PathSelectors.any())
                 .build();
     }

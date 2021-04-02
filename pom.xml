@@ -17,7 +17,6 @@
     <properties>
         <java.version>8</java.version>
         <log4jdbc.log4j2.version>1.16</log4jdbc.log4j2.version>
-        <start-class>com.revature.App</start-class>
     </properties>
 
 
@@ -126,6 +125,12 @@
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+          
         <!--Necessary dependency for WebClient-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -146,6 +151,17 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>org.jacoco.report</artifactId>
                 <version>0.7.1.201405082137</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.0</version>
+                <configuration>
+                    <includes>
+                        <include>**/*Test*.java</include>
+                    </includes>
+                </configuration>
             </plugin>
         </plugins>
     </build>

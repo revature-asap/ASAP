@@ -18,7 +18,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -172,8 +171,7 @@ public class UserServiceTest {
         hashUser.setAccountConfirmed(true);
         user1.setUsername(" ");
 
-        User existUser = userService.authenticate(user1.getUsername(),user1.getPassword());
-
+        userService.authenticate(user1.getUsername(),user1.getPassword());
     }
 
     @Test(expected = InvalidRequestException.class)
@@ -184,8 +182,7 @@ public class UserServiceTest {
         hashUser.setAccountConfirmed(true);
         when(userRepository.findUserByUsername(user1.getUsername())).thenReturn(Optional.of(hashUser));
 
-        User existUser = userService.authenticate(user1.getUsername(),user1.getPassword());
-
+        userService.authenticate(user1.getUsername(),user1.getPassword());
     }
 
     @Test(expected = InvalidRequestException.class)
@@ -195,8 +192,7 @@ public class UserServiceTest {
         hashUser.setPassword(PasswordEncryption.encryptString(user1.getPassword()));
         when(userRepository.findUserByUsername(user1.getUsername())).thenReturn(Optional.of(hashUser));
 
-        User existUser = userService.authenticate(user1.getUsername(),user1.getPassword());
-
+        userService.authenticate(user1.getUsername(),user1.getPassword());
     }
 
     @Test
@@ -211,8 +207,7 @@ public class UserServiceTest {
     public void getAllUsersIfEmpty(){
 
         when(userRepository.findAll()).thenReturn(Lists.emptyList());
-        List<User> users = userService.getallUsers();
-
+        userService.getallUsers();
     }
 
 }
