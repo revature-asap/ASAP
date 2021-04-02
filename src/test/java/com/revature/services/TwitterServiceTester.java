@@ -46,10 +46,6 @@ public class TwitterServiceTester {
     @Test
     public void testAssetPost() {
         final ArrayList<String> result = (ArrayList<String>) twitterService.getAssetPosts("apple");
-        System.out.println("----------------------------");
-        System.out.println("Twitter");
-        System.out.println(result);
-        System.out.println("----------------------------");
         Assertions.assertNotNull(result);
         Assertions.assertTrue(result.size() > 0);
         Assertions.assertNotNull(result.get(0));
