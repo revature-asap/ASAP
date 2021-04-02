@@ -15,7 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
-import javax.mail.Address;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
@@ -150,6 +149,20 @@ public class UserController {
         }
             response.setStatus(403);
             return null;
+    }
+
+    /**
+     * Get method that will output information for a user. Need to have a valid JWT to be able
+     * to hit this endpoint.
+     * @param username the username of a user in the database
+     * @return a {@code Principal} object of the user
+     */
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, path="/profile")
+    public Principal getUser(HttpServletRequest request){
+        String token = jwtparser.getTokenFromHeader(request);
+        Principal user = jwtparser.parseToken(token);
+        User u = userService.getUserByUsername(user.getUsername());
+        return new Principal(u);
     }
 
 
