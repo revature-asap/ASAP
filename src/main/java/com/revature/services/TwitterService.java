@@ -1,6 +1,6 @@
 package com.revature.services;
 
-import com.revature.DTO.TweetsDTO;
+import com.revature.dtos.TweetsDTO;
 import com.revature.entities.Tweet;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;

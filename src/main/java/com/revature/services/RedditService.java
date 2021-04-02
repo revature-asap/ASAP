@@ -1,8 +1,8 @@
 package com.revature.services;
 
-import com.revature.DTO.redditAPI.RedditAuthTokenDTO;
-import com.revature.DTO.redditAPI.RedditResultsDTO;
-import com.revature.DTO.redditAPI.RedditThreadDTO;
+import com.revature.dtos.redditAPI.RedditAuthTokenDTO;
+import com.revature.dtos.redditAPI.RedditResultsDTO;
+import com.revature.dtos.redditAPI.RedditThreadDTO;
 import com.revature.entities.redditAPI.RedditChildren;
 import com.revature.entities.redditAPI.RedditThreadPost;
 import org.springframework.http.HttpHeaders;

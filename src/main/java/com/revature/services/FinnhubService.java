@@ -81,7 +81,7 @@ public class FinnhubService {
                     .retrieve()
                     .bodyToMono(LunarCrushDTO.class) //map results to a LunarCrushDTO
                     .blockOptional().orElseThrow(RuntimeException::new);
-            return cryptoAsset.convertToAsset(); // convert the LunarCrush object to an Asset
+            return cryptoAsset.getAsset(); // convert the LunarCrush object to an Asset
         }
 
 
