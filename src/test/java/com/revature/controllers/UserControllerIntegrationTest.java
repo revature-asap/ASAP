@@ -4,6 +4,7 @@ import com.revature.dtos.Credentials;
 import com.revature.dtos.Principal;
 import com.revature.entities.User;
 import com.revature.entities.UserRole;
+import com.revature.exceptions.ResourceNotFoundException;
 import com.revature.repositories.UserRepository;
 import com.revature.services.UserService;
 import com.revature.util.JwtConfig;
@@ -22,6 +23,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
@@ -199,6 +201,45 @@ public class UserControllerIntegrationTest {
         String token = generator.generateJwt(principal);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/users")
+                .header("ASAP-token", token))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    public void getWatchlistWithCorrectUser() throws Exception {
+        User basicUser = new User("agooge","password","alexcgooge1@gmail.com","Alex","Googe");
+        basicUser.setRole(UserRole.BASIC);
+
+        Principal principal = new Principal(basicUser);
+
+        JwtGenerator generator = new JwtGenerator(new JwtConfig());
+
+        String token = generator.generateJwt(principal);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/users/watchlist")
+            .header("ASAP-token", token))
+                .andExpect(status().is2xxSuccessful());
+
+    }
+
+    //Still returns a Success, once I can add exception handling it should return a 4xx.
+    //Test is fine, just should change the controller method.
+    @Test
+    public void getWatchlistWithBadUser() throws Exception {
+
+        // Bad User
+        User basicUser = new User("ag","password","alexcgooge1@gmail.com","Alex","Googe");
+        basicUser.setRole(UserRole.BASIC);
+
+        Principal principal = new Principal(basicUser);
+
+        JwtGenerator generator = new JwtGenerator(new JwtConfig());
+
+        String token = generator.generateJwt(principal);
+
+        when(userService.getWatchlistFromUser("ag")).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/users/watchlist")
                 .header("ASAP-token", token))
                 .andExpect(status().is4xxClientError());
     }

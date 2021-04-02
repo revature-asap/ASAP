@@ -4,6 +4,7 @@ package com.revature.controllers;
 import com.revature.entities.Asset;
 import com.revature.entities.User;
 import com.revature.entities.UserRole;
+import com.revature.exceptions.ResourceNotFoundException;
 import com.revature.services.AssetService;
 import com.revature.services.EmailService;
 import com.revature.services.UserService;
@@ -161,8 +162,15 @@ public class UserController {
         String token = jwtparser.getTokenFromHeader(request);
         Principal user = jwtparser.parseToken(token);
 
-        return userService.getWatchlistFromUser(user.getUsername());
+        List<Asset> list = userService.getWatchlistFromUser(user.getUsername());
+
+        if(list.isEmpty()) {
+            throw new ResourceNotFoundException();
+        }
+
+        return list;
     }
+
 
     @PostMapping(path="/watchlist/{ticker}")
     @ResponseStatus(HttpStatus.CREATED)
