@@ -138,23 +138,17 @@ public class UserController {
      * @return the list of users in the database
      */
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<User> getAllUsers(HttpServletRequest request,HttpServletResponse response){
-        String token = jwtparser.getTokenFromHeader(request);
-        Principal user = jwtparser.parseToken(token);
+    public List<User> getAllUsers(HttpServletRequest request,HttpServletResponse response) {
+        //String token = jwtparser.getTokenFromHeader(request);
+        //Principal user = jwtparser.parseToken(token);
+        response.setStatus(200);
+        return userService.getallUsers();
 
-        if(user.getRole() == UserRole.ADMIN){
-            response.setStatus(200);
-            return userService.getallUsers();
-
-        }
-            response.setStatus(403);
-            return null;
     }
 
     /**
      * Get method that will output information for a user. Need to have a valid JWT to be able
      * to hit this endpoint.
-     * @param username the username of a user in the database
      * @return a {@code Principal} object of the user
      */
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, path="/profile")
@@ -164,7 +158,5 @@ public class UserController {
         User u = userService.getUserByUsername(user.getUsername());
         return new Principal(u);
     }
-
-
 
 }
