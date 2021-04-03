@@ -1,5 +1,11 @@
 package com.revature.controllers;
 
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.Optional;
+
 import com.revature.dtos.Credentials;
 import com.revature.dtos.Principal;
 import com.revature.entities.User;
@@ -9,9 +15,11 @@ import com.revature.repositories.UserRepository;
 import com.revature.services.UserService;
 import com.revature.util.JwtConfig;
 import com.revature.util.JwtGenerator;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -38,17 +46,16 @@ public class UserControllerIntegrationTest {
     private User theUser;
 
     @MockBean
-    private UserRepository userRepository;
+    UserRepository userRepository;
 
     @MockBean
-    private UserService userService;
-
-
+    UserService userService;
 
     @Autowired
-    public UserControllerIntegrationTest(WebApplicationContext webApplicationContext){
-        this.webApplicationContext = webApplicationContext;
+    public UserControllerIntegrationTest(WebApplicationContext webContext) {
+        this.webApplicationContext = webContext;
     }
+
 
     @BeforeEach
     public void setup(){
@@ -107,7 +114,6 @@ public class UserControllerIntegrationTest {
     public void confirmUserAccountWithValidData() throws Exception {
 
         when(userRepository.findById(theUser.getUserId())).thenReturn(Optional.of(theUser));
-        when(userService.getUserByUsername(theUser.getUsername())).thenReturn(theUser);
         doNothing().when(userRepository).confirmedAccount(theUser.getUserId());
 
         // redirect
@@ -132,16 +138,16 @@ public class UserControllerIntegrationTest {
 
     @Test
     public void loginWithValidData() throws Exception {
-        Credentials credentials = new Credentials("calvin123","password");
+        Credentials credentials = new Credentials("cspace","password");
         User user = new User();
         user.setUsername(credentials.getUsername());
         user.setPassword(credentials.getPassword());
-        user.setEmail("calvin123@yahoo.com");
-        user.setFirstName("calvin");
-        user.setLastName("zheng");
-        when(userService.authenticate("calvin123","password")).thenReturn(user);
+        user.setEmail("cole.w.space@gmail.com");
+        user.setFirstName("Cole");
+        user.setLastName("Space");
+        when(userRepository.findUserByUsername("cspace")).thenReturn(Optional.of(user));
         String Json = "{" +
-                "\"username\":\"" + "calvin123" + "\", " +
+                "\"username\":\"" + "cspace" + "\", " +
                 "\"password\":\"" + "password" + "\"" +
                 "}";
         mockMvc.perform(MockMvcRequestBuilders.post("/users/login")
@@ -161,7 +167,7 @@ public class UserControllerIntegrationTest {
         user.setEmail("alexcgooge1@gmail.com");
         user.setFirstName("Alex");
         user.setLastName("Googe");
-        when(userService.authenticate("agooge","password")).thenReturn(user);
+        when(userRepository.findUserByUsername("agooge")).thenReturn(Optional.of(user));
         String Json = "{" +
                 "\"username\":\"" + user.getUsername() + "\", " +
                 "\"password\":\"" + "password1" + "\"" +

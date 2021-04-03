@@ -5,6 +5,7 @@ import com.revature.DTO.redditAPI.RedditResultsDTO;
 import com.revature.entities.SentimentCarrier;
 import com.revature.entities.redditAPI.RedditChildren;
 import com.revature.entities.redditAPI.RedditThreadPost;
+import com.revature.exceptions.InvalidRequestException;
 import com.revature.util.sentiment.SentimentCalculator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -18,6 +19,7 @@ import org.springframework.util.MultiValueMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Properties;
 
 
 /**
@@ -52,22 +54,22 @@ public class RedditService {
         this.sentimentCalculator = sentimentCalculator;
     }
 
-
     /**
      * Make a call to the reddit API to get an authorization token.
      */
     public void setAUthToken() {
-        //public username for reddit app
-        final String username = System.getenv("reddit_public");        //"kpgtqXkTJsCWsQ";
-        //private key for reddit app. this and username need to be environmental vars for production code.
-        final String pass = System.getenv("reddit_private");   //"2NOsdIoiOMykyMlAQnLm8nxIinRP4A";
+        
+        //public key for reddit api
+        final String username = System.getProperty("reddit_public") != null ? System.getProperty("reddit_public"): System.getenv("reddit_public");
+        //private key for reddit api
+        final String pass = System.getProperty("reddit_private") != null ? System.getProperty("reddit_private"): System.getenv("reddit_private");
         //url for getting the authorization token.
         final String auth_url = "https://www.reddit.com/api/v1/access_token";
         //use this to set values in the form-encodedurl
         final MultiValueMap<String, String> encoded_form = new LinkedMultiValueMap<>();
         encoded_form.add("grant_type","password");
-        encoded_form.add("username",System.getenv("reddit_username")); //"testingapiforrevatur"); //username and password here need to be environmental vars for production code
-        encoded_form.add("password",System.getenv("reddit_password")); //"Password!2");
+        encoded_form.add("username", System.getProperty("reddit_username") != null ? System.getProperty("reddit_username") : System.getenv("reddit_username"));
+        encoded_form.add("password", System.getProperty("reddit_password") != null ? System.getProperty("reddit_password") : System.getenv("reddit_password"));
 
         final WebClient webClient1 = WebClient.create(auth_url);
         final RedditAuthTokenDTO results = webClient1.post()
@@ -142,8 +144,10 @@ public class RedditService {
         return body_array;
     }
 
-
-    public SentimentCarrier updatedSentiment(String asset) {
+    public SentimentCarrier updatedSentiment(final String asset) {
+        if(asset == null || asset.trim().equals("")) {
+            throw new InvalidRequestException("asset cannot be null or empty.");
+        }
         return sentimentCalculator.apiArrayProcessor((ArrayList<String>) getAssetPosts(asset));
     }
 }
