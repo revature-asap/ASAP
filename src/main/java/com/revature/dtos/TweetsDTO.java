@@ -1,4 +1,4 @@
-package com.revature.DTO;
+package com.revature.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.revature.entities.Tweet;
