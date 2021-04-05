@@ -39,7 +39,7 @@ DevOps Tools:
 
 ## Getting Started
 
-First clone the reop to your local machine
+First clone the repo to your local machine
 
 - git clone https://github.com/revature-asap/ASAP.git
 
