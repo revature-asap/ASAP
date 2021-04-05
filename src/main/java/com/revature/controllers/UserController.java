@@ -5,6 +5,7 @@ import com.revature.annotations.Secured;
 import com.revature.entities.Asset;
 import com.revature.entities.User;
 import com.revature.entities.UserRole;
+import com.revature.exceptions.InvalidRequestException;
 import com.revature.exceptions.ResourceNotFoundException;
 import com.revature.services.AssetService;
 import com.revature.services.EmailService;
@@ -94,16 +95,10 @@ public class UserController {
     @GetMapping(path = "/confirmation/{username}")
     public RedirectView confirmUserAccount(@PathVariable String username, HttpServletResponse response) {
         User user = userService.getUserByUsername(username);
-        if(user != null){
-            userService.confirmAccount(user.getUserId());
-            response.setStatus(204); // redirected
-            return new RedirectView(WEB_URL);
-        }
-        else{
-            // Create a different URL for failed confirmation?
-            response.setStatus(400);
-            return new RedirectView(WEB_URL);
-        }
+        if (user == null) { throw new InvalidRequestException("No user with that username found."); }
+
+        userService.confirmAccount(user.getUserId());
+        return new RedirectView(WEB_URL);
 
     }
 

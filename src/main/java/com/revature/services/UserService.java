@@ -92,14 +92,14 @@ public class UserService {
      */
     public User authenticate(String username, String password) {
         if (username == null || username.trim().equals("") || password == null || password.trim().equals("")) {
-            throw new InvalidRequestException();
+            throw new InvalidRequestException("Username and password must not be null.");
         }
 
         User user = userRepository.findUserByUsername(username).orElseThrow(ResourceNotFoundException::new);
 
         // If the BCrypt hashed password does not match the password provided. . .
         if (!PasswordEncryption.verifyPassword(password, user.getPassword())) {
-            throw new InvalidRequestException();
+            throw new InvalidRequestException("Invalid username and/or password.");
         }
 
         // If the User has not clicked the link in their email. . .

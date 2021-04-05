@@ -127,6 +127,14 @@ public class User {
         this.watchlist = watchlist;
     }
 
+    /**
+     * Copy constructor
+     * @param user
+     */
+    public User(User user) {
+        this(user.userId, user.username, user.password, user.email, user.firstName, user.lastName, user.role, user.watchlist);
+    }
+
     public int getUserId() {
         return userId;
     }
