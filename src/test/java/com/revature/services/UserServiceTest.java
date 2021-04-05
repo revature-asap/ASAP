@@ -1,6 +1,7 @@
 package com.revature.services;
 
 
+import com.revature.entities.Asset;
 import com.revature.entities.User;
 import com.revature.entities.UserRole;
 import com.revature.exceptions.InvalidRequestException;
@@ -13,14 +14,15 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -213,9 +215,88 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testGetWatchlistFromUser_withValidUser() {
+    public void testGetWatchlistFromUser_withValidUser_whereWatchlistIsNotEmpty() {
 
-        when(userRepository.save(user1)).thenReturn(null);
+        User basicUser = new User("agooge1","password","alexcgooge1@gmail.com","Alex","Googe");
+        basicUser.setRole(UserRole.BASIC);
+        Asset minAsset = new Asset();
+        minAsset.setAssetId(1);
+        minAsset.setName("min asset");
+        minAsset.setTicker("MNAS");
+        minAsset.setFinnhubIndustry("Fake");
+        minAsset.setLastTouchedTimestamp(LocalDate.now());
+        List<Asset> expected = new ArrayList<>();
+        expected.add(minAsset);
+        basicUser.setWatchlist(expected);
+
+        when(userRepository.findUserByUsername(basicUser.getUsername())).thenReturn(Optional.of(basicUser));
+
+        List<Asset> actual = userService.getWatchlistFromUser(basicUser.getUsername());
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testGetWatchlistFromUser_withValidUser_whereWatchlistIsEmpty() {
+        User basicUser = new User("agooge1","password","alexcgooge1@gmail.com","Alex","Googe");
+        basicUser.setRole(UserRole.BASIC);
+        List<Asset> emptyList = Collections.emptyList();
+        basicUser.setWatchlist(emptyList);
+
+        when(userRepository.findUserByUsername(basicUser.getUsername())).thenReturn(Optional.of(basicUser));
+
+        List<Asset> result = userService.getWatchlistFromUser(basicUser.getUsername());
+
+        assertEquals(emptyList, result);
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void testGetWatchlistFromUser_withInvalidUser() {
+        User invalidUser = new User("ag","password","alexcgooge1@gmail.com","Alex","Googe");
+        invalidUser.setRole(UserRole.BASIC);
+
+        when(userRepository.findUserByUsername(invalidUser.getUsername())).thenReturn(Optional.empty());
+
+        userService.getWatchlistFromUser(invalidUser.getUsername());
+    }
+
+    @Test
+    public void testAddToWatchlist_withValidUser() {
+        User basicUser = new User("agooge1","password","alexcgooge1@gmail.com","Alex","Googe");
+        basicUser.setRole(UserRole.BASIC);
+        List<Asset> assetList = new ArrayList<>();
+        Asset minAsset = new Asset();
+        minAsset.setAssetId(1);
+        minAsset.setName("min asset");
+        minAsset.setTicker("MNAS");
+        minAsset.setFinnhubIndustry("Fake");
+        minAsset.setLastTouchedTimestamp(LocalDate.now());
+        assetList.add(minAsset);
+
+        when(userRepository.findUserByUsername(basicUser.getUsername())).thenReturn(Optional.of(basicUser));
+
+        userService.addToWatchlist(basicUser.getUsername(), minAsset);
+
+        assertEquals(assetList, basicUser.getWatchlist());
+        verify(userRepository, times(1)).save(basicUser);
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void testAddToWatchlist_withInvalidUser() {
+        User invalidUser = new User("agooge1","password","alexcgooge1@gmail.com","Alex","Googe");
+        invalidUser.setRole(UserRole.BASIC);
+        List<Asset> assetList = new ArrayList<>();
+        Asset minAsset = new Asset();
+        minAsset.setAssetId(1);
+        minAsset.setName("min asset");
+        minAsset.setTicker("MNAS");
+        minAsset.setFinnhubIndustry("Fake");
+        minAsset.setLastTouchedTimestamp(LocalDate.now());
+        assetList.add(minAsset);
+
+        when(userRepository.findUserByUsername(invalidUser.getUsername())).thenReturn(Optional.empty());
+
+        userService.addToWatchlist(invalidUser.getUsername(), minAsset);
     }
 
 }

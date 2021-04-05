@@ -11,6 +11,7 @@ import com.revature.util.PasswordEncryption;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -145,7 +146,15 @@ public class UserService {
         User u = userRepository
                 .findUserByUsername(username)
                 .orElseThrow(ResourceNotFoundException::new);
-        u.getWatchlist().add(asset);
+        try {
+            u.getWatchlist().add(asset);
+        } 
+        // watchlist might be null if it's a new user
+        catch (NullPointerException e) {
+            List<Asset> watchlist = new ArrayList<>();
+            watchlist.add(asset);
+            u.setWatchlist(watchlist);
+        }
         userRepository.save(u);
     }
 
