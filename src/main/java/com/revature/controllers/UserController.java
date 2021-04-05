@@ -15,7 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
-import javax.mail.Address;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
@@ -33,7 +32,7 @@ import java.util.List;
 public class UserController {
 
     private final String WEB_URL = "http://p3-210119-java-enterprise.s3-website.us-east-2.amazonaws.com/";
-    private final String APP_URL = "http://localhost:5000";
+    private final String APP_URL = "http://ec2co-ecsel-1g0q6xc63i5af-1652680293.us-east-2.elb.amazonaws.com:5000/";
     private final UserService userService;
     private EmailService emailService;
     private final JwtGenerator jwtGenerator;
@@ -138,6 +137,7 @@ public class UserController {
      * @param response is the Http Servlet response
      * @return the list of users in the database
      */
+//    @Secured(allowedRoles = "ADMIN")
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<User> getAllUsers(HttpServletRequest request,HttpServletResponse response) {
         //String token = jwtparser.getTokenFromHeader(request);
@@ -146,4 +146,18 @@ public class UserController {
         return userService.getallUsers();
 
     }
+
+    /**
+     * Get method that will output information for a user. Need to have a valid JWT to be able
+     * to hit this endpoint.
+     * @return a {@code Principal} object of the user
+     */
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, path="/profile")
+    public Principal getUser(HttpServletRequest request){
+        String token = jwtparser.getTokenFromHeader(request);
+        Principal user = jwtparser.parseToken(token);
+        User u = userService.getUserByUsername(user.getUsername());
+        return new Principal(u);
+    }
+
 }
