@@ -154,10 +154,6 @@ public class UserController {
 
         List<Asset> list = userService.getWatchlistFromUser(user.getUsername());
 
-        if(list.isEmpty()) {
-            throw new ResourceNotFoundException();
-        }
-
         return list;
     }
 

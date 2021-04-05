@@ -72,27 +72,27 @@ public class UserControllerIntegrationTest {
         System.out.println("All Test finished!");
     }
 
-    // @Test
-    // public void registerUserWithValidData() throws Exception {
-    //     User user1 = new User("nana","password","nana123@yahoo.com","first","last");
-    //     user1.setRole(UserRole.BASIC);
-    //     when(userRepository.save(user1)).thenReturn(null);
+    @Test
+    public void registerUserWithValidData() throws Exception {
+        User user1 = new User("nana","password","nana123@yahoo.com","first","last");
+        user1.setRole(UserRole.BASIC);
+        when(userRepository.save(user1)).thenReturn(null);
 
-    //     String Json = "{" +
-    //             "\"username\":\"" + user1.getUsername() + "\", " +
-    //             "\"password\":\"" + user1.getPassword() + "\", " +
-    //             "\"email\":\"" + user1.getEmail() + "\", " +
-    //             "\"firstName\":\"" + user1.getFirstName() + "\", " +
-    //             "\"lastName\":\"" + user1.getLastName() + "\", " +
-    //             "\"role\":\"" + user1.getRole().toString().toUpperCase() + "\"" +
-    //             "}";
+        String Json = "{" +
+                "\"username\":\"" + user1.getUsername() + "\", " +
+                "\"password\":\"" + user1.getPassword() + "\", " +
+                "\"email\":\"" + user1.getEmail() + "\", " +
+                "\"firstName\":\"" + user1.getFirstName() + "\", " +
+                "\"lastName\":\"" + user1.getLastName() + "\", " +
+                "\"role\":\"" + user1.getRole().toString().toUpperCase() + "\"" +
+                "}";
 
-    //     mockMvc.perform(MockMvcRequestBuilders.post("/users")
-    //             .contentType(MediaType.APPLICATION_JSON_VALUE)
-    //             .content(Json))
-    //             .andExpect(status().isCreated());
+        mockMvc.perform(MockMvcRequestBuilders.post("/users")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(Json))
+                .andExpect(status().isCreated());
 
-    // }
+    }
 
     @Test
     public void registerUserWithInvalidData() throws Exception {
@@ -219,7 +219,7 @@ public class UserControllerIntegrationTest {
     }
 
     @Test
-    public void getWatchlistWithCorrectUser() throws Exception {
+    public void getWatchlist_withValidUser_whereWatchlistIsNotEmpty() throws Exception {
         User basicUser = new User("agooge1","password","alexcgooge1@gmail.com","Alex","Googe");
         basicUser.setRole(UserRole.BASIC);
         Asset minAsset = new Asset();
@@ -244,19 +244,37 @@ public class UserControllerIntegrationTest {
 
     }
 
-    //Still returns a Success, once I can add exception handling it should return a 4xx.
-    //Test is fine, just should change the controller method.
     @Test
-    public void getWatchlistWithBadUser() throws Exception {
-        // Bad User
-        User basicUser = new User("ag","password","alexcgooge1@gmail.com","Alex","Googe");
+    public void getWatchlist_withValidUser_whereWatchlistIsEmpty() throws Exception {
+        User basicUser = new User("agooge1","password","alexcgooge1@gmail.com","Alex","Googe");
         basicUser.setRole(UserRole.BASIC);
+        List<Asset> assetList = List.of();
+        basicUser.setWatchlist(assetList);
 
         Principal principal = new Principal(basicUser);
         JwtGenerator generator = new JwtGenerator(new JwtConfig());
         String token = generator.generateJwt(principal);
 
-        when(userRepository.findUserByUsername(basicUser.getUsername())).thenReturn(Optional.empty());
+        when(userRepository.findUserByUsername(basicUser.getUsername())).thenReturn(Optional.of(basicUser));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/users/watchlist")
+            .header("ASAP-token", token))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.size()").value(assetList.size()));
+
+    }
+
+    @Test
+    public void getWatchlist_withInvalidUser() throws Exception {
+        // Bad User
+        User invalidUser = new User("ag","password","alexcgooge1@gmail.com","Alex","Googe");
+        invalidUser.setRole(UserRole.BASIC);
+
+        Principal principal = new Principal(invalidUser);
+        JwtGenerator generator = new JwtGenerator(new JwtConfig());
+        String token = generator.generateJwt(principal);
+
+        when(userRepository.findUserByUsername(invalidUser.getUsername())).thenReturn(Optional.empty());
 
         mockMvc.perform(MockMvcRequestBuilders.get("/users/watchlist")
                 .header("ASAP-token", token))
