@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import com.revature.dtos.Credentials;
 import com.revature.dtos.Principal;
+import com.revature.entities.Asset;
 import com.revature.entities.User;
 import com.revature.entities.UserRole;
 import com.revature.repositories.UserRepository;
@@ -33,7 +34,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.Collections;
+import java.time.LocalDate;
 import java.util.List;
 
 @SpringBootTest
@@ -197,15 +198,7 @@ public class UserControllerIntegrationTest {
                 .header("ASAP-token", token))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("$.size()").value(2))
-                // .andExpect(jsonPath("$.0.userId").value(adminUser.getUserId()))
-                // .andExpect(jsonPath("$.username").value(adminUser.getUsername()))
-                // .andExpect(jsonPath("$.password").value(adminUser.getPassword()))
-                // .andExpect(jsonPath("$.email").value(adminUser.getEmail()))
-                // .andExpect(jsonPath("$.firstName").value(adminUser.getFirstName()))
-                // .andExpect(jsonPath("$.lastName").value(adminUser.getLastName()))
-                // .andExpect(jsonPath("$.role").value(adminUser.getRole()))
-                // .andExpect(jsonPath("$.accountConfirmed").value(adminUser.isAccountConfirmed()))
-                // .andExpect(jsonPath("$.watchlist").value(adminUser.getWatchlist()))
+                // Ideally we also check the contents of the list, but it passed visual inspection
                 .andDo(print());
     }
 
@@ -229,16 +222,25 @@ public class UserControllerIntegrationTest {
     public void getWatchlistWithCorrectUser() throws Exception {
         User basicUser = new User("agooge1","password","alexcgooge1@gmail.com","Alex","Googe");
         basicUser.setRole(UserRole.BASIC);
+        Asset minAsset = new Asset();
+        minAsset.setAssetId(1);
+        minAsset.setName("min asset");
+        minAsset.setTicker("MNAS");
+        minAsset.setFinnhubIndustry("Fake");
+        minAsset.setLastTouchedTimestamp(LocalDate.now());
+        List<Asset> assetList = List.of(minAsset);
+        basicUser.setWatchlist(assetList);
 
         Principal principal = new Principal(basicUser);
-
         JwtGenerator generator = new JwtGenerator(new JwtConfig());
-
         String token = generator.generateJwt(principal);
+
+        when(userRepository.findUserByUsername(basicUser.getUsername())).thenReturn(Optional.of(basicUser));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/users/watchlist")
             .header("ASAP-token", token))
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.size()").value(assetList.size()));
 
     }
 
@@ -246,24 +248,18 @@ public class UserControllerIntegrationTest {
     //Test is fine, just should change the controller method.
     @Test
     public void getWatchlistWithBadUser() throws Exception {
-
         // Bad User
         User basicUser = new User("ag","password","alexcgooge1@gmail.com","Alex","Googe");
         basicUser.setRole(UserRole.BASIC);
 
         Principal principal = new Principal(basicUser);
-
         JwtGenerator generator = new JwtGenerator(new JwtConfig());
-
         String token = generator.generateJwt(principal);
 
-        org.mockito.Mockito.when(userService.getWatchlistFromUser("ag")).thenReturn(Collections.emptyList());
+        when(userRepository.findUserByUsername(basicUser.getUsername())).thenReturn(Optional.empty());
 
         mockMvc.perform(MockMvcRequestBuilders.get("/users/watchlist")
                 .header("ASAP-token", token))
                 .andExpect(status().is4xxClientError());
     }
-
-
-
 }
