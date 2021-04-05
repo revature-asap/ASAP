@@ -212,10 +212,10 @@ public class UserServiceTest {
         userService.getallUsers();
     }
 
-//    @Test
-//    public void testGetWatchlistFromUser_withValidUser() {
-//
-//        when(userRepository.save(user1)).thenReturn(null);
-//    }
+    @Test
+    public void testGetWatchlistFromUser_withValidUser() {
+
+        when(userRepository.save(user1)).thenReturn(null);
+    }
 
 }

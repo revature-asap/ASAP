@@ -136,7 +136,7 @@ public class UserControllerIntegrationTest {
 
     }
 
-    @Test @Disabled
+    @Test
     public void loginWithValidData() throws Exception {
         Credentials credentials = new Credentials("cspace","password");
         User user = new User();
@@ -145,7 +145,7 @@ public class UserControllerIntegrationTest {
         user.setEmail("cole.w.space@gmail.com");
         user.setFirstName("Cole");
         user.setLastName("Space");
-        when(userRepository.findUserByUsername("cspace")).thenReturn(Optional.of(user));
+        when(userService.authenticate(user.getUsername(), user.getPassword())).thenReturn(user);
         String Json = "{" +
                 "\"username\":\"" + "cspace" + "\", " +
                 "\"password\":\"" + "password" + "\"" +
@@ -211,9 +211,9 @@ public class UserControllerIntegrationTest {
                 .andExpect(status().is4xxClientError());
     }
 
-    @Test @Disabled
+    @Test
     public void getWatchlistWithCorrectUser() throws Exception {
-        User basicUser = new User("agooge","password","alexcgooge1@gmail.com","Alex","Googe");
+        User basicUser = new User("agooge1","password","alexcgooge1@gmail.com","Alex","Googe");
         basicUser.setRole(UserRole.BASIC);
 
         Principal principal = new Principal(basicUser);
