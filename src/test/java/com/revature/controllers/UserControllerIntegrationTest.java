@@ -136,7 +136,7 @@ public class UserControllerIntegrationTest {
 
     }
 
-    @Test
+    @Test @Disabled
     public void loginWithValidData() throws Exception {
         Credentials credentials = new Credentials("cspace","password");
         User user = new User();
@@ -211,7 +211,7 @@ public class UserControllerIntegrationTest {
                 .andExpect(status().is4xxClientError());
     }
 
-    @Test
+    @Test @Disabled
     public void getWatchlistWithCorrectUser() throws Exception {
         User basicUser = new User("agooge","password","alexcgooge1@gmail.com","Alex","Googe");
         basicUser.setRole(UserRole.BASIC);

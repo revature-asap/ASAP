@@ -12,6 +12,8 @@ import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -210,9 +212,10 @@ public class UserServiceTest {
         userService.getallUsers();
     }
 
-    @Test
-    public void testGetWatchlistFromUser_withValidUser() {
-        when(userRepository.save(user1)).thenReturn(null);
-    }
+//    @Test
+//    public void testGetWatchlistFromUser_withValidUser() {
+//
+//        when(userRepository.save(user1)).thenReturn(null);
+//    }
 
 }
