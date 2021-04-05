@@ -38,15 +38,51 @@ DevOps Tools:
 * Comment on shared content provided by other users.
 
 ## Getting Started
-   
-(include git clone command)
-(include all environment setup steps)
 
-> Be sure to include BOTH Windows and Unix command  
-> Be sure to mention if the commands only work on a specific platform (eg. AWS, GCP)
+First clone the reop to your local machine
 
-- All the `code` required to get started
-- Images of what it should look like
+- git clone https://github.com/revature-asap/ASAP.git
+
+After the repo is cloned, you will need to have the following environment variables on your machine with corresponding values to your accounts across the sites leveraged
+
+- db_url : the url of the database you are connecting to
+- db_username : the username used to log into the database you are connecting to
+- db_password : the password used for logging into the database you are connecting to
+- AWS_ACCESS_KEY_ID : the access key for AWS Comprehend
+- AWS_SECRET_ACCESS_KEY : the secret access key for AWS Comprehend
+- email_username : the username of the email used for sending confirmation emails to newly registered users
+- email_password : the password to the email used for sending confirmation emails to newly registered users
+- reddit_public : the public key for hitting the Reddit API
+- reddit_private : the private key for hitting the Reddit API
+- reddit_username : the username for the reddit account used for accessing the Reddit API
+- reddit_password : the password for the reddit account used for accessing the Reddit API
+- twitter_bearer_token : the Twitter API token
+
+You will need to install docker to your machine and have it running in order to create the docker image. The following docker command is run in the root package where the dockerfile is:
+
+docker build -t asap:test . \
+--build-arg DB_URL=$db_url \
+--build-arg DB_USERNAME=$db_username \
+--build-arg DB_PASSWORD=$db_password \
+--build-arg AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+--build-arg AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+--build-arg EMAIL_USERNAME=$email_username \
+--build-arg EMAIL_PASSWORD=$email_password \
+--build-arg REDDIT_PUBLIC=$reddit_public \
+--build-arg REDDIT_PRIVATE=$reddit_private \
+--build-arg REDDIT_USERNAME=$reddit_username \
+--build-arg REDDIT_PASSWORD=$reddit_password \
+--build-arg TWITTER_BEARER_TOKEN=$twitter_bearer_token
+
+Once the docker image has been built, you can run the docker image to have the project running locally on your machine with the following command
+
+- docker run -d asap:test
+
+In order to find the IP address that the program is running on your machine with, run the follwoing command
+
+- docker inspect --format '{{ .NetworkSettings.IPAddress }}' <name of Docker app>
+
+Go to the ip address printed at port 5000 to see the application running
 
 ## Usage
 
