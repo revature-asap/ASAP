@@ -3,6 +3,8 @@ package com.revature.controllers;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import java.util.Optional;
 
@@ -10,17 +12,17 @@ import com.revature.dtos.Credentials;
 import com.revature.dtos.Principal;
 import com.revature.entities.User;
 import com.revature.entities.UserRole;
-import com.revature.exceptions.ResourceNotFoundException;
 import com.revature.repositories.UserRepository;
 import com.revature.services.UserService;
 import com.revature.util.JwtConfig;
 import com.revature.util.JwtGenerator;
+import com.revature.util.PasswordEncryption;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -32,10 +34,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Collections;
-import java.util.Optional;
-
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import java.util.List;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
@@ -47,8 +46,9 @@ public class UserControllerIntegrationTest {
 
     @MockBean
     UserRepository userRepository;
+    @Mock
+    PasswordEncryption passwordEncryption;
 
-    @MockBean
     UserService userService;
 
     @Autowired
@@ -112,13 +112,13 @@ public class UserControllerIntegrationTest {
 
     @Test
     public void confirmUserAccountWithValidData() throws Exception {
-
         when(userRepository.findById(theUser.getUserId())).thenReturn(Optional.of(theUser));
+        when(userRepository.findUserByUsername(theUser.getUsername())).thenReturn(Optional.of(theUser));
         doNothing().when(userRepository).confirmedAccount(theUser.getUserId());
 
-        // redirect
         mockMvc.perform(MockMvcRequestBuilders.get("/users/confirmation/{username}",theUser.getUsername()))
-                .andExpect(status().is(302));
+                // Status should be 302 - redirect
+                .andExpect(status().isFound());
 
     }
 
@@ -130,10 +130,9 @@ public class UserControllerIntegrationTest {
         fakeuser.setUserId(10);
         fakeuser.setRole(UserRole.BASIC);
 
-        // redirect
         mockMvc.perform(MockMvcRequestBuilders.get("/users/confirmation/{username}",fakeuser.getUsername()))
-                .andExpect(status().is(302));
-
+                // Returned status code should be bad request
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -145,7 +144,12 @@ public class UserControllerIntegrationTest {
         user.setEmail("cole.w.space@gmail.com");
         user.setFirstName("Cole");
         user.setLastName("Space");
-        when(userService.authenticate(user.getUsername(), user.getPassword())).thenReturn(user);
+        User hashedUser = new User(user);
+        hashedUser.setAccountConfirmed(true);
+        hashedUser.setPassword(PasswordEncryption.encryptString(hashedUser.getPassword()));
+
+        when(userRepository.findUserByUsername(user.getUsername())).thenReturn(Optional.of(hashedUser));
+
         String Json = "{" +
                 "\"username\":\"" + "cspace" + "\", " +
                 "\"password\":\"" + "password" + "\"" +
@@ -167,7 +171,7 @@ public class UserControllerIntegrationTest {
         user.setEmail("alexcgooge1@gmail.com");
         user.setFirstName("Alex");
         user.setLastName("Googe");
-        when(userRepository.findUserByUsername("agooge")).thenReturn(Optional.of(user));
+        org.mockito.Mockito.when(userRepository.findUserByUsername("agooge")).thenReturn(Optional.of(user));
         String Json = "{" +
                 "\"username\":\"" + user.getUsername() + "\", " +
                 "\"password\":\"" + "password1" + "\"" +
@@ -180,19 +184,29 @@ public class UserControllerIntegrationTest {
 
     @Test
     public void getAllWithCorrectRole() throws Exception {
-
         User adminUser = new User("agooge","password","alexcgooge1@gmail.com","Alex","Googe");
         adminUser.setRole(UserRole.ADMIN);
 
         Principal principal = new Principal(adminUser);
-
         JwtGenerator generator = new JwtGenerator(new JwtConfig());
-
         String token = generator.generateJwt(principal);
+
+        when(userRepository.findAll()).thenReturn(List.of(adminUser, theUser));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/users")
                 .header("ASAP-token", token))
-                .andExpect(status().is2xxSuccessful());
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.size()").value(2))
+                // .andExpect(jsonPath("$.0.userId").value(adminUser.getUserId()))
+                // .andExpect(jsonPath("$.username").value(adminUser.getUsername()))
+                // .andExpect(jsonPath("$.password").value(adminUser.getPassword()))
+                // .andExpect(jsonPath("$.email").value(adminUser.getEmail()))
+                // .andExpect(jsonPath("$.firstName").value(adminUser.getFirstName()))
+                // .andExpect(jsonPath("$.lastName").value(adminUser.getLastName()))
+                // .andExpect(jsonPath("$.role").value(adminUser.getRole()))
+                // .andExpect(jsonPath("$.accountConfirmed").value(adminUser.isAccountConfirmed()))
+                // .andExpect(jsonPath("$.watchlist").value(adminUser.getWatchlist()))
+                .andDo(print());
     }
 
     @Test
@@ -243,7 +257,7 @@ public class UserControllerIntegrationTest {
 
         String token = generator.generateJwt(principal);
 
-        when(userService.getWatchlistFromUser("ag")).thenReturn(Collections.emptyList());
+        org.mockito.Mockito.when(userService.getWatchlistFromUser("ag")).thenReturn(Collections.emptyList());
 
         mockMvc.perform(MockMvcRequestBuilders.get("/users/watchlist")
                 .header("ASAP-token", token))
