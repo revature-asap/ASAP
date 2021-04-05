@@ -1,6 +1,6 @@
 package com.revature.services.RedditServiceTest;
 
-import com.revature.DTO.redditAPI.RedditResultsDTO;
+import com.revature.dtos.redditAPI.RedditResultsDTO;
 import com.revature.entities.redditAPI.RedditChildren;
 import com.revature.entities.redditAPI.RedditData;
 import com.revature.entities.redditAPI.RedditThreadPost;

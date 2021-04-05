@@ -45,10 +45,20 @@ public class FinnhubService {
         public Asset retrieveAssetFromApi(String ticker) {
             // Search finnhub first (for stock tickers)
             Asset assetToCheck = searchFinnhub(ticker);
+            //check database to actually get that asset
+            Asset dbAsset = assetRepo.findAssetByTicker(ticker).get();
             if (assetToCheck.getName() != null) {
-                assetToCheck.setLastTouchedTimestamp(LocalDate.now());
-                assetRepo.save(assetToCheck); //!
-                return assetToCheck;
+                if (assetToCheck.getName().equals(dbAsset.getName())) {
+                    //we are updating a record in the database here
+                    dbAsset.setLastTouchedTimestamp(LocalDate.now());
+                    assetRepo.save(dbAsset); //!
+                    return dbAsset;
+                } else {
+                    //we are creating a new record in the database here
+                    assetToCheck.setLastTouchedTimestamp(LocalDate.now());
+                    assetRepo.save(assetToCheck); //!
+                    return assetToCheck;
+                }
             } else {
                 // Search lunarcrush next (for crypto currencies)
                 assetToCheck = searchLunarCrush(ticker);

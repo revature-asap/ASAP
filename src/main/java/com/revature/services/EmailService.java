@@ -42,7 +42,4 @@ public class EmailService {
         javaMailSender.send(email);
     }
 
-    public JavaMailSender getJavaMailSender() {
-        return javaMailSender;
-    }
 }
