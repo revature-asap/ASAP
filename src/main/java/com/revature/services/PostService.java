@@ -24,7 +24,14 @@ public class PostService {
         return posts;
     }
 
+    public List<Post> getPostsByParentPostId(int id){
+        List<Post> posts = postRepository.getPostsByParentPostId(id);
+        if(posts.isEmpty()){throw new ResourceNotFoundException();}
+        return posts;
+    }
+
     public void makePost(Post newPost){
+        newPost.setId(0);
         postRepository.save(newPost);
     }
 
