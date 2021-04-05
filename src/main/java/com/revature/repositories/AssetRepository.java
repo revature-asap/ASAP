@@ -1,15 +1,15 @@
 package com.revature.repositories;
 
-import java.util.Optional;
-
 import com.revature.entities.Asset;
-
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.revature.entities.User;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
-public interface AssetRepository extends JpaRepository<Asset,Integer> {
-    
+public interface AssetRepository extends CrudRepository<Asset, Integer>  {
+
     Optional<Asset> findAssetByTicker(String ticker);
 
 }

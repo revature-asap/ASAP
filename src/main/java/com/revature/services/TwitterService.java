@@ -1,6 +1,6 @@
 package com.revature.services;
 
-import com.revature.DTO.TweetsDTO;
+import com.revature.dtos.TweetsDTO;
 import com.revature.entities.SentimentCarrier;
 import com.revature.entities.Tweet;
 import com.revature.exceptions.InvalidRequestException;

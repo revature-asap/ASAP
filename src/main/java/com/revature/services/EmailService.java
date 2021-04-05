@@ -25,16 +25,21 @@ public class EmailService {
         this.javaMailSender = javaMailSender;
     }
 
+    public JavaMailSender getJavaMailSender() {
+        return javaMailSender;
+    }
+
     /**
      * Gets the Simple Mail Message and sends the email by using Java Mail Sender
      * @param email the email that send to the user
      */
+//    @Async
+//    public void sendEmail(SimpleMailMessage email){
+//        javaMailSender.send(email);
+//    }
     @Async
     public void sendEmail(MimeMessage email){
         javaMailSender.send(email);
     }
 
-    public JavaMailSender getJavaMailSender() {
-        return javaMailSender;
-    }
 }
