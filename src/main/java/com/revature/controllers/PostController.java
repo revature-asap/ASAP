@@ -55,6 +55,13 @@ public class PostController {
         return postService.getAllPosts();
     }
 
+    /**
+     * endpoing to get all posts from the database with a specified parent_post_id
+     * @param parentPostId the parent post id to search for
+     * @param request is the Http Servlet Request
+     * @param response is the Http Servlet Response
+     * @return
+     */
     //    @Secured(allowedRoles = "ADMIN")
     @GetMapping(path="/{parentPostId}", produces = MediaType.APPLICATION_JSON_VALUE)
         public List<Post> getPostsByParentId(@PathVariable int parentPostId, HttpServletRequest request, HttpServletResponse response){
@@ -62,6 +69,7 @@ public class PostController {
         response.setStatus(200);
         return postService.getPostsByParentPostId(parentPostId);
     }
+
 
     /**
      * Inserts a new post/comment into the database.
