@@ -1,6 +1,7 @@
 package com.revature.controllers;
 
 
+import com.revature.annotations.Secured;
 import com.revature.entities.User;
 import com.revature.entities.UserRole;
 import com.revature.services.EmailService;
@@ -20,6 +21,9 @@ import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
@@ -50,7 +54,7 @@ public class UserController {
         this.jwtparser = jwtparser;
     }
 
-    //Post
+    //Post4
 
     /**
      * Post method that will create a row in the database and also send an email
