@@ -35,6 +35,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @SpringBootTest
@@ -191,13 +193,16 @@ public class UserControllerIntegrationTest {
         Principal principal = new Principal(adminUser);
         JwtGenerator generator = new JwtGenerator(new JwtConfig());
         String token = generator.generateJwt(principal);
+        List<User> userList = new ArrayList<>();
+        userList.add(adminUser);
+        userList.add(theUser);
 
-        when(userRepository.findAll()).thenReturn(List.of(adminUser, theUser));
+        when(userRepository.findAll()).thenReturn(userList);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/users")
                 .header("ASAP-token", token))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("$.size()").value(2))
+                .andExpect(jsonPath("$.size()").value(userList.size()))
                 // Ideally we also check the contents of the list, but it passed visual inspection
                 .andDo(print());
     }
@@ -228,7 +233,8 @@ public class UserControllerIntegrationTest {
         minAsset.setTicker("MNAS");
         minAsset.setFinnhubIndustry("Fake");
         minAsset.setLastTouchedTimestamp(LocalDate.now());
-        List<Asset> assetList = List.of(minAsset);
+        List<Asset> assetList = new ArrayList<>();
+        assetList.add(minAsset);
         basicUser.setWatchlist(assetList);
 
         Principal principal = new Principal(basicUser);
@@ -248,7 +254,7 @@ public class UserControllerIntegrationTest {
     public void getWatchlist_withValidUser_whereWatchlistIsEmpty() throws Exception {
         User basicUser = new User("agooge1","password","alexcgooge1@gmail.com","Alex","Googe");
         basicUser.setRole(UserRole.BASIC);
-        List<Asset> assetList = List.of();
+        List<Asset> assetList = Collections.emptyList();
         basicUser.setWatchlist(assetList);
 
         Principal principal = new Principal(basicUser);
