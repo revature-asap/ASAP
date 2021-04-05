@@ -63,9 +63,17 @@ public class FinnhubService {
                 // Search lunarcrush next (for crypto currencies)
                 assetToCheck = searchLunarCrush(ticker);
                 if (assetToCheck.getName() != null) {
-                    assetToCheck.setLastTouchedTimestamp(LocalDate.now());
-                    assetRepo.save(assetToCheck); //!
-                    return assetToCheck;
+                    if (assetToCheck.getName().equals(dbAsset.getName())) {
+                        //we are updating a record in the database here
+                        dbAsset.setLastTouchedTimestamp(LocalDate.now());
+                        assetRepo.save(dbAsset); //!
+                        return dbAsset;
+                    } else {
+                        //we are creating a new record in the database here
+                        assetToCheck.setLastTouchedTimestamp(LocalDate.now());
+                        assetRepo.save(assetToCheck); //!
+                        return assetToCheck;
+                    }
                 } else {
                     throw new ResourceNotFoundException("The provided ticker does not correspond to any known stock or crypto currency.");
                 }
