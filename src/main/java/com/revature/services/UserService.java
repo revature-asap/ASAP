@@ -1,5 +1,6 @@
 package com.revature.services;
 
+import com.revature.entities.Asset;
 import com.revature.entities.User;
 import com.revature.entities.UserRole;
 import com.revature.exceptions.InvalidRequestException;
@@ -91,14 +92,14 @@ public class UserService {
      */
     public User authenticate(String username, String password) {
         if (username == null || username.trim().equals("") || password == null || password.trim().equals("")) {
-            throw new InvalidRequestException();
+            throw new InvalidRequestException("Username and password must not be null.");
         }
 
         User user = userRepository.findUserByUsername(username).orElseThrow(ResourceNotFoundException::new);
 
         // If the BCrypt hashed password does not match the password provided. . .
         if (!PasswordEncryption.verifyPassword(password, user.getPassword())) {
-            throw new InvalidRequestException();
+            throw new InvalidRequestException("Invalid username and/or password.");
         }
 
         // If the User has not clicked the link in their email. . .
@@ -121,6 +122,44 @@ public class UserService {
             throw new ResourceNotFoundException();
         }
         return users;
+    }
+
+    /**
+     * Gets the list of Assets that are on a user's watchlist
+     * @param username
+     * @return a List of Asset objects
+     */
+    public List<Asset> getWatchlistFromUser(String username) {
+        return userRepository
+                .findUserByUsername(username)
+                .orElseThrow(ResourceNotFoundException::new)
+                .getWatchlist();
+    }
+
+    /**
+     * Adds an {@code Asset} to a user's watchlist
+     * @param username
+     * @param asset
+     */
+    public void addToWatchlist(String username, Asset asset) {
+        User u = userRepository
+                .findUserByUsername(username)
+                .orElseThrow(ResourceNotFoundException::new);
+        u.getWatchlist().add(asset);
+        userRepository.save(u);
+    }
+
+    /**
+     * Removes an {@code Asset} from a user's watchlist
+     * @param username
+     * @param asset
+     */
+    public void removeFromWatchlist(String username, Asset asset) {
+        User u = userRepository
+                    .findUserByUsername(username)
+                    .orElseThrow(ResourceNotFoundException::new);
+        u.getWatchlist().remove(asset);
+        userRepository.save(u);
     }
 
     /**
