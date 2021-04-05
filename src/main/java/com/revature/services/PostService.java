@@ -60,9 +60,6 @@ public class PostService {
      */
     public void editPost(Post updatedPost){
         Post postToEdit= postRepository.findPostById(updatedPost.getId());
-        if(postToEdit==null){
-            //TODO ERROR
-        }
         assert postToEdit != null;
         postToEdit.setTitle(updatedPost.getTitle());
         postToEdit.setTextContent(updatedPost.getTextContent());
