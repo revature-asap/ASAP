@@ -167,7 +167,7 @@ public class UserController {
         String token = jwtparser.getTokenFromHeader(request);
         Principal user = jwtparser.parseToken(token);
 
-        Asset asset = assetService.getAssetByTicker(ticker);
+        Asset asset = assetService.getAssetByTicker(ticker.toUpperCase());
 
         userService.addToWatchlist(user.getUsername(), asset);
     }
@@ -178,7 +178,7 @@ public class UserController {
         String token = jwtparser.getTokenFromHeader(request);
         Principal user = jwtparser.parseToken(token);
 
-        Asset asset = assetService.getAssetByTicker(ticker);
+        Asset asset = assetService.getAssetByTicker(ticker.toUpperCase());
 
         userService.removeFromWatchlist(user.getUsername(), asset);
     }
