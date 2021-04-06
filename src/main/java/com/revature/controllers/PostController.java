@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -47,8 +45,7 @@ public class PostController {
 
     //    @Secured(allowedRoles = "ADMIN")
     @GetMapping(path="/{parentPostId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Post> getPostsByParentId(@PathVariable int parentPostId){
-
+    public List<Post> getPostsByParentId(@PathVariable Integer parentPostId){
         return postService.getPostsByParentPostId(parentPostId);
     }
 

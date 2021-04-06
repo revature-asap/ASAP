@@ -1,13 +1,11 @@
 package com.revature.services;
 
 import com.revature.entities.Post;
-import com.revature.entities.User;
 import com.revature.exceptions.ResourceNotFoundException;
 import com.revature.repositories.PostRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PostService {
@@ -24,8 +22,14 @@ public class PostService {
         return posts;
     }
 
-    public List<Post> getPostsByParentPostId(int id){
-        List<Post> posts = postRepository.getPostsByParentPostId(id);
+    public List<Post> getPostsByParentPostId(Integer id){
+        List<Post> posts;
+        if (id.equals(-1)) {
+            // throw new AuthenticationException();
+            posts = postRepository.getNullParentPosts();
+        } else {
+            posts = postRepository.getPostsByParentPostId(id);
+        }
         if(posts.isEmpty()){throw new ResourceNotFoundException();}
         return posts;
     }
