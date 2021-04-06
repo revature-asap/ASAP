@@ -2,7 +2,7 @@
 
 ## Project Description
 
-The Asset Sentiment Analysis Platform, or ASAP, is an application designed to allow users the ability to track and follow various financial assets (stocks, cryptocurrencies, etc.). Assets can be added to a user's watchlist, which will allow for them to receive news and price updates on their dashboard. Additionally, users are able to perform online sentiment analysis on a chosen asset that will query social media APIS (such as Reddit and Twitter) for mentions of an asset or its symbol. The content of online posts about the asset can be given a bullish, bearish, or neutral rating based upon the analyzed sentiment, which is performed by AWS Comprehend. This will allow for users to be able to stay on top of retail investor sentiment for their favorite assets to aid them in anticipating market moves.
+The Asset Sentiment Analysis Platform, or ASAP, is an application designed to allow users the ability to track and follow various financial assets (stocks, cryptocurrencies, etc.). Assets can be added to a user's watchlist, which will allow for them to receive news and price updates on their dashboard. Additionally, users are able to perform online sentiment analysis on a chosen asset that will query social media APIs (such as Reddit and Twitter) for mentions of an asset or its symbol. The content of online posts about the asset can be given a bullish, bearish, or neutral rating based upon the analyzed sentiment, which is performed by AWS Comprehend. This will allow for users to be able to stay on top of retail investor sentiment for their favorite assets to aid them in anticipating market moves.
 
 Link to front-end repository ASAP-UI: https://github.com/revature-asap/asap-ui
 
@@ -18,7 +18,7 @@ Persistence Tier:
 DevOps Tools:
   - Pipeline: AWS CodePipeline
   - Build Server: AWS CodeBuild
-  - Deployment: AWS Elastic Beanstalk
+  - Deployment: AWS Elastic Container Service
   - Containerization: Docker
 
 ## Features
@@ -41,7 +41,7 @@ DevOps Tools:
 
 First clone the repo to your local machine
 
-- git clone https://github.com/revature-asap/ASAP.git
+- `git clone https://github.com/revature-asap/ASAP.git`
 
 After the repo is cloned, you will need to have the following environment variables on your machine with corresponding values to your accounts across the sites leveraged
 
@@ -58,8 +58,13 @@ After the repo is cloned, you will need to have the following environment variab
 - reddit_password : the password for the reddit account used for accessing the Reddit API
 - twitter_bearer_token : the Twitter API token
 
+When all the appropriate environment variables are set, package up the project into a jar
+
+- `mvn package`
+
 You will need to install docker to your machine and have it running in order to create the docker image. The following docker command is run in the root package where the dockerfile is:
 
+```bash
 docker build -t asap:test . \
 --build-arg DB_URL=$db_url \
 --build-arg DB_USERNAME=$db_username \
@@ -73,20 +78,40 @@ docker build -t asap:test . \
 --build-arg REDDIT_USERNAME=$reddit_username \
 --build-arg REDDIT_PASSWORD=$reddit_password \
 --build-arg TWITTER_BEARER_TOKEN=$twitter_bearer_token
+```
 
 Once the docker image has been built, you can run the docker image to have the project running locally on your machine with the following command
 
-- docker run -d asap:test
+- `docker run -d asap:test`
 
 In order to find the IP address that the program is running on your machine with, run the follwoing command
 
-- docker inspect --format '{{ .NetworkSettings.IPAddress }}' <name of Docker app>
+- `docker inspect --format '{{ .NetworkSettings.IPAddress }}' <name of Docker app>`
 
 Go to the ip address printed at port 5000 to see the application running
 
 ## Usage
 
-> Here, you instruct other people on how to use your project after they’ve installed it. This would also be a good place to include screenshots of your project in action.
+Once you have the project running locally, you can use our API documentation to explore our available endpoints. To access the following endpoints, prepend the endpoint with both the IP address your docker container is running on, and `:5000` to hit the container on the correct port.
+
+- API documentation: `/swagger-ui/index.html` AND `/`
+  - Explore our endpoints and get familiar with what they accept and can do.
+- Asset endpoint: `/asset`
+  - Retrieve an asset from the connected database, or attempt to pull a new asset from Finnhub API or LunarCrush API.
+  - Use the stock/cryptocurrency ticker symbol as the value for the query parameter `ticker`
+  - Example call: `/asset?ticker=doge`
+- Posts endpoint: `/posts`
+  - Endpoint for making, modifying, creating and removing post objects in the connected database.
+- Reddit endpoint: `/reddit`
+  - Retrieve sentiment analysis for up to 45 recent reddit posts from a select number of subreddits (e.g. r/stocks, r/wallstreetbets and r/investing) based on a search term provided
+  - Example call: `/reddit?asset=bitcoin`
+- Twitter endpoint: `/twitter`
+  - Retrieve sentiment analysis for up to 100 recent (English) tweets from verified users based on a search term provided
+  - Example call: `/reddit?asset=aapl`
+- User endpoint: `/users`
+  - Provides information about users already created in the connected database, authenticates existing users and confirms registration of new users.
+  - Must be logged in as an Admin to use the endpoint to get all users.
+  - Newly created users will have their role set to `Basic`
 
 ## Contributors
 
