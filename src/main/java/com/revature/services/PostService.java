@@ -22,10 +22,16 @@ public class PostService {
         return posts;
     }
 
+    /**
+     * Will retrieve all posts with the given parent post id.
+     * If the {@code id} given is {@code -1}, will return all
+     * posts with a parent post id of {@code null}.
+     * @param id
+     * @return a list of {@code Post} objects with the parent post id provided
+     */
     public List<Post> getPostsByParentPostId(Integer id){
         List<Post> posts;
         if (id.equals(-1)) {
-            // throw new AuthenticationException();
             posts = postRepository.getNullParentPosts();
         } else {
             posts = postRepository.getPostsByParentPostId(id);
