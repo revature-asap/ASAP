@@ -11,6 +11,7 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 
 import java.time.LocalDate;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 @Service
 public class FinnhubService {
@@ -52,11 +53,11 @@ public class FinnhubService {
                 dbAsset = null;
             }
 
-            // Search finnhub first (for stock tickers)
-            Asset assetToCheck = searchFinnhub(ticker);
-            // if we got an Asset back from Finnhub
-            if (assetToCheck != null && assetToCheck.getName() != null) {
-                if (dbAsset != null && assetToCheck.getName().equals(dbAsset.getName())) {
+            // Search lunarCrush first (for crypto currencies)
+            Asset assetToCheck = searchLunarCrush(ticker);
+            // if we got an Asset back from lunarCrush
+            if (!Objects.isNull(assetToCheck) && assetToCheck.getName() != null) {
+                if (!Objects.isNull(dbAsset) && assetToCheck.getName().equals(dbAsset.getName())) {
                     //we are updating a record in the database here
                     dbAsset.setLastTouchedTimestamp(LocalDate.now());
                     assetRepo.save(dbAsset);
@@ -68,8 +69,8 @@ public class FinnhubService {
                     return assetToCheck;
                 }
             } else {
-                // Search lunarcrush next (for crypto currencies)
-                assetToCheck = searchLunarCrush(ticker);
+                // Search finnhub next (for stock tickers)
+                assetToCheck = searchFinnhub(ticker);
                 if (assetToCheck != null && assetToCheck.getName() != null) {
                     if (dbAsset != null && assetToCheck.getName().equals(dbAsset.getName())) {
                         //we are updating a record in the database here
