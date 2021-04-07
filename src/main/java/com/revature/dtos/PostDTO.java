@@ -5,13 +5,13 @@ import java.sql.Timestamp;
 public class PostDTO {
     private int postId;
     private int authorId;
-    private int parentPostId;
+    private Integer parentPostId;
     private String title;
     private String textContent;
     private Timestamp timeStamp;
     private String username;
 
-    public PostDTO(int postId, int authorId, int parentPostId, String title, String textContent, Timestamp timeStamp, String username) {
+    public PostDTO(int postId, int authorId, Integer parentPostId, String title, String textContent, Timestamp timeStamp, String username) {
         this.postId = postId;
         this.authorId = authorId;
         this.parentPostId = parentPostId;
@@ -37,11 +37,11 @@ public class PostDTO {
         this.authorId = authorId;
     }
 
-    public int getParentPostId() {
+    public Integer getParentPostId() {
         return parentPostId;
     }
 
-    public void setParentPostId(int parentPostId) {
+    public void setParentPostId(Integer parentPostId) {
         this.parentPostId = parentPostId;
     }
 
