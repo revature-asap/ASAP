@@ -64,7 +64,7 @@ public class UserControllerIntegrationTest {
     @BeforeEach
     public void setup(){
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        theUser = new User("nana","password","nana123@yahoo.com","first","last");
+        theUser = new User("nana","password","fakeEmail","first","last");
         theUser.setRole(UserRole.BASIC);
         theUser.setUserId(1);
 
@@ -75,9 +75,9 @@ public class UserControllerIntegrationTest {
         System.out.println("All Test finished!");
     }
 
-    @Test @Disabled
+    @Test
     public void registerUserWithValidData() throws Exception {
-        User user1 = new User("nana","password","nana123@yahoo.com","first","last");
+        User user1 = new User("nana","password","fakeEmail","first","last");
         user1.setRole(UserRole.BASIC);
         when(userRepository.save(user1)).thenReturn(null);
 
@@ -99,7 +99,7 @@ public class UserControllerIntegrationTest {
 
     @Test
     public void registerUserWithInvalidData() throws Exception {
-        User user1 = new User("nana","password","nana123@yahoo.com","first","last");
+        User user1 = new User("nana","password","fakeEmail","first","last");
         user1.setRole(UserRole.BASIC);
         when(userRepository.save(user1)).thenReturn(null);
 
