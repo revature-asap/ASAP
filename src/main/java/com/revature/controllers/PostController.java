@@ -1,6 +1,7 @@
 package com.revature.controllers;
 
 
+import com.revature.dtos.PostDTO;
 import com.revature.entities.Post;
 import com.revature.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,9 +44,15 @@ public class PostController {
         return postService.getAllPosts();
     }
 
+    /**
+     *
+     * @param parentPostId
+     * @return
+     */
     //    @Secured(allowedRoles = "ADMIN")
     @GetMapping(path="/{parentPostId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Post> getPostsByParentId(@PathVariable Integer parentPostId){
+    public List<PostDTO> getPostsByParentId(@PathVariable Integer parentPostId){
+
         return postService.getPostsByParentPostId(parentPostId);
     }
 

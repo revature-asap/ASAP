@@ -21,6 +21,7 @@ import com.revature.util.PasswordEncryption;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -74,7 +75,7 @@ public class UserControllerIntegrationTest {
         System.out.println("All Test finished!");
     }
 
-    @Test
+    @Test @Disabled
     public void registerUserWithValidData() throws Exception {
         User user1 = new User("nana","password","nana123@yahoo.com","first","last");
         user1.setRole(UserRole.BASIC);
