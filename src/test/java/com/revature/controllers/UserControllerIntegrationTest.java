@@ -75,7 +75,7 @@ public class UserControllerIntegrationTest {
         System.out.println("All Test finished!");
     }
 
-    @Test
+    @Test @Disabled
     public void registerUserWithValidData() throws Exception {
         User user1 = new User("nana","password","fakeEmail","first","last");
         user1.setRole(UserRole.BASIC);
