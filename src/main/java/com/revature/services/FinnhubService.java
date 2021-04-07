@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.LocalDate;
+import java.util.NoSuchElementException;
+import java.util.Objects;
 
 @Service
 public class FinnhubService {
@@ -45,21 +47,36 @@ public class FinnhubService {
         public Asset retrieveAssetFromApi(String ticker) {
             // Search finnhub first (for stock tickers)
             Asset assetToCheck = searchFinnhub(ticker);
+            System.out.println("ASSET TO CHECK RETURNED FROM FINNHUB: " + assetToCheck.toString());
             //check database to actually get that asset
-            Asset dbAsset = assetRepo.findAssetByTicker(ticker).get();
-            if (assetToCheck.getName() != null) {
-                if (assetToCheck.getName().equals(dbAsset.getName())) {
+            Asset dbAsset;
+            try {
+                dbAsset = assetRepo.findAssetByTicker(ticker).get();
+                System.out.println("ASSET TO CHECK RETURNED FROM DBCALL: " + dbAsset.toString());
+            } catch (NoSuchElementException e) {
+                System.out.println("NO ASSET IN DB RETURNING NULL FOR DB ASSET");
+                dbAsset = null;
+            }
+;
+            //check if the
+            if (!Objects.isNull(assetToCheck) && assetToCheck.getName() != null) {
+                System.out.println("ASSET TO CHECK FROM FINNHUB IS NOT EQUAL TO NULL AND ITS NAME IS SET");
+
+                if (!Objects.isNull(dbAsset) && assetToCheck.getName().equals(dbAsset.getName())) {
+                    System.out.println("ASSET NAME RETURNED FROM FINNHUB IS ALREADY IN DB");
                     //we are updating a record in the database here
                     dbAsset.setLastTouchedTimestamp(LocalDate.now());
                     assetRepo.save(dbAsset); //!
                     return dbAsset;
                 } else {
+                    System.out.println("ASSET NAME IS NOT IN FINNHUB DB GOING TO PUT IT IN");
                     //we are creating a new record in the database here
                     assetToCheck.setLastTouchedTimestamp(LocalDate.now());
                     assetRepo.save(assetToCheck); //!
                     return assetToCheck;
                 }
             } else {
+                System.out.println("ASSET TO CHECK FROM FINNHUB IS EQUAL TO NULL SEARCHING LUNAR CRUSH");
                 // Search lunarcrush next (for crypto currencies)
                 assetToCheck = searchLunarCrush(ticker);
                 if (assetToCheck.getName() != null) {
