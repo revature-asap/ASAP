@@ -2,6 +2,7 @@ package com.revature.services;
 
 import com.revature.dtos.LunarCrushDTO;
 import com.revature.entities.Asset;
+import com.revature.exceptions.InvalidRequestException;
 import com.revature.exceptions.ResourceNotFoundException;
 import com.revature.repositories.AssetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +25,11 @@ public class FinnhubService {
 
         //THIS is where we do logic to see if the asset is in the repository/database - otherwise we push the call off to the finnhub service
         public Asset getAsset(String ticker) {
+            if (ticker == null || ticker.trim().equals("")) {
+                throw new InvalidRequestException("Ticker must not be empty");
+            }
             ticker = ticker.toUpperCase();
-            // System.out.println("RETURN FROM FINDBYTICKER ON REPO: " + assetRepo.findAssetByTicker(ticker));
-            
+
             try {
                 // If ticker is in database
                 Asset savedAsset = assetRepo.findAssetByTicker(ticker).get();
@@ -35,7 +38,6 @@ public class FinnhubService {
                     return retrieveAssetFromApi(ticker);
                 } else {
                     //STILL VALID - return asset
-                    System.out.println("SAVED CALL TO FINNHUB FOR ASSET: " + savedAsset);
                     return savedAsset;
                 }
             } catch (NoSuchElementException e) {
