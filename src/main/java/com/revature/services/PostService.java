@@ -2,6 +2,7 @@ package com.revature.services;
 
 import com.revature.dtos.PostDTO;
 import com.revature.entities.Post;
+import com.revature.entities.User;
 import com.revature.exceptions.ResourceNotFoundException;
 import com.revature.repositories.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
