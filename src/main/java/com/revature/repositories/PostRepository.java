@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * repository containing queries for accessing the posts table of the database
+ * Repository containing queries for accessing the posts table of the database
  */
 @Repository
 public interface PostRepository extends JpaRepository<Post, Integer> {
@@ -16,7 +16,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     /**
      * find a post in the database with the specified id
      * @param id the id of the post
-     * @return the post with the supplied id
+     * @return a {@code Post} object with the supplied id
      */
     Post findPostById(int id);
 

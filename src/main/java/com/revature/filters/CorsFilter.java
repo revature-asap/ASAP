@@ -14,17 +14,14 @@ import java.io.IOException;
 @WebFilter("/*")
 public class CorsFilter extends OncePerRequestFilter {
 
+    /**
+     * Sets the CORS filter for incoming HTTP requests and outgoing responses
+     * Allows access from all urls (We couldn't figure out how to limit it to just localhost and our frontend)
+     * The header for the JWT is called {@code ASAP-token}
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
-        /*
-            urls available:
-                - localhost (for local testing)
-                - p3-210119-java-enterprise.s3.amazonaws.com (I expect this to be the url for our front end)
-            header for JWT:
-                - ASAP-token
-        */
         httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
-        // httpServletResponse.setHeader("Access-Control-Allow-Origin","http://localhost:4200, https://p3-210119-java-enterprise.s3.amazonaws.com");
         httpServletResponse.setHeader("Access-Control-Allow-Credentials","true");
         httpServletResponse.setHeader("Access-Control-Allow-Headers","Content-Type, ASAP-token");
         httpServletResponse.setHeader("Access-Control-Expose-Headers","ASAP-token");

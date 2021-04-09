@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.time.LocalDate;
 
 
@@ -16,9 +15,6 @@ public class Asset {
     @Column(name = "asset_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int assetId;
-
-//    @Column
-//    private String phone;
 
     @Column(nullable = false, name = "asset_name")
     @JsonProperty("name")
@@ -52,14 +48,6 @@ public class Asset {
     public void setAssetId(int assetId) {
         this.assetId = assetId;
     }
-
-//    public String getPhone() {
-//        return phone;
-//    }
-//
-//    public void setPhone(String phone) {
-//        this.phone = phone;
-//    }
 
     public String getName() {
         return name;
@@ -129,8 +117,6 @@ public class Asset {
     public String toString() {
         return "Asset{" +
                 "assetId=" + assetId +
-//                ", exchange='" + exchange + '\'' +
-//                ", phone='" + phone + '\'' +
                 ", assetName='" + name + '\'' +
                 ", ticker='" + ticker + '\'' +
                 ", logo='" + logo + '\'' +

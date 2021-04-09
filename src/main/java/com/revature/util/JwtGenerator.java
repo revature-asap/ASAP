@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 
 /**
- * The class that will use the JwtConfig to generate JWT tokens
+ * This class uses the JwtConfig to generate JWT tokens
  */
 @Component
 public class JwtGenerator {
@@ -31,7 +31,7 @@ public class JwtGenerator {
 
     /**
      * Generates a Jwt based on the Principal provided
-     * @param subject the Principal for a user that has logged in
+     * @param subject the {@code Principal} for a user that has logged in
      * @return
      */
     public String generateJwt (Principal subject) {

@@ -28,12 +28,11 @@ public class SentimentCalculator {
 
     /**
      * Splits batches of Strings into clusters of 25. AWS Comprehend performs Batch Calculation in groups
-     * of 25, and no more, and therefor will not work without being split properly.
+     * of 25, and no more, and therefore will not work without being split properly.
      *
-     * @param target Full arraylist of Strings to analyze
-     * @return Object containing Mapped values of Sentiment analytics.
+     * @param target Full arraylist of strings to analyze
+     * @return a {@code SentimentCarrier} object containing mapped values of Sentiment analytics.
      */
-    //Batch call 25 at a time, sends to Organizer.
     public SentimentCarrier apiArrayProcessor(ArrayList<String> target) {
         if(target.isEmpty()){
             throw new SentimentAnalysisException("Analysis was called without any targets");
@@ -73,9 +72,7 @@ public class SentimentCalculator {
      *
      * @param target batch of >= 25 Strings to be analyzed.
      */
-    //Take in Target, validate credentials, etc. Sends to apiArrayProcessor to split into batches
     private void sentimentAnalyzer(ArrayList<String> target) {
-        // Create credentials using a provider chain. For more information, see
         AWSCredentialsProvider awsCreds = DefaultAWSCredentialsProviderChain.getInstance();
         AmazonComprehend comprehendClient =
                 AmazonComprehendClientBuilder.standard()
@@ -112,12 +109,11 @@ public class SentimentCalculator {
     }
 
     /**
-     * Looks at the largest score of Sentiment per String, and tallies it for a total number of sentiment within
-     * a batch.
+     * Looks at the largest score of Sentiment per String, and tallies it 
+     * for a total number of sentiment within a batch.
      *
      * @param batchDetectSentimentResult Results of Comprehend's analytics.
      */
-    //Totals for batch of 25
     private void sentimentTotals(BatchDetectSentimentResult batchDetectSentimentResult) {
         for (BatchDetectSentimentItemResult item : batchDetectSentimentResult.getResultList()) {
             switch (item.getSentiment()) {
@@ -142,11 +138,12 @@ public class SentimentCalculator {
     }
 
     /**
-     * Takes in all values passed back from Comprehend in order to be re-averaged to determine average sentiment.
+     * Takes in all values passed back from Comprehend
+     * in order to be re-averaged to determine average sentiment.
+     * Total averages for batch of 25.
      *
      * @param batchDetectSentimentResult Results of Comprehend's analytics.
      */
-    //Total averages for batch of 25
     private void sentimentAverage(BatchDetectSentimentResult batchDetectSentimentResult) {
         for (BatchDetectSentimentItemResult item : batchDetectSentimentResult.getResultList()) {
             sentimentCarrier.getSentimentAverage().put("NEGATIVE",

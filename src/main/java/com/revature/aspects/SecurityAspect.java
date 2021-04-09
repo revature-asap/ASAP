@@ -20,15 +20,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.List;
 
 /**
- * Aspect for all methods marked with @Secured
+ * Aspect for all methods marked with {@code @Secured}
  * Allows or Denies access to endpoints based on role supplied by the client
  * if no role is supplied, access to the endpoint is denied.
- * Allowed roles are set with @Secured(allowRoles={"allowd_role1", "allowed_role2"})
+ * Allowed roles are set with {@code @Secured(allowRoles={"allowd_role1", "allowed_role2"})}
  */
 @Component
 @Aspect

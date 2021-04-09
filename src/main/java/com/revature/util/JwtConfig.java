@@ -14,7 +14,7 @@ import java.security.Key;
 public class JwtConfig {
 
     /**
-     * Secret key for creating a SIGNING_KEY
+     * Secret key for creating a {@code SIGNING_KEY}
      */
     private String secretKey = "pineapple";
 
@@ -28,7 +28,7 @@ public class JwtConfig {
      */
     private final Key SIGNING_KEY;
 
-    // Convert secret key into bytes and then generate a SIGNING_KEY
+    // Convert secret key into bytes and then generate a {@code SIGNING_KEY}
     {
         byte[] secretBytes = DatatypeConverter.parseBase64Binary(secretKey);
         SIGNING_KEY = new SecretKeySpec(secretBytes, SIG_ALG.getJcaName());

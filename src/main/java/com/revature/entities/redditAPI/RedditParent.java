@@ -42,7 +42,6 @@ public class RedditParent {
     public String toString() {
         return "RedditParent{" +
                 "kind='" + kind + '\'' +
-//                ", data=" + data +
                 '}';
     }
 }

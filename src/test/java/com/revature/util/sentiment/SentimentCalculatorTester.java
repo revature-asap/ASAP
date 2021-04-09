@@ -18,7 +18,6 @@ public class SentimentCalculatorTester {
     @Before
     public void setUp() {
         textList = new ArrayList<String>();
-        //textList.add("I'm Bullish on Apple");
 
         biggerTextList = new ArrayList<>();
         for (int i = 0; i < 26; i++) {

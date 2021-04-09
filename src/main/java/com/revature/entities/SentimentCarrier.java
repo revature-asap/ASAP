@@ -44,6 +44,9 @@ public class SentimentCarrier {
         this.sentimentTotals = sentimentTotals;
     }
 
+    /**
+     * Clears all average and total values
+     */
     public void clear(){
         sentimentAverage.put("POSITIVE", 0.0);
         sentimentAverage.put("NEGATIVE", 0.0);

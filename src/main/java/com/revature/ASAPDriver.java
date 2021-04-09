@@ -23,6 +23,11 @@ public class ASAPDriver {
         return new RestTemplate();
     }
 
+    /**
+     * Setup for Swagger UI
+     * Makes Swagger aware of all controllers in the {@code com.revature.controllers package}
+     * except for the root controller (which has the {@code @ApiIgnore} annotation)
+     */
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
