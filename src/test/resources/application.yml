@@ -15,17 +15,6 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: validate
-  mail:
-    host: smtp.mail.yahoo.com
-    port: 587
-    properties.mail.smtp.starttls.enable: true
-    username: ${email_username}
-    password: ${email_password}
-    properties.mail.smtp.starttls.required: true
-    properties.mail.smtp.auth: true
-    properties.mail.smtp.connectiontimeout: 5000
-    properties.mail.smtp.writetimeout: 5000
-
 management:
   endpoints:
     web:

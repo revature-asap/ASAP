@@ -4,6 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
+
+import springfox.documentation.annotations.ApiIgnore;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
@@ -21,12 +23,18 @@ public class ASAPDriver {
         return new RestTemplate();
     }
 
-    //This has yet to be implemented, but will be nice for API docs
+    /**
+     * Setup for Swagger UI
+     * Makes Swagger aware of all controllers in the {@code com.revature.controllers package}
+     * except for the root controller (which has the {@code @ApiIgnore} annotation)
+     */
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.revature.web.controllers"))
+                .apis(RequestHandlerSelectors.basePackage("com.revature.controllers"))
+                // Ignore the root controller
+                .apis(RequestHandlerSelectors.withClassAnnotation(ApiIgnore.class).negate())
                 .paths(PathSelectors.any())
                 .build();
     }
