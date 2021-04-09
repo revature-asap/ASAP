@@ -10,9 +10,9 @@ import javax.persistence.AttributeConverter;
 public class UserRoleConverter implements AttributeConverter<UserRole, String> {
 
     /**
-     * converts the user role into a string with an uppercase
-     * @param userRole user role
-     * @return returns a user role in the form of a string with the first letter capitalize
+     * converts an instance of {@code UserRole} into a string with an uppercase first letter
+     * @param userRole a {@code UserRole} to be converted to a {@code String}
+     * @return returns a user role in the form of a string with the first letter capitalized
      */
     @Override
     public String convertToDatabaseColumn(UserRole userRole) {
@@ -33,9 +33,9 @@ public class UserRoleConverter implements AttributeConverter<UserRole, String> {
     }
 
     /**
-     * Converting the string of user role back into an ENUM that is the user role
-     * @param s string of user role
-     * @return returns the user role ENUM
+     * Converting the string for a user role back into an ENUM 
+     * @param s a string for a user role
+     * @return an instance of a {@code UserRole} corresponding to the value passed in
      */
     @Override
     public UserRole convertToEntityAttribute(String s) {

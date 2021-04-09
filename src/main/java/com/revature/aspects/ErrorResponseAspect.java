@@ -56,10 +56,4 @@ public class ErrorResponseAspect {
         return errRespFactory.generateErrorResponse(HttpStatus.FORBIDDEN);
     }
 
-    // @ExceptionHandler
-    // @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    // public ErrorResponse handleQuizzardException(QuizzardException e) {
-    //     return errRespFactory.generateErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR);
-    // }
-
 }

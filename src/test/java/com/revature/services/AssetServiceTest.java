@@ -1,6 +1,5 @@
 package com.revature.services;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -42,18 +41,6 @@ public class AssetServiceTest {
         minAsset.setFinnhubIndustry("Fake");
         minAsset.setLastTouchedTimestamp(LocalDate.now());
 
-        // fullAsset = new Asset();
-        // fullAsset.setAssetId(2);
-        // fullAsset.setName("full asset");
-        // fullAsset.setTicker("FLAS");
-        // fullAsset.setFinnhubIndustry("Fake");
-        // fullAsset.setLastTouchedTimestamp(LocalDate.now());
-        // fullAsset.setLogo("fake logo url");
-        // fullAsset.setMarketCapitalization(new BigDecimal(2));
-        // fullAsset.setShareOutstanding(new BigDecimal(2));
-        // fullAsset.setWeburl("http://localhost:5000");
-        
-        // assetList = List.of(minAsset, fullAsset);
     }
 
     @Test

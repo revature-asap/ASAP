@@ -3,14 +3,14 @@ package com.revature.util;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
 /**
- * class use to encrypt user's password
+ * Class use to encrypt user's password
  */
 public class PasswordEncryption {
 
     /**
-     * returns an encrypted password that is hashed
+     * Returns an encrypted password that is hashed
      * @param str password to encrypt
-     * @return returns an encrypted password
+     * @return the encrypted password
      */
     public static String encryptString(String str) {
         String bcryptHashString = BCrypt.withDefaults().hashToString(12, str.toCharArray());
@@ -18,10 +18,10 @@ public class PasswordEncryption {
     }
 
     /**
-     * verifies the password
+     * Verifies a password
      * @param pw regular password
      * @param encryptedPassword encrypted password
-     * @return returns a boolean if the password matches
+     * @return {@code true} if the passwords match, otherwise {@code false}
      */
     public static boolean verifyPassword(String pw, String encryptedPassword) {
         BCrypt.Result result = BCrypt.verifyer().verify(pw.toCharArray(), encryptedPassword);
