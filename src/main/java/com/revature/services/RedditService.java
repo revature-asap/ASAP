@@ -19,7 +19,6 @@ import org.springframework.util.MultiValueMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Properties;
 
 
 /**
@@ -60,22 +59,22 @@ public class RedditService {
     public void setAUthToken() {
         
         //public key for reddit api
-        final String username = System.getProperty("reddit_public") != null ? System.getProperty("reddit_public"): System.getenv("reddit_public");
+        final String reddit_public = System.getProperty("reddit_public") != null ? System.getProperty("reddit_public"): System.getenv("reddit_public");
         //private key for reddit api
-        final String pass = System.getProperty("reddit_private") != null ? System.getProperty("reddit_private"): System.getenv("reddit_private");
+        final String reddit_private = System.getProperty("reddit_private") != null ? System.getProperty("reddit_private"): System.getenv("reddit_private");
         //url for getting the authorization token.
         final String auth_url = "https://www.reddit.com/api/v1/access_token";
         //use this to set values in the form-encodedurl
         final MultiValueMap<String, String> encoded_form = new LinkedMultiValueMap<>();
-        encoded_form.add("grant_type","password");
-        encoded_form.add("username", System.getProperty("reddit_username") != null ? System.getProperty("reddit_username") : System.getenv("reddit_username"));
-        encoded_form.add("password", System.getProperty("reddit_password") != null ? System.getProperty("reddit_password") : System.getenv("reddit_password"));
+        encoded_form.add("grant_type","reddit_privateword");
+        encoded_form.add("reddit_public", System.getProperty("reddit_username") != null ? System.getProperty("reddit_username") : System.getenv("reddit_username"));
+        encoded_form.add("reddit_privateword", System.getProperty("reddit_password") != null ? System.getProperty("reddit_password") : System.getenv("reddit_password"));
 
         final WebClient webClient1 = WebClient.create(auth_url);
         final RedditAuthTokenDTO results = webClient1.post()
                                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                                 .header("User-agent",user_agent)
-                                .headers(httpHeaders -> httpHeaders.setBasicAuth(username,pass))//set basic authorization on the post
+                                .headers(httpHeaders -> httpHeaders.setBasicAuth(reddit_public,reddit_private))//set basic authorization on the post
                                 .body(BodyInserters.fromFormData(encoded_form)) //insert the encodedurl values into the body
                                 .retrieve()
                                 .bodyToMono(RedditAuthTokenDTO.class)//map results to a RedditAuthTOkenDTO
@@ -87,8 +86,8 @@ public class RedditService {
 
     /**
      * Method to return an ArrayList of threads from a reddit search for an asset.
-     * @param asset
-     * @return
+     * @param asset asset ticker to search reddit for.
+     * @return arraylist of strings where each string is a thread from reddit.
      */
     public Collection<String> getAssetPosts(final String asset) {
         setAUthToken();
@@ -144,6 +143,11 @@ public class RedditService {
         return body_array;
     }
 
+    /**
+     * Get Sentiment analysis for an asset on reddit.
+     * @param asset asset ticker to search for
+     * @return the SentimentCarrier which holds the results of sentiment analysis on the reddit search.
+     */
     public SentimentCarrier updatedSentiment(final String asset) {
         if(asset == null || asset.trim().equals("")) {
             throw new InvalidRequestException("asset cannot be null or empty.");
