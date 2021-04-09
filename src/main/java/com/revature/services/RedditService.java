@@ -19,6 +19,7 @@ import org.springframework.util.MultiValueMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 
 /**
@@ -94,7 +95,7 @@ public class RedditService {
      */
     public Collection<String> getAssetPosts(final String asset) {
         setAUthToken();
-        final ArrayList<String> assets_list = new ArrayList<>();
+        final List<String> assets_list = new ArrayList<>();
         Arrays.stream(subreddits)
                 .map(subreddit -> getArrayFromDTO(searchAssetOnSubbreddit(subreddit,asset,"top")))
                 .forEach(assets_list::addAll);
@@ -136,7 +137,7 @@ public class RedditService {
      */
     public Collection<String> getArrayFromDTO(final RedditResultsDTO dto) {
         //arraylist to hold the body of every reddit post inside the dto.
-        final ArrayList<String> body_array = new ArrayList<>();
+        final List<String> body_array = new ArrayList<>();
         dto.getData().getChildren().stream()
                 .map(RedditChildren::getData)
                 .map(RedditThreadPost::getSelftext) //get the actual reddit post
