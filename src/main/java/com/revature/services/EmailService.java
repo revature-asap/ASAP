@@ -29,13 +29,9 @@ public class EmailService {
     }
 
     /**
-     * Gets the Simple Mail Message and sends the email by using Java Mail Sender
-     * @param email the email that send to the user
+     * Sends the MimeMessage by using Java Mail Sender
+     * @param email the email that is sent to the user
      */
-//    @Async
-//    public void sendEmail(SimpleMailMessage email){
-//        javaMailSender.send(email);
-//    }
     @Async
     public void sendEmail(MimeMessage email){
         javaMailSender.send(email);

@@ -26,8 +26,6 @@ public class AssetController {
         this.finnhubService = finnhubService;
     }
 
-    //Get (Updating an Asset existing (once every 24 hours)
-
     /**
      * Retrieves an asset by the ticker
      * @param ticker a String representation for the ticker of a company

@@ -13,6 +13,9 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import java.time.LocalDate;
 import java.util.NoSuchElementException;
 
+/**
+ * Service class that handles Finnhub API
+ */
 @Service
 public class FinnhubService {
 
@@ -23,8 +26,16 @@ public class FinnhubService {
             this.assetRepo = assetRepo;
         }
 
+
         //THIS is where we do logic to see if the asset is in the repository/database - otherwise we push the call off to the finnhub service
-        public Asset getAsset(String ticker) {
+
+    /**
+     * Retrieves an asset from our database
+     * If our database does not store that asset, calls Finnhub
+     * @param ticker the ticker to search for
+     * @return an Asset Object
+     */
+    public Asset getAsset(String ticker) {
             if (ticker == null || ticker.trim().equals("")) {
                 throw new InvalidRequestException("Ticker must not be empty");
             }
@@ -45,7 +56,12 @@ public class FinnhubService {
             }
         }
 
-        public Asset retrieveAssetFromApi(String ticker) {
+    /**
+     * Updates or add a record to the database based on if the asset is in our database
+     * @param ticker the String ticker for the asset
+     * @return the Asset Object
+     */
+    public Asset retrieveAssetFromApi(String ticker) {
             //check database to actually get that asset if it exists
             Asset dbAsset;
             try {

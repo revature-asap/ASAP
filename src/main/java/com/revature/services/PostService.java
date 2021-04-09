@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Service class that servers a an intermidiary between the enpoints and the repository
+ * Service class that servers a an intermidiary between the endpoints and the repository
  */
 @Service
 public class PostService {
