@@ -24,7 +24,12 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
-
+/**
+ * Aspect for all methods marked with @Secured
+ * Allows or Denies access to endpoints based on role supplied by the client
+ * if no role is supplied, access to the endpoint is denied.
+ * Allowed roles are set with @Secured(allowRoles={"allowd_role1", "allowed_role2"})
+ */
 @Component
 @Aspect
 public class SecurityAspect {
@@ -33,6 +38,12 @@ public class SecurityAspect {
     private HttpServletResponse response;
     private final JwtParser jwtParser;
 
+    /**
+     * Constructor that autowires the Web Token Parser, the request and response
+     * @param request
+     * @param response
+     * @param jwtParser
+     */
     @Autowired
     public SecurityAspect(HttpServletRequest request, HttpServletResponse response, JwtParser jwtParser) {
         this.request = request;
@@ -41,6 +52,15 @@ public class SecurityAspect {
     }
 
 
+    /**
+     * The code that gets executed when aspect is called.
+     * Parses the token to get user data (if user data exists)
+     * then checks whether or not user has appropriate permissions to access the endpoint
+     * sets a response code indicating OK, forbidden, or unauthorized
+     * @param pjp the join point
+     * @return .proceed() allowing the method to mover foreward
+     * @throws Throwable
+     */
     @Around("@annotation(com.revature.annotations.Secured)")
     public Object secureEndpoint(ProceedingJoinPoint pjp) throws Throwable {
         Method method = ((MethodSignature) pjp.getSignature()).getMethod();

@@ -45,8 +45,10 @@ public class PostController {
     }
 
     /**
-     *
-     * @param parentPostId
+     * endpoing to get all posts from the database with a specified parent_post_id
+     * @param parentPostId the parent post id to search for
+     * @param request is the Http Servlet Request
+     * @param response is the Http Servlet Response
      * @return
      */
     //    @Secured(allowedRoles = "ADMIN")
@@ -55,6 +57,7 @@ public class PostController {
 
         return postService.getPostsByParentPostId(parentPostId);
     }
+
 
     /**
      * Inserts a new post/comment into the database.
