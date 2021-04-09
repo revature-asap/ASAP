@@ -19,6 +19,7 @@ import org.springframework.util.MultiValueMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 
 /**
@@ -59,16 +60,19 @@ public class RedditService {
     public void setAUthToken() {
         
         //public key for reddit api
-        final String reddit_public = System.getProperty("reddit_public") != null ? System.getProperty("reddit_public"): System.getenv("reddit_public");
+        final String reddit_public = (System.getProperty("reddit_public") != null) ? System.getProperty("reddit_public") : System.getenv("reddit_public");
+
         //private key for reddit api
-        final String reddit_private = System.getProperty("reddit_private") != null ? System.getProperty("reddit_private"): System.getenv("reddit_private");
+        final String reddit_private = (System.getProperty("reddit_private") != null) ? System.getProperty("reddit_private") : System.getenv("reddit_private");
+
         //url for getting the authorization token.
         final String auth_url = "https://www.reddit.com/api/v1/access_token";
+
         //use this to set values in the form-encodedurl
         final MultiValueMap<String, String> encoded_form = new LinkedMultiValueMap<>();
-        encoded_form.add("grant_type","reddit_privateword");
-        encoded_form.add("reddit_public", System.getProperty("reddit_username") != null ? System.getProperty("reddit_username") : System.getenv("reddit_username"));
-        encoded_form.add("reddit_privateword", System.getProperty("reddit_password") != null ? System.getProperty("reddit_password") : System.getenv("reddit_password"));
+        encoded_form.add("grant_type","password");
+        encoded_form.add("username", (System.getProperty("reddit_username") != null) ? System.getProperty("reddit_username") : System.getenv("reddit_username"));
+        encoded_form.add("password", (System.getProperty("reddit_password") != null) ? System.getProperty("reddit_password") : System.getenv("reddit_password"));
 
         final WebClient webClient1 = WebClient.create(auth_url);
         final RedditAuthTokenDTO results = webClient1.post()
@@ -77,7 +81,7 @@ public class RedditService {
                                 .headers(httpHeaders -> httpHeaders.setBasicAuth(reddit_public,reddit_private))//set basic authorization on the post
                                 .body(BodyInserters.fromFormData(encoded_form)) //insert the encodedurl values into the body
                                 .retrieve()
-                                .bodyToMono(RedditAuthTokenDTO.class)//map results to a RedditAuthTOkenDTO
+                                .bodyToMono(RedditAuthTokenDTO.class)//map results to a RedditAuthTokenDTO
                                 .blockOptional().orElseThrow(RuntimeException::new); //block until the results come back from the API.
 
         auth_token = results.getAccess_token();
@@ -91,7 +95,7 @@ public class RedditService {
      */
     public Collection<String> getAssetPosts(final String asset) {
         setAUthToken();
-        final ArrayList<String> assets_list = new ArrayList<>();
+        final List<String> assets_list = new ArrayList<>();
         Arrays.stream(subreddits)
                 .map(subreddit -> getArrayFromDTO(searchAssetOnSubbreddit(subreddit,asset,"top")))
                 .forEach(assets_list::addAll);
@@ -114,8 +118,8 @@ public class RedditService {
                         .queryParam("q",asset)
                         .queryParam("sort",sort)
                         .queryParam("limit",limit)
-                        .queryParam("restrict_sr",1)
-                        .queryParam("raw_json","1")  //tell reddit not convert characters '<','>',and'&'
+                        .queryParam("restrict_sr",1)  //limit search to specific subreddit.
+                        .queryParam("raw_json","1")  //tell reddit not to convert characters '<','>',and'&'.
                         .build())
                 .header("User", user_agent)
                 .header("Authorization", "bearer " + auth_token)
@@ -131,14 +135,14 @@ public class RedditService {
      * @param dto DTO which contains the object returned from a call to the Reddit API
      * @return ArrayList of strings. each string is the body of a post on Reddit.
      */
-    public ArrayList<String> getArrayFromDTO(final RedditResultsDTO dto) {
+    public Collection<String> getArrayFromDTO(final RedditResultsDTO dto) {
         //arraylist to hold the body of every reddit post inside the dto.
-        final ArrayList<String> body_array = new ArrayList<>();
+        final List<String> body_array = new ArrayList<>();
         dto.getData().getChildren().stream()
                 .map(RedditChildren::getData)
-                .map(RedditThreadPost::getSelftext)
-                .filter(str -> str != null && !"".equals(str.trim()))
-                .filter(str -> str.length() < 5000)
+                .map(RedditThreadPost::getSelftext) //get the actual reddit post
+                .filter(str -> str != null && !"".equals(str.trim()))  //filter out any null or empty strings.
+                .filter(str -> str.length() < 5000)  //filter out any post longer than 5000 bytes
                 .forEach(body_array::add);
         return body_array;
     }
