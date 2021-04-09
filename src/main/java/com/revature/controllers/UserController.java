@@ -4,9 +4,7 @@ package com.revature.controllers;
 import com.revature.annotations.Secured;
 import com.revature.entities.Asset;
 import com.revature.entities.User;
-import com.revature.entities.UserRole;
 import com.revature.exceptions.InvalidRequestException;
-import com.revature.exceptions.ResourceNotFoundException;
 import com.revature.services.AssetService;
 import com.revature.services.EmailService;
 import com.revature.services.UserService;
@@ -25,9 +23,6 @@ import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
@@ -39,13 +34,21 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
 
+    /**
+     * Hosted Website URL
+     */
     private final String WEB_URL = "http://p3-210119-java-enterprise.s3-website.us-east-2.amazonaws.com/";
+
+    /**
+     * Hosted API URL
+     */
     private final String APP_URL = "http://ec2co-ecsel-1g0q6xc63i5af-1652680293.us-east-2.elb.amazonaws.com:5000/";
     private final UserService userService;
     private final AssetService assetService;
     private EmailService emailService;
     private final JwtGenerator jwtGenerator;
     private JwtParser jwtparser;
+
     /**
      * Constructor for auto wiring User Service and Email Service
      * @param userService service class for the users
@@ -59,8 +62,6 @@ public class UserController {
         this.jwtGenerator = jwtGenerator;
         this.jwtparser = jwtparser;
     }
-
-    //Post4
 
     /**
      * Post method that will create a row in the database and also send an email
@@ -150,6 +151,11 @@ public class UserController {
         return userService.getallUsers();
     }
 
+    /**
+     * Retrieves the WatchList for the currently logged in User
+     * @param request the HTTPRequest sent from the client
+     * @return a List of Assets
+     */
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, path="/watchlist")
     public List<Asset> getWatchlistForUser(HttpServletRequest request) {
         String token = jwtparser.getTokenFromHeader(request);
@@ -161,6 +167,11 @@ public class UserController {
     }
 
 
+    /**
+     * Addes an Asset to the logged in User's Watchlist by Ticker
+     * @param ticker the ticker for the company to add
+     * @param request the HTTPRequest from the client
+     */
     @PostMapping(path="/watchlist/{ticker}")
     @ResponseStatus(HttpStatus.CREATED)
     public void addAssetToWatchlist(@PathVariable String ticker, HttpServletRequest request) {
@@ -172,6 +183,11 @@ public class UserController {
         userService.addToWatchlist(user.getUsername(), asset);
     }
 
+    /**
+     * Deletes an Asset from the User's Watchlist by Ticker
+     * @param ticker the ticker for the company to delete
+     * @param request the HTTPRequest from the client
+     */
     @DeleteMapping(path="/watchlist/{ticker}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeAssetFromWatchlist(@PathVariable String ticker, HttpServletRequest request) {

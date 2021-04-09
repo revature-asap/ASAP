@@ -186,6 +186,11 @@ public class UserService {
         return true;
     }
 
+    /**
+     * Returns a user from their id
+     * @param id the unique id for the user
+     * @return a User object that corresponds to the id
+     */
     public User getUser(int id){
         return userRepository.getOne(id);
     }

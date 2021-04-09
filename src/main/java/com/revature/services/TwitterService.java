@@ -21,8 +21,10 @@ public class TwitterService {
         this.sentimentCalculator = sentimentCalculator;
     }
 
-    /*
-    Currently, retrieves the tweets from the past 5 days on the passed asset. Returns 10 tweets for now.
+    /**
+     * Retrieves the tweets from the past 5 days on the provided asset. Returns 10 tweets.
+     * @param asset the Asset to search for
+     * @return a DTO for Tweets
      */
     public TweetsDTO searchAssetOnTwitter(final String asset) {
         if (System.getProperty("twitter_bearer_token") == null)
@@ -47,6 +49,12 @@ public class TwitterService {
     /*
     Processes a TweetDTO and outputs a list of Strings
      */
+
+    /**
+     * Processes a TweetDTO and provides a list of Strings from Tweets
+     * @param asset the asset to get Posts for
+     * @return a Collection of Strings
+     */
     public Collection<String> getAssetPosts(final String asset) {
 
         final TweetsDTO tweetsDTO = searchAssetOnTwitter(asset);
@@ -63,12 +71,23 @@ public class TwitterService {
         return tweetList;
     }
 
+    /**
+     * Replaces bullish and bearish with positive and negative respectively.
+     * This is needed to ensure that we can display sentiment on the front end easier
+     * @param tweet String representation of tweet
+     * @return a tweet String but with bullish and bearish replaced
+     */
     public String bullBearReplace(final String tweet) {
         //case insensitive searches for bullish and bearish
             return tweet.replaceAll("(?i)bullish","positive")
                     .replaceAll("(?i)bearish", "negative");
     }
 
+    /**
+     * Retrieves the most recent sentiment for an asset
+     * @param asset the asset to return sentiment for
+     * @return a SentimentCarrier object
+     */
     public SentimentCarrier updatedSentiment(String asset) {
         if(asset == null || asset.trim().equals("")) {
             throw new InvalidRequestException("asset cannot be null or empty.");
