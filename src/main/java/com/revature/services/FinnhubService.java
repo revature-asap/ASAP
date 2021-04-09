@@ -2,6 +2,7 @@ package com.revature.services;
 
 import com.revature.dtos.LunarCrushDTO;
 import com.revature.entities.Asset;
+import com.revature.exceptions.InvalidRequestException;
 import com.revature.exceptions.ResourceNotFoundException;
 import com.revature.repositories.AssetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +25,11 @@ public class FinnhubService {
 
         //THIS is where we do logic to see if the asset is in the repository/database - otherwise we push the call off to the finnhub service
         public Asset getAsset(String ticker) {
+            if (ticker == null || ticker.trim().equals("")) {
+                throw new InvalidRequestException("Ticker must not be empty");
+            }
             ticker = ticker.toUpperCase();
-            // System.out.println("RETURN FROM FINDBYTICKER ON REPO: " + assetRepo.findAssetByTicker(ticker));
-            
+
             try {
                 // If ticker is in database
                 Asset savedAsset = assetRepo.findAssetByTicker(ticker).get();
@@ -35,7 +38,6 @@ public class FinnhubService {
                     return retrieveAssetFromApi(ticker);
                 } else {
                     //STILL VALID - return asset
-                    System.out.println("SAVED CALL TO FINNHUB FOR ASSET: " + savedAsset);
                     return savedAsset;
                 }
             } catch (NoSuchElementException e) {
@@ -52,9 +54,9 @@ public class FinnhubService {
                 dbAsset = null;
             }
 
-            // Search finnhub first (for stock tickers)
-            Asset assetToCheck = searchFinnhub(ticker);
-            // if we got an Asset back from Finnhub
+            // Search LunarCrush first (for crypto currencies)
+            Asset assetToCheck = searchLunarCrush(ticker);
+            // if we got an Asset back from LunarCrush
             if (assetToCheck != null && assetToCheck.getName() != null) {
                 if (dbAsset != null && assetToCheck.getName().equals(dbAsset.getName())) {
                     //we are updating a record in the database here
@@ -68,8 +70,8 @@ public class FinnhubService {
                     return assetToCheck;
                 }
             } else {
-                // Search lunarcrush next (for crypto currencies)
-                assetToCheck = searchLunarCrush(ticker);
+                // Search Finnhub next (for stock tickers)
+                assetToCheck = searchFinnhub(ticker);
                 if (assetToCheck != null && assetToCheck.getName() != null) {
                     if (dbAsset != null && assetToCheck.getName().equals(dbAsset.getName())) {
                         //we are updating a record in the database here

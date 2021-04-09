@@ -48,10 +48,10 @@ public class UserServiceTest {
     public void setup(){
         MockitoAnnotations.initMocks(this);
         nullUser = new User();
-        user1 = new User("nana","password","nana123@yahoo.com","first","last");
+        user1 = new User("nana","password","fakeEmail","first","last");
         user1.setUserId(1);
         user1.setRole(UserRole.BASIC);
-        user2 = new User("nana","password","nana123@yahoo.com","first","last");
+        user2 = new User("nana","password","fakeEmail","first","last");
         user2.setUserId(2);
         user2.setRole(UserRole.BASIC);
         listUsers = new ArrayList<>();

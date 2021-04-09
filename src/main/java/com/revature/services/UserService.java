@@ -18,6 +18,7 @@ import java.util.List;
  * User service class that has methods for calling the user repo and checking the validation of the data
  */
 @Service
+
 public class UserService {
 
     private UserRepository userRepository;
@@ -185,5 +186,7 @@ public class UserService {
         return true;
     }
 
-
+    public User getUser(int id){
+        return userRepository.getOne(id);
+    }
 }

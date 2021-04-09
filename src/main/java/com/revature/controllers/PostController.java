@@ -1,6 +1,7 @@
 package com.revature.controllers;
 
 
+import com.revature.dtos.PostDTO;
 import com.revature.entities.Post;
 import com.revature.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,11 +44,20 @@ public class PostController {
         return postService.getAllPosts();
     }
 
+    /**
+     * endpoing to get all posts from the database with a specified parent_post_id
+     * @param parentPostId the parent post id to search for
+     * @param request is the Http Servlet Request
+     * @param response is the Http Servlet Response
+     * @return
+     */
     //    @Secured(allowedRoles = "ADMIN")
     @GetMapping(path="/{parentPostId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Post> getPostsByParentId(@PathVariable Integer parentPostId){
+    public List<PostDTO> getPostsByParentId(@PathVariable Integer parentPostId){
+
         return postService.getPostsByParentPostId(parentPostId);
     }
+
 
     /**
      * Inserts a new post/comment into the database.
