@@ -4,31 +4,17 @@ server:
 spring:
   application:
     name: ASAP-API
-  h2:
-    console:
-      enabled: true
-      path: /h2
   datasource:
-    url: jdbc:h2:mem:quizzard-db
-    driver-class-name: org.h2.Driver
-    username: sa
-    password: password
+    platform: postgres
+    url: ${db_url}
+    username: ${db_username}
+    password: ${db_password}
+    driverClassName: org.postgresql.Driver
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.PostgreSQL82Dialect
     show-sql: true
     hibernate:
-      ddl-auto: create
-  mail:
-    host: smtp.mail.yahoo.com
-    port: 587
-    properties.mail.smtp.starttls.enable: true
-    username: ${email_username}
-    password: ${email_password}
-    properties.mail.smtp.starttls.required: true
-    properties.mail.smtp.auth: true
-    properties.mail.smtp.connectiontimeout: 5000
-    properties.mail.smtp.writetimeout: 5000
-
+      ddl-auto: validate
 management:
   endpoints:
     web:

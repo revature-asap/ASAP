@@ -84,7 +84,6 @@ public class SentimentCalculator {
                         .build();
 
         // Call detectEntities API
-        System.out.println("Calling BatchDetectEntities");
         BatchDetectSentimentRequest batchDetectSentimentRequest = new BatchDetectSentimentRequest().withTextList(target)
                 .withLanguageCode("en");
         BatchDetectSentimentResult batchDetectSentimentResult = comprehendClient.batchDetectSentiment(batchDetectSentimentRequest);
@@ -94,7 +93,6 @@ public class SentimentCalculator {
 
         // check if we need to retry failed requests
         if (batchDetectSentimentResult.getErrorList().size() != 0) {
-            System.out.println("Retrying Failed Requests");
             ArrayList<String> textToRetry = new ArrayList<String>();
             for (BatchItemError errorItem : batchDetectSentimentResult.getErrorList()) {
                 textToRetry.add(target.get(errorItem.getIndex()));
@@ -109,11 +107,8 @@ public class SentimentCalculator {
         }
 
         // Call to our hashmap of sentiment totals
-        System.out.println("Map of all sentiments and dominant occurrences in the batch");
         sentimentTotals(batchDetectSentimentResult);
-        System.out.println("Map of all sentiments and their batch averages");
         sentimentAverage(batchDetectSentimentResult);
-        System.out.println("End of DetectEntities");
     }
 
     /**
@@ -124,7 +119,6 @@ public class SentimentCalculator {
      */
     //Totals for batch of 25
     private void sentimentTotals(BatchDetectSentimentResult batchDetectSentimentResult) {
-        String domSentiment = "";
         for (BatchDetectSentimentItemResult item : batchDetectSentimentResult.getResultList()) {
             switch (item.getSentiment()) {
                 case "NEGATIVE":

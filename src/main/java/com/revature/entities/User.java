@@ -3,6 +3,8 @@ package com.revature.entities;
 import com.revature.util.UserRoleConverter;
 
 import javax.persistence.*;
+
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -62,6 +64,17 @@ public class User {
     @Column(nullable = false, name ="account_confirmed")
     private boolean accountConfirmed;
 
+    /**
+     * Holds a list of Assets that the User has on their watchlist
+     */
+    @ManyToMany
+    @JoinTable(
+        name = "user_assets",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "asset_id")
+    )
+    private List<Asset> watchlist;
+
     public User() {
         super();
     }
@@ -93,13 +106,33 @@ public class User {
      * @param role the role of the user
      */
     public User(int userId, String username, String password, String email, String firstName, String lastName, UserRole role) {
+        this(username, password, email, firstName, lastName);
         this.userId = userId;
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
         this.role = role;
+    }
+
+    /**
+     * Constructor for initializing user's id, username, password, email, firstname, lastname, and role
+     * @param userId the user id
+     * @param username the username of the user
+     * @param password the password of the user
+     * @param email email of the user
+     * @param firstName the firstname of the user
+     * @param lastName the lastname of the user
+     * @param role the role of the user
+     * @param watchlist the watchlist for this user
+     */
+    public User(int userId, String username, String password, String email, String firstName, String lastName, UserRole role, List<Asset> watchlist) {
+        this(userId, username, password, email, firstName, lastName, role);
+        this.watchlist = watchlist;
+    }
+
+    /**
+     * Copy constructor
+     * @param user
+     */
+    public User(User user) {
+        this(user.userId, user.username, user.password, user.email, user.firstName, user.lastName, user.role, user.watchlist);
     }
 
     public int getUserId() {
@@ -166,17 +199,36 @@ public class User {
         this.accountConfirmed = accountConfirmed;
     }
 
+    public List<Asset> getWatchlist() {
+        return watchlist;
+    }
+
+    public void setWatchlist(List<Asset> watchlist) {
+        this.watchlist = watchlist;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return userId == user.userId && accountConfirmed == user.accountConfirmed && Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(email, user.email) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && role == user.role;
+        return userId == user.userId && accountConfirmed == user.accountConfirmed && Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(email, user.email) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && role == user.role && watchlist.equals(user.watchlist);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, username, password, email, firstName, lastName, role, accountConfirmed);
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (accountConfirmed ? 1231 : 1237);
+        result = prime * result + ((email == null) ? 0 : email.hashCode());
+        result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
+        result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
+        result = prime * result + ((password == null) ? 0 : password.hashCode());
+        result = prime * result + ((role == null) ? 0 : role.hashCode());
+        result = prime * result + userId;
+        result = prime * result + ((username == null) ? 0 : username.hashCode());
+        result = prime * result + ((watchlist == null) ? 0 : watchlist.hashCode());
+        return result;
     }
 
     @Override
@@ -190,6 +242,7 @@ public class User {
                 ", lastName='" + lastName + '\'' +
                 ", role=" + role +
                 ", accountConfirmed=" + accountConfirmed +
+                ", watchlist=" + watchlist +
                 '}';
     }
 }

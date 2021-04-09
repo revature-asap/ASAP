@@ -1,8 +1,13 @@
 package com.revature.controllers;
 
 
+import com.revature.annotations.Secured;
+import com.revature.entities.Asset;
 import com.revature.entities.User;
 import com.revature.entities.UserRole;
+import com.revature.exceptions.InvalidRequestException;
+import com.revature.exceptions.ResourceNotFoundException;
+import com.revature.services.AssetService;
 import com.revature.services.EmailService;
 import com.revature.services.UserService;
 import com.revature.util.JwtGenerator;
@@ -15,12 +20,14 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
-import javax.mail.Address;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
@@ -33,8 +40,9 @@ import java.util.List;
 public class UserController {
 
     private final String WEB_URL = "http://p3-210119-java-enterprise.s3-website.us-east-2.amazonaws.com/";
-    private final String APP_URL = "http://localhost:5000";
+    private final String APP_URL = "http://ec2co-ecsel-1g0q6xc63i5af-1652680293.us-east-2.elb.amazonaws.com:5000/";
     private final UserService userService;
+    private final AssetService assetService;
     private EmailService emailService;
     private final JwtGenerator jwtGenerator;
     private JwtParser jwtparser;
@@ -44,14 +52,15 @@ public class UserController {
      * @param emailService service class for email
      */
     @Autowired
-    public UserController(UserService userService, EmailService emailService, JwtGenerator jwtGenerator, JwtParser jwtparser){
+    public UserController(UserService userService, AssetService assetService, EmailService emailService, JwtGenerator jwtGenerator, JwtParser jwtparser){
         this.userService = userService;
+        this.assetService = assetService;
         this.emailService = emailService;
         this.jwtGenerator = jwtGenerator;
         this.jwtparser = jwtparser;
     }
 
-    //Post
+    //Post4
 
     /**
      * Post method that will create a row in the database and also send an email
@@ -89,16 +98,10 @@ public class UserController {
     @GetMapping(path = "/confirmation/{username}")
     public RedirectView confirmUserAccount(@PathVariable String username, HttpServletResponse response) {
         User user = userService.getUserByUsername(username);
-        if(user != null){
-            userService.confirmAccount(user.getUserId());
-            response.setStatus(204); // redirected
-            return new RedirectView(WEB_URL);
-        }
-        else{
-            // Create a different URL for failed confirmation?
-            response.setStatus(400);
-            return new RedirectView(WEB_URL);
-        }
+        if (user == null) { throw new InvalidRequestException("No user with that username found."); }
+
+        userService.confirmAccount(user.getUserId());
+        return new RedirectView(WEB_URL);
 
     }
 
@@ -138,12 +141,59 @@ public class UserController {
      * @param response is the Http Servlet response
      * @return the list of users in the database
      */
+    @Secured(allowedRoles = "ADMIN")
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<User> getAllUsers(HttpServletRequest request,HttpServletResponse response) {
         //String token = jwtparser.getTokenFromHeader(request);
         //Principal user = jwtparser.parseToken(token);
         response.setStatus(200);
         return userService.getallUsers();
-
     }
+
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, path="/watchlist")
+    public List<Asset> getWatchlistForUser(HttpServletRequest request) {
+        String token = jwtparser.getTokenFromHeader(request);
+        Principal user = jwtparser.parseToken(token);
+
+        List<Asset> list = userService.getWatchlistFromUser(user.getUsername());
+
+        return list;
+    }
+
+
+    @PostMapping(path="/watchlist/{ticker}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addAssetToWatchlist(@PathVariable String ticker, HttpServletRequest request) {
+        String token = jwtparser.getTokenFromHeader(request);
+        Principal user = jwtparser.parseToken(token);
+
+        Asset asset = assetService.getAssetByTicker(ticker.toUpperCase());
+
+        userService.addToWatchlist(user.getUsername(), asset);
+    }
+
+    @DeleteMapping(path="/watchlist/{ticker}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removeAssetFromWatchlist(@PathVariable String ticker, HttpServletRequest request) {
+        String token = jwtparser.getTokenFromHeader(request);
+        Principal user = jwtparser.parseToken(token);
+
+        Asset asset = assetService.getAssetByTicker(ticker.toUpperCase());
+
+        userService.removeFromWatchlist(user.getUsername(), asset);
+    }
+
+    /**
+     * Get method that will output information for a user. Need to have a valid JWT to be able
+     * to hit this endpoint.
+     * @return a {@code Principal} object of the user
+     */
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, path="/profile")
+    public Principal getUser(HttpServletRequest request){
+        String token = jwtparser.getTokenFromHeader(request);
+        Principal user = jwtparser.parseToken(token);
+        User u = userService.getUserByUsername(user.getUsername());
+        return new Principal(u);
+    }
+
 }

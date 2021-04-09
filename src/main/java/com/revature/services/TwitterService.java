@@ -1,13 +1,13 @@
 package com.revature.services;
 
-import com.revature.DTO.TweetsDTO;
+import com.revature.dtos.TweetsDTO;
 import com.revature.entities.SentimentCarrier;
 import com.revature.entities.Tweet;
+import com.revature.exceptions.InvalidRequestException;
 import com.revature.util.sentiment.SentimentCalculator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -24,10 +24,11 @@ public class TwitterService {
     /*
     Currently, retrieves the tweets from the past 5 days on the passed asset. Returns 10 tweets for now.
      */
-    public TweetsDTO searchAssetOnTwitter(String asset) {
-        WebClient client;
-        client = WebClient.create("https://api.twitter.com/2/tweets/search/recent?");
-        String modifiedAsset = asset + " is:verified lang:en";
+    public TweetsDTO searchAssetOnTwitter(final String asset) {
+        if (System.getProperty("twitter_bearer_token") == null)
+            System.setProperty("twitter_bearer_token", System.getenv("twitter_bearer_token"));
+        final WebClient client = WebClient.create("https://api.twitter.com/2/tweets/search/recent?");
+        final String modifiedAsset = asset + " is:verified lang:en";
 
         return client.get()
                 .uri(uriBuilder -> uriBuilder
@@ -37,11 +38,7 @@ public class TwitterService {
                                 LocalDateTime.now().minusDays(5).withNano(0) + "Z")
                         .queryParam("max_results",100)
                         .build())
-                .header("Authorization",
-                        "Bearer AAAAAAAAAAAAAAAAAAAAADGONw" +
-                                "EAAAAAr6f8hXiM9o5bmI7w%2BoKEUxY%2FCEI%3Dx9e5LgBNr22yfKKS4SkLEn" +
-                                "SAMCPfDEv4PFILkzsRsi0Zy2zElD"
-                )
+                        .header("Authorization","Bearer " + System.getProperty("twitter_bearer_token") )
                 .retrieve()
                 .bodyToMono(TweetsDTO.class)//map results to a RedditPostDTO
                 .blockOptional().orElseThrow(RuntimeException::new);
@@ -50,32 +47,32 @@ public class TwitterService {
     /*
     Processes a TweetDTO and outputs a list of Strings
      */
-    public Collection<String> getAssetPosts(String asset) {
+    public Collection<String> getAssetPosts(final String asset) {
 
-        TweetsDTO tweetsDTO = searchAssetOnTwitter(asset);
-        ArrayList<String> tweetList = new ArrayList<>();
+        final TweetsDTO tweetsDTO = searchAssetOnTwitter(asset);
+        final ArrayList<String> tweetList = new ArrayList<>();
 
         //Iterate
         tweetsDTO.getTweets().stream()
                 .map(Tweet::getTweet)
                 .filter(str -> str != null && !"".equals(str.trim()))
                 .filter(str -> str.length() < 5000)
-                .map(str -> bullBearReplace(str))
+                .map(this::bullBearReplace)
                 .forEach(tweetList::add);
 
         return tweetList;
     }
 
-    public String bullBearReplace(String tweet) {
-        if(tweet.toLowerCase().contains("bullish"))
-            tweet = tweet.replace("bullish", "positive");
-        if (tweet.toLowerCase().contains("bearish"))
-            tweet = tweet.replace("bearish", "negative");
-
-        return tweet;
+    public String bullBearReplace(final String tweet) {
+        //case insensitive searches for bullish and bearish
+            return tweet.replaceAll("(?i)bullish","positive")
+                    .replaceAll("(?i)bearish", "negative");
     }
 
     public SentimentCarrier updatedSentiment(String asset) {
+        if(asset == null || asset.trim().equals("")) {
+            throw new InvalidRequestException("asset cannot be null or empty.");
+        }
         return sentimentCalculator.apiArrayProcessor((ArrayList<String>) getAssetPosts(asset));
     }
 }
