@@ -67,8 +67,8 @@ public class RedditService {
         //use this to set values in the form-encodedurl
         final MultiValueMap<String, String> encoded_form = new LinkedMultiValueMap<>();
         encoded_form.add("grant_type","reddit_privateword");
-        encoded_form.add("reddit_public", System.getProperty("reddit_username") != null ? System.getProperty("reddit_username") : System.getenv("reddit_username"));
-        encoded_form.add("reddit_privateword", System.getProperty("reddit_password") != null ? System.getProperty("reddit_password") : System.getenv("reddit_password"));
+        encoded_form.add("username", System.getProperty("reddit_username") != null ? System.getProperty("reddit_username") : System.getenv("reddit_username"));
+        encoded_form.add("password", System.getProperty("reddit_password") != null ? System.getProperty("reddit_password") : System.getenv("reddit_password"));
 
         final WebClient webClient1 = WebClient.create(auth_url);
         final RedditAuthTokenDTO results = webClient1.post()
